@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.diagram {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.label {
+  margin: 0;
+  padding: 0;
+}
+
+.working {
+  font-size: smaller;
+  margin: 0;
+  text-align: left;
+  color: silver;
+}
+
+.steps {
+  text-align: left;
+}
