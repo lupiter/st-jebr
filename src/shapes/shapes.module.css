@@ -21,9 +21,24 @@
   font-size: smaller;
   margin: 0;
   text-align: left;
-  color: silver;
+  opacity: 0.5;
 }
 
 .steps {
   text-align: left;
+}
+
+.instructions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+fieldset {
+  border: 1px solid rgba(200, 200, 200, 0.25);
+  border-radius: 5px;
+}
+
+.canvas {
+  image-rendering: pixelated;
 }

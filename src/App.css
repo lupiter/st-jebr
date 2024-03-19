@@ -29,10 +29,15 @@ input[type="number"] {
   max-width: 84px;
 }
 
+.logo {
+  margin-left: -1.5rem;
+}
+
 .views {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 
 .caption {
@@ -47,4 +52,14 @@ input[type="number"] {
   margin: 0;
   text-align: left;
   color: silver;
+}
+
+@media (prefers-color-scheme: dark) {
+  rect, polyline, path {
+    stroke: white;
+  }
+
+  polygon, text {
+    fill: white;
+  }
 }

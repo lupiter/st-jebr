@@ -3,12 +3,13 @@ import "./App.css";
 import { AppState, UNIT } from "./app-state";
 import { Square } from "./shapes/square";
 import { Even } from "./shapes/even";
+import { BasicRoundNeck } from "./shapes/basic-round-neck";
 
 function App() {
   const [state, setState] = useState<AppState>({
     gauge: {
       stitches: 14,
-      rows: 10,
+      rows: 21,
       unit: UNIT.CM,
       square: 10,
     },
@@ -48,8 +49,12 @@ function App() {
 
   return (
     <>
-    <h1>st-jebr</h1>
-    <p role="caption" className="caption">stitch-(al)gebra</p>
+      <h1>
+        st-jebr <svg className="logo" viewBox="0 0 100 50" width={100} height={50}><polyline points="0,49 30,49 30,40 50,40 50,30 60,30 60,20 70,20 70,10 80,10 80,1" fill="none" stroke="black" strokeWidth={2} /></svg>
+      </h1>
+      <p role="caption" className="caption">
+        stitch-(al)gebra
+      </p>
       <section></section>
       <main>
         <section>
@@ -90,15 +95,19 @@ function App() {
                 <option value={1}>1x1</option>
               </select>
             </fieldset>
-            <p className="working">({state.gauge.stitches / state.gauge.square} sts/{state.gauge.unit.toString()}; {state.gauge.rows / state.gauge.square} rows/{state.gauge.unit.toString()})</p>
-            
+            <p className="working">
+              ({state.gauge.stitches / state.gauge.square} sts/
+              {state.gauge.unit.toString()};{" "}
+              {state.gauge.rows / state.gauge.square} rows/
+              {state.gauge.unit.toString()})
+            </p>
           </form>
         </section>
         <section className="views">
           <Square gauge={state.gauge} />
           <Even />
-          {/* <BasicRoundNeck state={state} />
-          <ShoulderSlope state={state} />
+          <BasicRoundNeck gauge={state.gauge} />
+          {/*<ShoulderSlope state={state} />
           <Armhole state={state} />
           <BackNeck state={state} />
           <Slant state={state} />
