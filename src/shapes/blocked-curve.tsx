@@ -1,3 +1,4 @@
+import { fillInSlopes, getSpan } from "./blocked-calcs";
 import style from "./shapes.module.css";
 
 export function isSorted(all: number[][]): boolean {
@@ -9,26 +10,6 @@ export function isSorted(all: number[][]): boolean {
   const yMatch = ys.findIndex((v, i) => sortedYs[i] !== v) < 0;
 
   return xMatch && yMatch;
-}
-
-export function getSpan(
-  all: number[][],
-  index: number,
-  subindex: number
-): number {
-  const target = all[index][subindex];
-  let i = index - 1;
-  let count = 1;
-  while (i >= 0 && all[i][subindex] === target) {
-    count++;
-    i--;
-  }
-  i = index + 1;
-  while (i < all.length && all[i][subindex] === target) {
-    count++;
-    i++;
-  }
-  return count;
 }
 
 function calculateCurvePoints(rx: number, ry: number): number[][] {
@@ -105,27 +86,7 @@ export function sortCurvePoints(points: number[][]): number[][] {
     panic++;
     sorted = isSorted(points);
   }
-  if (panic >= 200) {
-    console.error(isSorted(points), points);
-    throw new Error("PANIC");
-  }
   return points;
-}
-
-function fillInSlopes(points: number[][]): number[][] {
-  let outPoints: number[][] = [];
-  // add intermediate points where needed
-  for (let i = 0; i < points.length; i++) {
-    const p = points[i];
-    if (i > 0) {
-      const prev = points[i - 1];
-      if (prev[0] != p[0] && prev[1] != p[1]) {
-        outPoints.push([p[0], prev[1]]);
-      }
-    }
-    outPoints.push(p);
-  }
-  return outPoints;
 }
 
 function pointsToInstructions(all: number[][]): string[] {
@@ -139,13 +100,10 @@ function pointsToInstructions(all: number[][]): string[] {
       const spanX = getSpan(all, pixel - 1, 1);
       if (spanX > 1) {
         if (instructions.length === 0) {
-          instructions.push(
-            `Cast off ${spanX} stitch${spanX > 1 ? "es" : ""}`
-          );
+          instructions.push(`Cast off ${spanX} stitch${spanX > 1 ? "es" : ""}`);
         } else {
           instructions.push(`Decrease ${spanX} stitches`);
         }
-
       } else {
         if (element[0] !== prev[0]) {
           instructions.push(`Decrease 1 stitch`);
@@ -166,6 +124,10 @@ export function BlockedCurve(props: {
 }): JSX.Element {
   const { rx, ry, aspect } = props;
 
+  if (rx <= 0 || ry <= 0) {
+    return <></>
+  }
+
   const curve = calculateCurvePoints(rx, ry);
   const sortedCurve = sortCurvePoints(curve.slice());
   const points = fillInSlopes(sortedCurve);
@@ -178,8 +140,18 @@ export function BlockedCurve(props: {
     )
     .join(" ");
 
-  const width = (Math.max(...points.map((p) => p[0])) * 10) / aspect;
+  const stitchWidth = Math.max(...points.map((p) => p[0])) * 10;
+  const width = stitchWidth / aspect;
   const height = Math.max(...points.map((p) => p[1])) * 10;
+
+  const verticals = new Array(stitchWidth / 10)
+    .fill(0)
+    .map((_, i) => `M ${(i * 10) / aspect},0 V ${height}`)
+    .join(" ");
+  const horizontals = new Array(height / 10)
+    .fill(0)
+    .map((_, i) => `M 0,${i * 10} H ${width}`)
+    .join(" ");
 
   return (
     <div className={style.instructions}>
@@ -188,15 +160,8 @@ export function BlockedCurve(props: {
         width={width + 2}
         height={height + 2}
       >
-        <rect
-          x={0}
-          y={0}
-          width={width}
-          height={height}
-          fill="url(#stitch-bg)"
-          stroke="none"
-          strokeWidth={0}
-        />
+        <path d={`${verticals}`} stroke="black" opacity={0.2} />
+        <path d={`${horizontals}`} stroke="black" opacity={0.2} />
         <polyline
           points={drawPoints}
           stroke="black"
@@ -214,8 +179,6 @@ export function BlockedCurve(props: {
           strokeWidth={1}
           strokeDasharray={4}
         />
-        <path d={`M`} stroke="silver" fill="none" />{" "}
-        {/* todo: grid background */}
       </svg>
       <ol className={style.steps}>
         {instructions.map((n, i) => (
@@ -225,3 +188,4 @@ export function BlockedCurve(props: {
     </div>
   );
 }
+

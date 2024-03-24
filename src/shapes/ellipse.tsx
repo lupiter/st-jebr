@@ -3,18 +3,26 @@ import { GaugeState } from "../app-state";
 import style from "./shapes.module.css";
 import { BlockedCurve } from "./blocked-curve";
 
-type BasicRoundNeckState = {
+type EllipseState = {
   width: number;
   height: number;
 };
 
-export function BasicRoundNeck(props: { gauge: GaugeState }): JSX.Element {
-  const [state, setState] = useState<BasicRoundNeckState>({
-    width: 18,
+function floatOrZero(value: string): number {
+  const asFloat = parseFloat(value);
+  if (Number.isNaN(asFloat)) {
+    return 0;
+  }
+  return asFloat;
+}
+
+export function Ellipse(props: { gauge: GaugeState }): JSX.Element {
+  const [state, setState] = useState<EllipseState>({
+    width: 9,
     height: 8.5,
   });
   const height = state.height * (props.gauge.rows / props.gauge.square);
-  const width = state.width * (props.gauge.stitches / props.gauge.square) / 2;
+  const width = (state.width * (props.gauge.stitches / props.gauge.square));
 
   let aspectWidth = 100;
   let aspectHeight = 100;
@@ -27,19 +35,20 @@ export function BasicRoundNeck(props: { gauge: GaugeState }): JSX.Element {
   const setWidth = (e: ChangeEvent<HTMLInputElement>) => {
     setState({
       ...state,
-      width: parseFloat(e.target.value),
+      width: floatOrZero(e.target.value),
     });
   };
   const setHeight = (e: ChangeEvent<HTMLInputElement>) => {
     setState({
       ...state,
-      height: parseFloat(e.target.value),
+      height: floatOrZero(e.target.value),
     });
   };
 
   return (
     <div className={style.container}>
-      <h3>Basic Round Neck</h3>
+      <h3>Ellipse Quadrant</h3>
+      <h4>Round necks, sleeve heads, armscyes</h4>
       <fieldset>
         <legend>Measurements</legend>
         <label>
@@ -59,8 +68,8 @@ export function BasicRoundNeck(props: { gauge: GaugeState }): JSX.Element {
       </p>
       <p className={style.working}>
         {props.gauge.stitches / props.gauge.square} sts/{props.gauge.unit}{" "}
-        &times; {state.width} {props.gauge.unit} = {width * 2} sts &asymp;{" "}
-        {Math.round(width) * 2} (rounded to nearest even number)
+        &times; {state.width} {props.gauge.unit} = {width} sts &asymp;{" "}
+        {Math.round(width)} (rounded)
       </p>
       <div className={style.diagram}>
         <p className={style.label}>
@@ -68,28 +77,36 @@ export function BasicRoundNeck(props: { gauge: GaugeState }): JSX.Element {
           ) high
         </p>
         {!Number.isNaN(aspectWidth) && !Number.isNaN(aspectHeight) && (
-          <svg viewBox={`-1 -1 ${aspectWidth + 2} ${aspectHeight + 2}`} width={aspectWidth + 2} height={aspectHeight + 2}>
+          <svg
+            viewBox={`-1 -1 ${aspectWidth * 2 + 2} ${aspectHeight * 2 + 2}`}
+            width={aspectWidth * 2 + 2}
+            height={aspectHeight * 2 + 2}
+          >
+            <ellipse rx={aspectWidth} ry={aspectHeight} cx={aspectWidth} cy={aspectHeight} stroke="blue" strokeDasharray={4} fill="none" />
             <path
-              d={`M ${aspectWidth},0 A ${
-                aspectWidth / 2
-              } ${aspectHeight} 0 1 1 0,0`}
+              d={`M ${aspectWidth * 2},${aspectHeight} A ${
+                aspectWidth
+              } ${aspectHeight} 0 0 1 ${aspectWidth},${aspectHeight * 2}`}
               stroke="black"
               strokeWidth={1}
               fill="none"
-            />
-            <path
-              d={`M 0,0 L 0,${aspectHeight} L ${aspectWidth},${aspectHeight} L ${aspectWidth},0`}
-              stroke="black"
-              strokeWidth={1}
-              fill="none"
-              strokeDasharray={4}
             />
           </svg>
         )}
       </div>
       <p className={style.label}>
-        {Math.round(width) * 2} sts ({state.width} {props.gauge.unit.toString()})
-        wide
+        {Math.round(width) * 2} sts ({state.width} {props.gauge.unit.toString()}
+        ) wide
+      </p>
+      <p className={style.working}>
+        Using{" "}
+        <a href="https://www.geeksforgeeks.org/midpoint-ellipse-drawing-algorithm/">
+          midpoint ellipse drawing algorithm
+        </a>{" "}
+        with sorting from{" "}
+        <a href="http://src.acm.org/binaries/content/assets/src/2012/tiffany-inglis.pdf">
+          Inglis' Superpixelator
+        </a>
       </p>
       <BlockedCurve
         aspect={props.gauge.stitches / props.gauge.rows}

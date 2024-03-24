@@ -48,6 +48,7 @@ export function Even(): JSX.Element {
   return (
     <div className={style.container}>
       <h3>Decrease / Increase Evenly</h3>
+      <h4>Cuff to sleeve, ribbing to body, working in the round generally</h4>
       <fieldset>
         <legend>Change</legend>
         <label>

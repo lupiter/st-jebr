@@ -36,6 +36,7 @@ export function Square(props: { gauge: GaugeState }): JSX.Element {
   return (
     <div className={style.container}>
       <h3>Rectangle</h3>
+      <h4>Body panel, dish cloth, apron front</h4>
       <fieldset>
         <legend>Measurements</legend>
         <label>
