@@ -7,14 +7,7 @@ export function Header() {
     <>
       <h1>
         st-jebr{" "}
-        <svg className="logo" viewBox="0 0 100 50" width={100} height={50}>
-          <polyline
-            points="0,49 30,49 30,40 50,40 50,30 60,30 60,20 70,20 70,10 80,10 80,1"
-            fill="none"
-            stroke="black"
-            strokeWidth={2}
-          />
-        </svg>
+        <img src="/st-jebr/logo.svg" alt="" width={30} height={30}/>
       </h1>
       <p role="caption" className="caption">
         stitch-(al)gebra
