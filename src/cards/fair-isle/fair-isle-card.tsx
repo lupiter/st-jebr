@@ -47,7 +47,7 @@ export function FairIselCard(props: FairIsleCardProps): JSX.Element {
   return (
     <section>
       <p>
-        This card should be {Math.round(height)}mm high by {Math.round(width)}mm
+        This card should be {height}mm high by {width}mm
         wide
       </p>
       <button onClick={download}>Download</button>
