@@ -1,7 +1,7 @@
 import { fillInSlopes, getSpan } from "./blocked-calcs";
 import style from "./shapes.module.css";
 
-function calculateSlopePoints(x2: number, y2: number, aspect: number): number[][] {
+function calculateSlopePoints(x2: number, y2: number, _aspect: number): number[][] {
   let points: number[][] = [];
   let changeX = x2;
   let changeY = y2;

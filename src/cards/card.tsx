@@ -45,9 +45,9 @@ export function Card() {
     setState({ ...state, maxHeight: parseFloat(e.target.value) });
   };
 
-  const setMaxWidth = (e: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, maxWidth: parseFloat(e.target.value) });
-  };
+  // const setMaxWidth = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setState({ ...state, maxWidth: parseFloat(e.target.value) });
+  // };
 
   const setUnit = (e: ChangeEvent<HTMLSelectElement>) => {
     setState({
