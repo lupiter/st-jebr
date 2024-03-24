@@ -2,11 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import Calculator from "./calculator.tsx";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import { ROUTES } from "./routes.ts";
 import { Card } from "./cards/card.tsx";
 
-const router = createBrowserRouter(
+const router = createHashRouter(
   [
     {
       path: ROUTES.HOME.toString(),
@@ -17,7 +17,7 @@ const router = createBrowserRouter(
       element: <Card />,
     },
   ],
-  { basename: "/st-jebr/" }
+  { basename: "/" }
 );
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
