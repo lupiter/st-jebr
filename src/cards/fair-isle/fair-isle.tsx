@@ -19,7 +19,7 @@ import { FairIselCard } from "./fair-isle-card";
 type FairIsleProps = {
   data: number[][];
   width: number;
-  maxHeight: number;
+  maxHeight?: number;
 };
 
 function pixels(
@@ -159,7 +159,11 @@ export function FairIsle(props: FairIsleProps): JSX.Element {
   let largestHeight = cards[0].height;
   const rows = props.data.length / props.width;
 
-  while (largestHeight > props.maxHeight) {
+  if (props.maxHeight && props.maxHeight < 200) {
+    return <></>
+  }
+
+  while (props.maxHeight && largestHeight > props.maxHeight) {
     // split into multiple cards
     const splitData = chunk(
       props.data,

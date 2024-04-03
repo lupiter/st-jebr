@@ -1,4 +1,4 @@
-import { fillInSlopes, getSpan } from "./blocked-calcs";
+import { fillInSlopes, getSpan, pointsToInstructions } from "./blocked-calcs";
 import style from "./shapes.module.css";
 
 export function isSorted(all: number[][]): boolean {
@@ -12,49 +12,63 @@ export function isSorted(all: number[][]): boolean {
   return xMatch && yMatch;
 }
 
-function calculateCurvePoints(rx: number, ry: number): number[][] {
-  let x = 0,
-    y = ry;
+function calculateCurvePoints(rx: number, ry: number, aspect: number): number[][] {
   let points: number[][] = [];
-  const rx2 = rx * rx;
-  const ry2 = ry * ry;
+  const fn = (x: number, y: number) => ((x * x) / (rx * rx)) + ((y * y) / (ry * ry * aspect * aspect)) - 1; 
+  let y = ry * aspect;
+  let x = 0;
 
-  let decision = ry2 - rx2 * ry + 0.25 * rx2;
-  let decisionX = 2 * ry2 * x;
-  let decisionY = 2 * rx2 * y;
-
-  while (decisionX < decisionY) {
+  // for (let x = 0; x <= ry; x++) {
+  while (x <= rx && y >= 0) {
     points.push([x, y]);
-
-    decisionX = decisionX + 2 * ry2;
-    x += 1;
-    if (decision < 0) {
-      decision = decision + decisionX + ry2;
-    } else {
-      y--;
-      decisionY = decisionY - 2 * rx2;
-      decision = decision + decisionX - decisionY + ry2;
-    }
-  }
-
-  let decision2 =
-    ry2 * (x + 0.5) * (x + 0.5) + rx2 * ((y - 1) * (y - 1)) - rx2 * ry2;
-
-  while (y > 0) {
-    points.push([x, y]);
-
-    y--;
-    decisionY = decisionY - 2 * rx2;
-    if (decision2 > 0) {
-      decision2 = decision2 + rx2 - decisionY;
+    console.log(x, y, fn(x, y))
+    if (fn(x, y - (0.5 * aspect)) > 0) {
+      y -= 1 * aspect;
     } else {
       x += 1;
-      decisionX = decisionX + 2 * ry2;
-      decision2 = decision2 + decisionX - decisionY + rx2;
     }
+    
   }
 
-  points.push([rx, 0]);
+  // const rx2 = rx * rx;
+  // const ry2 = ry * ry * aspect;
+
+  // let decision = ry2 - rx2 * ry + 0.25 * rx2;
+  // let decisionX = 2 * ry2 * x;
+  // let decisionY = 2 * rx2 * y;
+
+  // while (decisionX < decisionY) {
+  //   points.push([x, y]);
+
+  //   decisionX += 2 * ry2;
+  //   x += 1;
+  //   if (decision < 0) {
+  //     decision += decisionX + ry2;
+  //   } else {
+  //     y--;
+  //     decisionY += - 2 * rx2;
+  //     decision += decisionX - decisionY + ry2;
+  //   }
+  // }
+
+  // decision =
+  //   ry2 * (x + 0.5) * (x + 0.5) + rx2 * ((y - 1) * (y - 1)) - rx2 * ry2;
+
+  // while (y > 0) {
+  //   points.push([x, y]);
+
+  //   y--;
+  //   decisionY = decisionY - 2 * rx2;
+  //   if (decision > 0) {
+  //     decision += rx2 - decisionY;
+  //   } else {
+  //     x += 1;
+  //     decisionX += 2 * ry2;
+  //     decision += decisionX - decisionY + rx2;
+  //   }
+  // }
+
+  // points.push([rx / aspect, 0]);
 
   return points;
 }
@@ -89,33 +103,6 @@ export function sortCurvePoints(points: number[][]): number[][] {
   return points;
 }
 
-function pointsToInstructions(all: number[][]): string[] {
-  let instructions: string[] = [];
-
-  for (let pixel = 1; pixel < all.length; pixel++) {
-    const element = all[pixel];
-    const prev = all[pixel - 1];
-    // have we changed row?
-    if (element[1] !== prev[1]) {
-      const spanX = getSpan(all, pixel - 1, 1);
-      if (spanX > 1) {
-        if (instructions.length === 0) {
-          instructions.push(`Cast off ${spanX} stitch${spanX > 1 ? "es" : ""}`);
-        } else {
-          instructions.push(`Decrease ${spanX} stitches`);
-        }
-      } else {
-        if (element[0] !== prev[0]) {
-          instructions.push(`Decrease 1 stitch`);
-        } else {
-          instructions.push(`Work all stitches`);
-        }
-      }
-    }
-  }
-
-  return instructions;
-}
 
 export function BlockedCurve(props: {
   aspect: number;
@@ -128,29 +115,31 @@ export function BlockedCurve(props: {
     return <></>
   }
 
-  const curve = calculateCurvePoints(rx, ry);
-  const sortedCurve = sortCurvePoints(curve.slice());
-  const points = fillInSlopes(sortedCurve);
+  const curve = calculateCurvePoints(rx, ry, aspect);
+  const sortedCurve = curve // sortCurvePoints(curve.slice());
+  const points = curve // fillInSlopes(sortedCurve);
   const instructions = pointsToInstructions(sortedCurve);
 
   const drawPoints = points
     .map(
       (point) =>
-        `${Math.round((point[0] * 10) / aspect)},${Math.round(point[1] * 10)}`
+        `${Math.round((point[0] * 10))},${Math.round(point[1] * 10)}`
     )
     .join(" ");
 
-  const stitchWidth = Math.max(...points.map((p) => p[0])) * 10;
-  const width = stitchWidth / aspect;
-  const height = Math.max(...points.map((p) => p[1])) * 10;
+  // const stitchWidth = Math.max(...points.map((p) => p[0])) * 10;
+  // const width = stitchWidth / aspect;
+  // const height = Math.max(...points.map((p) => p[1])) * 10;
+  const width = rx * 10;
+  const height = ry * 10 * aspect;
 
-  const verticals = new Array(stitchWidth / 10)
+  const verticals = new Array(rx)
     .fill(0)
-    .map((_, i) => `M ${(i * 10) / aspect},0 V ${height}`)
+    .map((_, i) => `M ${i * 10},0 V ${height}`)
     .join(" ");
-  const horizontals = new Array(height / 10)
+  const horizontals = new Array(ry)
     .fill(0)
-    .map((_, i) => `M 0,${i * 10} H ${width}`)
+    .map((_, i) => `M 0,${i * 10 * aspect} H ${width}`)
     .join(" ");
 
   return (
@@ -169,10 +158,10 @@ export function BlockedCurve(props: {
           fill="none"
         />
         <path
-          d={`M ${(rx / aspect) * 10},0 A ${(rx / aspect) * 10} ${
+          d={`M ${(rx) * 10},0 A ${(rx) * 10} ${
             ry * 10
-          } 0 0 1 0,${ry * 10} L ${(rx / aspect) * 10},${ry * 10} L ${
-            (rx / aspect) * 10
+          } 0 0 1 0,${ry * 10 * aspect} L ${(rx) * 10},${ry * 10 * aspect} L ${
+            (rx) * 10
           },0 z`}
           stroke="blue"
           fill="none"

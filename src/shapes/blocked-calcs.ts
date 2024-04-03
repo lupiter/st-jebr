@@ -35,3 +35,32 @@ export function fillInSlopes(points: number[][]): number[][] {
   }
   return outPoints;
 }
+
+
+export function pointsToInstructions(all: number[][]): string[] {
+  let instructions: string[] = [];
+
+  for (let pixel = 1; pixel < all.length; pixel++) {
+    const element = all[pixel];
+    const prev = all[pixel - 1];
+    // have we changed row?
+    if (element[1] !== prev[1]) {
+      const spanX = getSpan(all, pixel - 1, 1);
+      if (spanX > 1) {
+        if (instructions.length === 0) {
+          instructions.push(`Cast off ${spanX} stitch${spanX > 1 ? "es" : ""}`);
+        } else {
+          instructions.push(`Decrease ${spanX} stitches`);
+        }
+      } else {
+        if (element[0] !== prev[0]) {
+          instructions.push(`Decrease 1 stitch`);
+        } else {
+          instructions.push(`Work all stitches`);
+        }
+      }
+    }
+  }
+
+  return instructions;
+}

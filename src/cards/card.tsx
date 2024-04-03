@@ -16,8 +16,8 @@ type PixelDataState = {
 };
 
 type CardState = {
-  maxWidth: number;
-  maxHeight: number;
+  maxWidth?: number;
+  maxHeight?: number;
   unit: UNIT;
   content?: LoadingErrorState | PixelDataState;
 };
@@ -37,12 +37,13 @@ function isErrorState(
 export function Card() {
   const [state, setState] = useState<CardState>({
     maxWidth: 21,
-    maxHeight: 30,
+    maxHeight: 60,
     unit: UNIT.CM,
   });
 
   const setMaxHeight = (e: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, maxHeight: parseFloat(e.target.value) });
+    const float = parseFloat(e.target.value);
+    setState({ ...state, maxHeight: Number.isNaN(float) ? undefined : float});
   };
 
   // const setMaxWidth = (e: ChangeEvent<HTMLInputElement>) => {
@@ -92,8 +93,8 @@ export function Card() {
     setState({ ...state, content: { pixels, width, url } });
   };
 
-  let maxHeightMM = state.maxHeight * 10;
-  if (state.unit === UNIT.IN) {
+  let maxHeightMM = state.maxHeight ? state.maxHeight * 10 : undefined;
+  if (state.unit === UNIT.IN && state.maxHeight) {
     maxHeightMM = state.maxHeight * 25.4;
   }
 

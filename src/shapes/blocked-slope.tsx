@@ -1,59 +1,50 @@
-import { fillInSlopes, getSpan } from "./blocked-calcs";
+import { fillInSlopes, pointsToInstructions } from "./blocked-calcs";
 import style from "./shapes.module.css";
 
-function calculateSlopePoints(x2: number, y2: number, _aspect: number): number[][] {
+function calculateSlopePoints(
+  x2: number,
+  y2: number,
+  aspect: number
+): number[][] {
   let points: number[][] = [];
-  let changeX = x2;
-  let changeY = y2;
-  let yStart = 1;
-  if (changeY < 0) {
-    yStart = -1;
-    changeY = -changeY;
+  let yStart = 1 * aspect;
+  if (y2 < 0) {
+    yStart = -1 * aspect;
   }
-  let decision = 2 * changeY - changeX;
-  let y = yStart;
+  let y = 0;
+  let fn = (x: number, y: number) => y2 * x - (x2 * y) / aspect;
 
   for (let x = 0; x <= x2; x += 1) {
     points.push([x, y]);
-    if (decision > 0) {
+    if (fn(x, y) > 0) {
       y += yStart;
-      decision += 2 * (changeY - changeX);
-    } else {
-      decision += 2 * changeY;
     }
   }
-
-  points.push([x2, y2])
 
   return points;
 }
 
-function pointsToInstructions(all: number[][]): string[] {
-  let instructions: string[] = [];
+function calculateSteepSlopePoints(
+  x2: number,
+  y2: number,
+  aspect: number
+): number[][] {
+  let points: number[][] = [];
+  let yStart = 1;
+  if (x2 < 0) {
+    yStart = -1;
+  }
+  let y = 0;
+  let fn = (x: number, y: number) => x2 * x / aspect - (y2 * y);
 
-  for (let pixel = 1; pixel < all.length; pixel++) {
-    const element = all[pixel];
-    const prev = all[pixel - 1];
-    // have we changed row?
-    if (element[1] !== prev[1]) {
-      const spanX = getSpan(all, pixel - 1, 1);
-      if (spanX > 1) {
-        if (instructions.length === 0) {
-          instructions.push(`Cast off ${spanX} stitch${spanX > 1 ? "es" : ""}`);
-        } else {
-          instructions.push(`Decrease ${spanX} stitches`);
-        }
-      } else {
-        if (element[0] !== prev[0]) {
-          instructions.push(`Decrease 1 stitch`);
-        } else {
-          instructions.push(`Work all stitches`);
-        }
-      }
+  for (let x = 0; x <= y2; x += 1 * aspect) {
+    points.push([y, x]);
+    if (fn(x, y) > 0) {
+      y += yStart;
     }
   }
 
-  return instructions;
+  return points;
 }
 
 export function BlockedSlope(props: {
@@ -63,28 +54,28 @@ export function BlockedSlope(props: {
 }): JSX.Element {
   const { x, y, aspect } = props;
 
-  const slope = calculateSlopePoints(x, y * -1, aspect);
-  const points = fillInSlopes(slope).map((p) => [p[0], p[1] + y]);
-  const instructions = pointsToInstructions(slope);
+  const slope = x > y ? calculateSlopePoints(x, y, aspect) : calculateSteepSlopePoints(x, y, aspect);
+  const points = fillInSlopes(slope);
+  const instructions = pointsToInstructions(slope.slice().reverse());
 
   const drawPoints = points
-    .map(
-      (point) =>
-        `${Math.round((point[0] * 10))},${Math.round(point[1] * 10)}`
-    )
+    .map((point) => `${Math.round(point[0] * 10)},${Math.round(point[1] * 10)}`)
     .join(" ");
 
-  const stitchWidth = Math.max(...points.map((p) => p[0])) * 10;
-  const width = stitchWidth / aspect;
-  const height = Math.max(...points.map((p) => p[1])) * 10;
+  const width = x * 10;
+  const height = y * 10 * aspect;
 
-  const verticals = new Array(stitchWidth / 10)
+  if (!x || !y || x <= 0 || y <= 0) {
+    return <></>;
+  }
+
+  const verticals = new Array(x)
     .fill(0)
-    .map((_, i) => `M ${(i * 10) / aspect},0 V ${height}`)
+    .map((_, i) => `M ${i * 10},0 V ${height}`)
     .join(" ");
-  const horizontals = new Array(height / 10)
+  const horizontals = new Array(y)
     .fill(0)
-    .map((_, i) => `M 0,${i * 10} H ${width}`)
+    .map((_, i) => `M 0,${i * 10 * aspect} H ${width}`)
     .join(" ");
 
   return (
@@ -105,7 +96,7 @@ export function BlockedSlope(props: {
         />
 
         <polyline
-          points={`0,${height} ${width},${height} ${width},0 0,${height}`}
+          points={`0,0 ${width},${height} 0,${height} 0,0`}
           stroke="blue"
           strokeWidth={1}
           strokeDasharray={4}
