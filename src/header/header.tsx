@@ -1,4 +1,4 @@
-import "./header.css";
+import "./header.module.css";
 import { ROUTES } from "../routes";
 import { NavLink } from "react-router-dom";
 

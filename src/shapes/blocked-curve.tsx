@@ -1,4 +1,4 @@
-import { fillInSlopes, getSpan, pointsToInstructions } from "./blocked-calcs";
+import { fillInSlopes, getSpan, pointsToInstructions, pointsToShortInstructions } from "./blocked-calcs";
 import style from "./shapes.module.css";
 
 export function isSorted(all: number[][]): boolean {
@@ -12,64 +12,43 @@ export function isSorted(all: number[][]): boolean {
   return xMatch && yMatch;
 }
 
-function calculateCurvePoints(rx: number, ry: number, aspect: number): number[][] {
+function calculateCurvePoints(radiusX: number, radiusY: number, aspect: number): number[][] {
   let points: number[][] = [];
-  const fn = (x: number, y: number) => ((x * x) / (rx * rx)) + ((y * y) / (ry * ry * aspect * aspect)) - 1; 
-  let y = ry * aspect;
-  let x = 0;
 
-  // for (let x = 0; x <= ry; x++) {
-  while (x <= rx && y >= 0) {
-    points.push([x, y]);
-    console.log(x, y, fn(x, y))
-    if (fn(x, y - (0.5 * aspect)) > 0) {
-      y -= 1 * aspect;
-    } else {
-      x += 1;
+  let x0 = -radiusX;
+  let x1 = radiusX;
+  let diameterX = 2 * radiusX;
+  let diameterY = 2 * radiusY;
+  let decisionX = 4 * (1 - diameterX) * diameterY * diameterY;
+  let decisionY = 4 * diameterX * diameterX;
+  let error = decisionX + decisionY;
+  
+  let y0 = radiusY * 2 + (diameterY + 1) / 2;
+  let startY = y0;
+  let y1 = y0;
+  diameterX = 8 * diameterX * diameterX;
+  let b1 = 8 * diameterY * diameterY;
+
+  do {
+    points.push([x1, y0 - startY])
+    if (2 * error <= decisionY) {
+      y0 += aspect;
+      y1 -= aspect;
+      decisionY += diameterX;
+      error += decisionY;
     }
-    
+    if (2 * error * aspect * aspect >= decisionX || 2 * error >= decisionY) {
+      x0++;
+      x1--;
+      decisionX += b1;
+      error += decisionX;
+    }
+  } while (x0 < x1)
+
+  while (y0 - y1 < diameterY * aspect) {
+    points.push([x1, y0++ - startY])
   }
-
-  // const rx2 = rx * rx;
-  // const ry2 = ry * ry * aspect;
-
-  // let decision = ry2 - rx2 * ry + 0.25 * rx2;
-  // let decisionX = 2 * ry2 * x;
-  // let decisionY = 2 * rx2 * y;
-
-  // while (decisionX < decisionY) {
-  //   points.push([x, y]);
-
-  //   decisionX += 2 * ry2;
-  //   x += 1;
-  //   if (decision < 0) {
-  //     decision += decisionX + ry2;
-  //   } else {
-  //     y--;
-  //     decisionY += - 2 * rx2;
-  //     decision += decisionX - decisionY + ry2;
-  //   }
-  // }
-
-  // decision =
-  //   ry2 * (x + 0.5) * (x + 0.5) + rx2 * ((y - 1) * (y - 1)) - rx2 * ry2;
-
-  // while (y > 0) {
-  //   points.push([x, y]);
-
-  //   y--;
-  //   decisionY = decisionY - 2 * rx2;
-  //   if (decision > 0) {
-  //     decision += rx2 - decisionY;
-  //   } else {
-  //     x += 1;
-  //     decisionX += 2 * ry2;
-  //     decision += decisionX - decisionY + rx2;
-  //   }
-  // }
-
-  // points.push([rx / aspect, 0]);
-
+  
   return points;
 }
 
@@ -116,9 +95,10 @@ export function BlockedCurve(props: {
   }
 
   const curve = calculateCurvePoints(rx, ry, aspect);
-  const sortedCurve = curve // sortCurvePoints(curve.slice());
-  const points = curve // fillInSlopes(sortedCurve);
+  const sortedCurve = sortCurvePoints(curve.slice().reverse());
+  const points = fillInSlopes(sortedCurve);
   const instructions = pointsToInstructions(sortedCurve);
+  const shortInstructions = pointsToShortInstructions(sortedCurve).reverse();
 
   const drawPoints = points
     .map(
@@ -127,9 +107,6 @@ export function BlockedCurve(props: {
     )
     .join(" ");
 
-  // const stitchWidth = Math.max(...points.map((p) => p[0])) * 10;
-  // const width = stitchWidth / aspect;
-  // const height = Math.max(...points.map((p) => p[1])) * 10;
   const width = rx * 10;
   const height = ry * 10 * aspect;
 
@@ -160,7 +137,11 @@ export function BlockedCurve(props: {
         <path
           d={`M ${(rx) * 10},0 A ${(rx) * 10} ${
             ry * 10
-          } 0 0 1 0,${ry * 10 * aspect} L ${(rx) * 10},${ry * 10 * aspect} L ${
+          } 0 0 1 0,${ry * 10 * aspect
+
+          } L ${(rx) * 10},${ry * 10 * aspect
+
+          } L ${
             (rx) * 10
           },0 z`}
           stroke="blue"
@@ -169,11 +150,23 @@ export function BlockedCurve(props: {
           strokeDasharray={4}
         />
       </svg>
+      <details>
+        <summary>Row-by-row</summary>
       <ol className={style.steps}>
         {instructions.map((n, i) => (
           <li key={i}>{n}</li>
         ))}
       </ol>
+      </details>
+      <details>
+        <summary>Japanese-style</summary>
+        Matching diagram
+      <ul className={style.steps}>
+        {shortInstructions.map((n, i) => (
+          <li key={i}>{n.decrease}&middot;{n.rows}&middot;{n.times}</li>
+        ))}
+      </ul>
+      </details>
     </div>
   );
 }

@@ -34,8 +34,25 @@
 .instructions {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: start;
   flex-wrap: wrap;
+  gap: 1rem;
+  flex: 1;
+}
+
+.instructions svg, .instructions details {
+  flex: 1;
+}
+
+details {
+  border: 1px solid rgba(200, 200, 200, 0.25);
+  border-radius: 5px;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(200, 200, 200, 0.25);
 }
 
 fieldset {

@@ -1,4 +1,8 @@
-import { fillInSlopes, pointsToInstructions } from "./blocked-calcs";
+import {
+  fillInSlopes,
+  pointsToInstructions,
+  pointsToShortInstructions,
+} from "./blocked-calcs";
 import style from "./shapes.module.css";
 
 function calculateSlopePoints(
@@ -35,7 +39,7 @@ function calculateSteepSlopePoints(
     yStart = -1;
   }
   let y = 0;
-  let fn = (x: number, y: number) => x2 * x / aspect - (y2 * y);
+  let fn = (x: number, y: number) => (x2 * x) / aspect - y2 * y;
 
   for (let x = 0; x <= y2; x += 1 * aspect) {
     points.push([y, x]);
@@ -54,9 +58,15 @@ export function BlockedSlope(props: {
 }): JSX.Element {
   const { x, y, aspect } = props;
 
-  const slope = x > y ? calculateSlopePoints(x, y, aspect) : calculateSteepSlopePoints(x, y, aspect);
+  const slope =
+    x > y
+      ? calculateSlopePoints(x, y, aspect)
+      : calculateSteepSlopePoints(x, y, aspect);
   const points = fillInSlopes(slope);
   const instructions = pointsToInstructions(slope.slice().reverse());
+  const shortInstructions = pointsToShortInstructions(
+    slope.slice().reverse()
+  ).reverse();
 
   const drawPoints = points
     .map((point) => `${Math.round(point[0] * 10)},${Math.round(point[1] * 10)}`)
@@ -103,11 +113,27 @@ export function BlockedSlope(props: {
           fill="none"
         />
       </svg>
-      <ol className={style.steps}>
-        {instructions.map((n, i) => (
-          <li key={i}>{n}</li>
-        ))}
-      </ol>
+      <details>
+        <summary>Row-by-row</summary>
+        From bottom
+        <ol className={style.steps}>
+          {instructions.map((n, i) => (
+            <li key={i}>{n}</li>
+          ))}
+        </ol>
+      </details>
+
+      <details>
+        <summary>Japanese-style</summary>
+        Matching diagram
+        <ul className={style.steps}>
+          {shortInstructions.map((n, i) => (
+            <li key={i}>
+              {n.decrease}&middot;{n.rows}&middot;{n.times}
+            </li>
+          ))}
+        </ul>
+      </details>
     </div>
   );
 }

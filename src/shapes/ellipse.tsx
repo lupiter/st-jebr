@@ -100,8 +100,11 @@ export function Ellipse(props: { gauge: GaugeState }): JSX.Element {
       </p>
       <p className={style.working}>
         Using{" "}
-        <a href="https://www.geeksforgeeks.org/midpoint-ellipse-drawing-algorithm/">
+        {/* <a href="https://www.geeksforgeeks.org/midpoint-ellipse-drawing-algorithm/">
           midpoint ellipse drawing algorithm
+        </a>{" "} */}
+        <a href="https://zingl.github.io/bresenham.html">
+            Bresenham's algorithm extended to ellipses
         </a>{" "}
         with sorting from{" "}
         <a href="http://src.acm.org/binaries/content/assets/src/2012/tiffany-inglis.pdf">
