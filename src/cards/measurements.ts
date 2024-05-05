@@ -10,7 +10,10 @@ export const guideVerticalInset =
   holeDiameter / 2 + holeVerticalInset - guideHoleDiameter / 2; // mm
 export const gapToSnapHole = 4; // mm
 export const gapBetweenSnapHole = 6.5; // mm
-export const gapSnapToEdgeVertical =  holeVerticalInset + (holeGapVertical + holeDiameter * 2) / 2 - holeDiameter / 2 // mm
+export const gapSnapToEdgeVertical =
+  holeVerticalInset +
+  (holeGapVertical + holeDiameter * 2) / 2 -
+  holeDiameter / 2; // mm
 export const gapSnapToEdge = 2; // mm
 export const edgeInset = 2; // mm
 export const edgeInsetVertical = 21; // mm

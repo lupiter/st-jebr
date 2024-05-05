@@ -20,10 +20,17 @@ export function Header() {
         </GridItem>
 
         <GridItem>
-          <Heading textAlign="center" color="brand.200">st-jebr</Heading>
+          <Heading textAlign="center" color="brand.200">
+            st-jebr
+          </Heading>
         </GridItem>
         <GridItem alignSelf="end">
-          <Text role="caption" className="caption" align="left" color="gray.400">
+          <Text
+            role="caption"
+            className="caption"
+            align="left"
+            color="gray.400"
+          >
             stitch-(al)gebra
           </Text>
         </GridItem>

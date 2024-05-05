@@ -18,11 +18,10 @@ import {
 } from "./blocked-calcs";
 import style from "./shapes.module.css";
 
-
 function calculateCurvePoints(
   radiusX: number,
   radiusY: number,
-  aspect: number
+  aspect: number,
 ): number[][] {
   const points: number[][] = [];
 

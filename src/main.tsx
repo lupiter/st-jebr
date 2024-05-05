@@ -18,7 +18,7 @@ const router = createHashRouter(
       element: <Card />,
     },
   ],
-  { basename: "/" }
+  { basename: "/" },
 );
 
 const theme = extendTheme({
@@ -35,7 +35,7 @@ const theme = extendTheme({
       "800": "#660700",
       "900": "#330300",
     },
-    "orange": {
+    orange: {
       "50": "#FFEFE5",
       "100": "#FFD2B8",
       "200": "#FFB58A",
@@ -45,9 +45,9 @@ const theme = extendTheme({
       "600": "#CC4B00",
       "700": "#993800",
       "800": "#662600",
-      "900": "#331300"
+      "900": "#331300",
     },
-    "yellow": {
+    yellow: {
       "50": "#FEF5E7",
       "100": "#FCE3BB",
       "200": "#FAD18F",
@@ -57,9 +57,9 @@ const theme = extendTheme({
       "600": "#C37C09",
       "700": "#925D07",
       "800": "#623E04",
-      "900": "#311F02"
+      "900": "#311F02",
     },
-    "red": {
+    red: {
       "50": "#FFE7E5",
       "100": "#FFBCB8",
       "200": "#FF928A",
@@ -69,9 +69,9 @@ const theme = extendTheme({
       "600": "#CC0E00",
       "700": "#990A00",
       "800": "#660700",
-      "900": "#330300"
+      "900": "#330300",
     },
-    "green": {
+    green: {
       "50": "#F1F4F2",
       "100": "#D7E0DC",
       "200": "#BDCCC5",
@@ -81,9 +81,9 @@ const theme = extendTheme({
       "600": "#597367",
       "700": "#43564E",
       "800": "#2D3934",
-      "900": "#161D1A"
+      "900": "#161D1A",
     },
-    "blue": {
+    blue: {
       "50": "#EFEFF6",
       "100": "#D1D1E6",
       "200": "#B3B3D5",
@@ -93,9 +93,9 @@ const theme = extendTheme({
       "600": "#484884",
       "700": "#363663",
       "800": "#242442",
-      "900": "#121221"
+      "900": "#121221",
     },
-    "purple": {
+    purple: {
       "50": "#F6EFF1",
       "100": "#E6D1D7",
       "200": "#D6B3BD",
@@ -105,9 +105,9 @@ const theme = extendTheme({
       "600": "#844859",
       "700": "#633643",
       "800": "#42242D",
-      "900": "#211216"
+      "900": "#211216",
     },
-    "pink": {
+    pink: {
       "50": "#F7EEED",
       "100": "#EACFCD",
       "200": "#DCB1AD",
@@ -117,9 +117,9 @@ const theme = extendTheme({
       "600": "#8F443D",
       "700": "#6B332E",
       "800": "#47221F",
-      "900": "#24110F"
+      "900": "#24110F",
     },
-    "cyan": {
+    cyan: {
       "50": "#EFEFF6",
       "100": "#D1D1E6",
       "200": "#B3B3D5",
@@ -129,9 +129,9 @@ const theme = extendTheme({
       "600": "#484884",
       "700": "#363663",
       "800": "#242442",
-      "900": "#121221"
+      "900": "#121221",
     },
-    "teal": {
+    teal: {
       "50": "#F1F4F2",
       "100": "#D7E0DC",
       "200": "#BDCCC5",
@@ -141,15 +141,15 @@ const theme = extendTheme({
       "600": "#597367",
       "700": "#43564E",
       "800": "#2D3934",
-      "900": "#161D1A"
-    }
-  }
-})
+      "900": "#161D1A",
+    },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <RouterProvider router={router} />
     </ChakraProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

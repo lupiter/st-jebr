@@ -67,7 +67,7 @@ export function Even(): JSX.Element {
   const endStitches = end > 0 ? new Array(end).fill(0) : [];
   const svgWidth = Math.max(
     102,
-    start * 10 + changeRepeat * 10 + end * 10 + 40
+    start * 10 + changeRepeat * 10 + end * 10 + 40,
   );
 
   return (

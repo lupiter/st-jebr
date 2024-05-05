@@ -71,7 +71,14 @@ function Calculator() {
   };
 
   return (
-    <VStack align="stretch" m={2} maxW={1000} justify="center" marginLeft="auto" marginRight="auto">
+    <VStack
+      align="stretch"
+      m={2}
+      maxW={1000}
+      justify="center"
+      marginLeft="auto"
+      marginRight="auto"
+    >
       <Header />
       <VStack as="main" align="stretch">
         <VStack as="form" align="center">

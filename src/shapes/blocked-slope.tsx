@@ -20,7 +20,7 @@ import style from "./shapes.module.css";
 function calculateSlopePoints(
   x2: number,
   y2: number,
-  aspect: number
+  aspect: number,
 ): number[][] {
   const points: number[][] = [];
   let yStart = 1 * aspect;
@@ -43,7 +43,7 @@ function calculateSlopePoints(
 function calculateSteepSlopePoints(
   x2: number,
   y2: number,
-  aspect: number
+  aspect: number,
 ): number[][] {
   const points: number[][] = [];
   let yStart = 1;
@@ -77,7 +77,7 @@ export function BlockedSlope(props: {
   const points = fillInSlopes(slope);
   const instructions = pointsToInstructions(slope.slice().reverse());
   const shortInstructions = pointsToShortInstructions(
-    slope.slice().reverse()
+    slope.slice().reverse(),
   ).reverse();
 
   const drawPoints = points

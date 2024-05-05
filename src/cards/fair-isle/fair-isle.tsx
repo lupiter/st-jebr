@@ -28,7 +28,7 @@ function pixels(
   pixelWidth: number,
   pixelHeight: number,
   data: number[][],
-  mostCommon: number[]
+  mostCommon: number[],
 ) {
   const pixelPoints: number[][] = [];
   const xOffset =
@@ -120,7 +120,7 @@ function calculateFairIsle(props: FairIsleCalculationInputs): CardMeasurements {
       pixelWidth,
       pixelHeight,
       props.data,
-      props.mostCommon
+      props.mostCommon,
     ),
     guideHoles: guideHoles(width, height, pixelHeight),
     snapCX,
@@ -161,17 +161,22 @@ export function FairIsle(props: FairIsleProps): JSX.Element {
   const rows = props.data.length / props.width;
 
   if (props.maxHeight && props.maxHeight < 200) {
-    return <Alert status="warning" m={4}><AlertIcon /> We can't generate cards this small. Try making the max height larger</Alert>;
+    return (
+      <Alert status="warning" m={4}>
+        <AlertIcon /> We can't generate cards this small. Try making the max
+        height larger
+      </Alert>
+    );
   }
 
   while (props.maxHeight && largestHeight > props.maxHeight) {
     // split into multiple cards
     const splitData = chunk(
       props.data,
-      Math.ceil(rows / (cards.length + 1)) * props.width
+      Math.ceil(rows / (cards.length + 1)) * props.width,
     );
     cards = splitData.map((data) =>
-      calculateFairIsle({ data, width: props.width, mostCommon })
+      calculateFairIsle({ data, width: props.width, mostCommon }),
     );
     largestHeight = Math.max(...cards.map((card) => card.height));
   }

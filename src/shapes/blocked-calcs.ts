@@ -1,7 +1,7 @@
 export function getSpan(
   all: number[][],
   index: number,
-  subindex: number
+  subindex: number,
 ): number {
   const target = all[index][subindex];
   let i = index - 1;

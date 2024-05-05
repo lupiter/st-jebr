@@ -171,12 +171,21 @@ export function Ellipse(props: { gauge: GaugeState }): JSX.Element {
               {/* <a href="https://www.geeksforgeeks.org/midpoint-ellipse-drawing-algorithm/">
           midpoint ellipse drawing algorithm
         </a>{" "} */}
-              <Link href="https://zingl.github.io/bresenham.html" color="pink.500" isExternal>
-                Bresenham's algorithm extended to ellipses <ExternalLinkIcon mx='2px' />
+              <Link
+                href="https://zingl.github.io/bresenham.html"
+                color="pink.500"
+                isExternal
+              >
+                Bresenham's algorithm extended to ellipses{" "}
+                <ExternalLinkIcon mx="2px" />
               </Link>{" "}
               with sorting from{" "}
-              <Link href="http://src.acm.org/binaries/content/assets/src/2012/tiffany-inglis.pdf" color="pink.500" isExternal>
-                Inglis' Superpixelator <ExternalLinkIcon mx='2px' />
+              <Link
+                href="http://src.acm.org/binaries/content/assets/src/2012/tiffany-inglis.pdf"
+                color="pink.500"
+                isExternal
+              >
+                Inglis' Superpixelator <ExternalLinkIcon mx="2px" />
               </Link>
             </Text>
           </AccordionPanel>

@@ -5,7 +5,15 @@ import {
   guideHoleDiameter,
   holeDiameter,
 } from "../measurements";
-import { Box, Button, Divider, HStack, Heading, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Divider,
+  HStack,
+  Heading,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { DownloadIcon } from "@chakra-ui/icons";
 
 type FairIsleCardProps = {
@@ -38,7 +46,7 @@ export function FairIselCard(props: FairIsleCardProps): JSX.Element {
     const element = document.createElement("a");
     element.setAttribute(
       "href",
-      "data:image/svg+xml," + encodeURIComponent(text)
+      "data:image/svg+xml," + encodeURIComponent(text),
     );
     element.setAttribute("download", "punchcard.svg");
     element.style.display = "none";
@@ -48,8 +56,20 @@ export function FairIselCard(props: FairIsleCardProps): JSX.Element {
   };
 
   return (
-    <VStack as="section" spacing={4} align="stretch" borderWidth="1px" borderRadius="lg">
-      <HStack align="end" justify="space-between" paddingTop={4} paddingLeft={4} paddingRight={4}>
+    <VStack
+      as="section"
+      spacing={4}
+      align="stretch"
+      borderWidth="1px"
+      borderRadius="lg"
+    >
+      <HStack
+        align="end"
+        justify="space-between"
+        paddingTop={4}
+        paddingLeft={4}
+        paddingRight={4}
+      >
         <VStack align="start">
           <Heading size="md">Card {props.index}</Heading>
           <Text>

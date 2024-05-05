@@ -90,7 +90,12 @@ export function Square(props: { gauge: GaugeState }): JSX.Element {
         &times; {state.width} {props.gauge.unit} = {width} sts &asymp;{" "}
         {Math.round(width)} (rounded)
       </Text>
-      <Grid alignSelf="center" templateColumns="repeat(2, 1fr)" alignItems="center" justifyItems="center">
+      <Grid
+        alignSelf="center"
+        templateColumns="repeat(2, 1fr)"
+        alignItems="center"
+        justifyItems="center"
+      >
         <GridItem>
           <Text>
             {Math.round(height)} sts ({state.height}{" "}

@@ -60,13 +60,13 @@ type CardState = {
 };
 
 function isDataState(
-  content: LoadingErrorState | PixelDataState
+  content: LoadingErrorState | PixelDataState,
 ): content is PixelDataState {
   return (content as PixelDataState).pixels !== undefined;
 }
 
 function isErrorState(
-  content: LoadingErrorState | PixelDataState
+  content: LoadingErrorState | PixelDataState,
 ): content is LoadingErrorState {
   return (content as LoadingErrorState).message !== undefined;
 }
@@ -225,9 +225,10 @@ export function Card() {
                   <Heading size="sm">Images</Heading>
                   <Text>
                     The image should have the height and width in pixels that
-                    you want in stitches. That means to make a card 24 stitches wide
-                    and 60 rows long, you want to upload a 24x60 pixel image.
-                    These can be made using the image editor of your choice.
+                    you want in stitches. That means to make a card 24 stitches
+                    wide and 60 rows long, you want to upload a 24x60 pixel
+                    image. These can be made using the image editor of your
+                    choice.
                   </Text>
                   <Heading size="sm">Cutting</Heading>
                   <Text>
@@ -260,8 +261,7 @@ export function Card() {
                 </VStack>
               </ModalBody>
 
-              <ModalFooter>
-              </ModalFooter>
+              <ModalFooter></ModalFooter>
             </ModalContent>
           </Modal>
 
