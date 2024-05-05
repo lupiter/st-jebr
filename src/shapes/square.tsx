@@ -1,6 +1,25 @@
 import { ChangeEvent, useState } from "react";
 import { GaugeState } from "../app-state";
 import style from "./shapes.module.css";
+import {
+  Box,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Grid,
+  GridItem,
+  HStack,
+  Heading,
+  Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Spacer,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 
 type SquareState = {
   width: number;
@@ -20,68 +39,92 @@ export function Square(props: { gauge: GaugeState }): JSX.Element {
     aspectWidth = aspectWidth * (state.width / state.height);
   }
 
-  const setWidth = (e: ChangeEvent<HTMLInputElement>) => {
+  const setWidth = (_: string, numberValue: number) => {
     setState({
       ...state,
-      width: parseFloat(e.target.value),
+      width: numberValue,
     });
   };
-  const setHeight = (e: ChangeEvent<HTMLInputElement>) => {
+  const setHeight = (_: string, numberValue: number) => {
     setState({
       ...state,
-      height: parseFloat(e.target.value),
+      height: numberValue,
     });
   };
 
   return (
-    <div className={style.container}>
-      <h3>Rectangle</h3>
-      <h4>Body panel, dish cloth, apron front</h4>
-      <fieldset>
-        <legend>Measurements</legend>
-        <label>
-          width <input type="number" value={state.width} onChange={setWidth} />{" "}
-          {props.gauge.unit.toString()}
-        </label>
-        <label>
-          height{" "}
-          <input type="number" value={state.height} onChange={setHeight} />{" "}
-          {props.gauge.unit.toString()}
-        </label>
-      </fieldset>
-      <p className={style.working}>
+    <VStack spacing={2} align="stretch">
+      <Text size="sm">Body panel, dish cloth, apron front</Text>
+
+      <HStack as="fieldset">
+        <Heading size="sm" as="legend">
+          Measurements
+        </Heading>
+        <FormControl maxW={40}>
+          <FormLabel>Width</FormLabel>
+          <NumberInput value={state.width} onChange={setWidth}>
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <FormHelperText>{props.gauge.unit.toString()}</FormHelperText>
+        </FormControl>
+        <FormControl maxW={40}>
+          <FormLabel>Height</FormLabel>
+          <NumberInput value={state.height} onChange={setHeight}>
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <FormHelperText>{props.gauge.unit.toString()}</FormHelperText>
+        </FormControl>
+      </HStack>
+      <Text size="sm">
         {props.gauge.rows / props.gauge.square} sts/{props.gauge.unit} &times;{" "}
         {state.height} {props.gauge.unit} = {height} sts &asymp;{" "}
         {Math.round(height)} (rounded)
-      </p>
-      <p className={style.working}>
+      </Text>
+      <Text size="sm">
         {props.gauge.stitches / props.gauge.square} sts/{props.gauge.unit}{" "}
         &times; {state.width} {props.gauge.unit} = {width} sts &asymp;{" "}
         {Math.round(width)} (rounded)
-      </p>
-      <div className={style.diagram}>
-        <p className={style.label}>
-          {Math.round(height)} sts ({state.height} {props.gauge.unit.toString()}
-          ) high
-        </p>
-        {!Number.isNaN(aspectWidth) && !Number.isNaN(aspectHeight) && (
-          <svg viewBox="0 0 102 102" width="102" height="102">
-            <rect
-              width={aspectWidth}
-              height={aspectHeight}
-              x={1}
-              y={1}
-              stroke="black"
-              strokeWidth={1}
-              fill="none"
-            ></rect>
-          </svg>
-        )}
-      </div>
-      <p className={style.label}>
-        {Math.round(width)} sts ({state.width} {props.gauge.unit.toString()})
-        wide
-      </p>
-    </div>
+      </Text>
+      <Grid alignSelf="center" templateColumns="repeat(2, 1fr)" alignItems="center" justifyItems="center">
+        <GridItem>
+          <Text>
+            {Math.round(height)} sts ({state.height}{" "}
+            {props.gauge.unit.toString()}) high
+          </Text>
+        </GridItem>
+        <GridItem>
+          {!Number.isNaN(aspectWidth) && !Number.isNaN(aspectHeight) && (
+            <svg viewBox="0 0 102 102" width="102" height="102">
+              <rect
+                width={aspectWidth}
+                height={aspectHeight}
+                x={1}
+                y={1}
+                stroke="black"
+                strokeWidth={1}
+                fill="none"
+              ></rect>
+            </svg>
+          )}
+        </GridItem>
+        <GridItem>
+          <Spacer />
+        </GridItem>
+        <GridItem>
+          <Text>
+            {Math.round(width)} sts ({state.width} {props.gauge.unit.toString()}
+            ) wide
+          </Text>
+        </GridItem>
+      </Grid>
+    </VStack>
   );
 }

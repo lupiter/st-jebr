@@ -1,5 +1,25 @@
 import { ChangeEvent, useState } from "react";
 import style from "./shapes.module.css";
+import {
+  VStack,
+  Text,
+  HStack,
+  Heading,
+  FormControl,
+  FormHelperText,
+  NumberInput,
+  NumberInputStepper,
+  FormLabel,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInputField,
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+} from "@chakra-ui/react";
 
 type EvenState = {
   before: number;
@@ -21,16 +41,16 @@ export function Even(): JSX.Element {
     offsetAfter = (aspectBefore - aspectAfter) / 2;
   }
 
-  const setBefore = (e: ChangeEvent<HTMLInputElement>) => {
+  const setBefore = (_: string, numberValue: number) => {
     setState({
       ...state,
-      before: parseFloat(e.target.value),
+      before: numberValue,
     });
   };
-  const setAfter = (e: ChangeEvent<HTMLInputElement>) => {
+  const setAfter = (_: string, numberValue: number) => {
     setState({
       ...state,
-      after: parseFloat(e.target.value),
+      after: numberValue,
     });
   };
 
@@ -51,71 +71,110 @@ export function Even(): JSX.Element {
   );
 
   return (
-    <div className={style.container}>
-      <h3>Decrease / Increase Evenly</h3>
-      <h4>Cuff to sleeve, ribbing to body, working in the round generally</h4>
-      <fieldset>
-        <legend>Change</legend>
-        <label>
-          before{" "}
-          <input type="number" value={state.before} onChange={setBefore} /> sts
-        </label>
-        <label>
-          after <input type="number" value={state.after} onChange={setAfter} />{" "}
-          sts
-        </label>
-      </fieldset>
-      <p className={style.working}>
-        {state.after} - {state.before} = {change} st change
-      </p>
-      <p className={style.working}>
-        {state.before} &divide; abs({change}) sts ={" "}
-        {state.before / Math.abs(change)} sts &asymp; every {changeRepeat} sts
-        (truncated) (note: we want the{" "}
-        {state.after > state.before ? "increase" : "decrease"} in the middle of
-        this group)
-      </p>
-      <p className={style.working}>
-        {state.before} - (abs({change}) &times; {changeRepeat}) = remainder{" "}
-        {remainder} sts
-      </p>
-      <p className={style.working}>
-        ({changeRepeat} &divide; 2) + ({remainder} &divide; 2) ={" "}
-        {changeRepeat / 2 + remainder / 2} &asymp; {start} (truncated) sts
-        before first decrease
-      </p>
+    <VStack spacing={2} align="stretch">
+      <Text>
+        Cuff to sleeve, ribbing to body, working in the round generally
+      </Text>
+      <HStack as="fieldset">
+        <Heading size="sm" as="legend">
+          Change
+        </Heading>
+        <FormControl maxW={40}>
+          <FormLabel>Before</FormLabel>
+          <NumberInput value={state.before} onChange={setBefore}>
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <FormHelperText>stitches</FormHelperText>
+        </FormControl>
+        <FormControl maxW={40}>
+          <FormLabel>After</FormLabel>
+          <NumberInput value={state.after} onChange={setAfter}>
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <FormHelperText>stitches</FormHelperText>
+        </FormControl>
+      </HStack>
 
-      <div className={style.diagram}>
-        <div className={style.instructions}>
-          <svg viewBox="0 0 102 102" width={102} height={102}>
-            <rect
-              width={aspectAfter}
-              height={30}
-              x={offsetAfter}
-              y={1}
-              stroke="black"
-              strokeWidth={1}
-              fill="transparent"
-            ></rect>
-            <g
-              transform={`translate(${
-                Math.max(aspectAfter, aspectBefore) / 2 - 10
-              } 17)`}
-            >
-              <polygon points="10,0 20,10 15,10 15,20 5,20 5,10 0,10" />
-            </g>
-            <rect
-              width={aspectBefore}
-              height={30}
-              x={offsetBefore}
-              y={31}
-              stroke="black"
-              strokeWidth={1}
-              fill="transparent"
-            ></rect>
-          </svg>
-          <details>
-            <summary>Words</summary>
+      <Box alignSelf="center">
+        <svg viewBox="0 0 102 102" width={102} height={102}>
+          <rect
+            width={aspectAfter}
+            height={30}
+            x={offsetAfter}
+            y={1}
+            stroke="black"
+            strokeWidth={1}
+            fill="transparent"
+          ></rect>
+          <g
+            transform={`translate(${
+              Math.max(aspectAfter, aspectBefore) / 2 - 10
+            } 17)`}
+          >
+            <polygon points="10,0 20,10 15,10 15,20 5,20 5,10 0,10" />
+          </g>
+          <rect
+            width={aspectBefore}
+            height={30}
+            x={offsetBefore}
+            y={31}
+            stroke="black"
+            strokeWidth={1}
+            fill="transparent"
+          ></rect>
+        </svg>
+      </Box>
+
+      <Accordion allowMultiple>
+        <AccordionItem>
+          <h2>
+            <AccordionButton>
+              <Box as="span" flex="1" textAlign="left">
+                Working
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+          </h2>
+          <AccordionPanel pb={4}>
+            <Text>
+              {state.after} - {state.before} = {change} st change
+            </Text>
+            <Text>
+              {state.before} &divide; abs({change}) sts ={" "}
+              {state.before / Math.abs(change)} sts &asymp; every {changeRepeat}{" "}
+              sts (truncated) (note: we want the{" "}
+              {state.after > state.before ? "increase" : "decrease"} in the
+              middle of this group)
+            </Text>
+            <Text>
+              {state.before} - (abs({change}) &times; {changeRepeat}) =
+              remainder {remainder} sts
+            </Text>
+            <Text>
+              ({changeRepeat} &divide; 2) + ({remainder} &divide; 2) ={" "}
+              {changeRepeat / 2 + remainder / 2} &asymp; {start} (truncated) sts
+              before first decrease
+            </Text>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem>
+          <h2>
+            <AccordionButton>
+              <Box as="span" flex="1" textAlign="left">
+                Words
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+          </h2>
+          <AccordionPanel pb={4}>
             <ul className={style.steps}>
               {start > 0 && <li>work {start} stitches as usual</li>}
               <li>
@@ -126,10 +185,19 @@ export function Even(): JSX.Element {
               </li>
               <li>work as usual to end of row ({end} stitches)</li>
             </ul>
-          </details>
-          <details>
-            <summary>Diagram</summary>
+          </AccordionPanel>
+        </AccordionItem>
 
+        <AccordionItem>
+          <h2>
+            <AccordionButton>
+              <Box as="span" flex="1" textAlign="left">
+                Diagram
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+          </h2>
+          <AccordionPanel pb={4}>
             <svg viewBox={`0 0 ${svgWidth} 50`} width={svgWidth} height="50">
               <defs>
                 <polygon
@@ -183,9 +251,9 @@ export function Even(): JSX.Element {
                 />
               ))}
             </svg>
-          </details>
-        </div>
-      </div>
-    </div>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
+    </VStack>
   );
 }

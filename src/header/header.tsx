@@ -1,41 +1,56 @@
 import "./header.module.css";
 import { ROUTES } from "../routes";
 import { NavLink } from "react-router-dom";
+import {
+  Heading,
+  Text,
+  Link,
+  Flex,
+  HStack,
+  VStack,
+  Grid,
+  GridItem,
+} from "@chakra-ui/react";
 
 export function Header() {
   return (
-    <>
-      <h1>
-        st-jebr{" "}
-        <img src="/st-jebr/logo.svg" alt="" width={30} height={30}/>
-      </h1>
-      <p role="caption" className="caption">
-        stitch-(al)gebra
-      </p>
-      <nav>
-        <ul>
+    <VStack>
+      <Grid gap={3} templateColumns="repeat(3, 1fr)" alignItems="center">
+        <GridItem justifySelf="end">
+          <img src="/st-jebr/logo.svg" alt="" width={30} height={30} />
+        </GridItem>
+
+        <GridItem>
+          <Heading textAlign="center" color="brand.200">st-jebr</Heading>
+        </GridItem>
+        <GridItem alignSelf="end">
+          <Text role="caption" className="caption" align="left" color="gray.400">
+            stitch-(al)gebra
+          </Text>
+        </GridItem>
+      </Grid>
+      <Flex as="nav" direction="row" justify="space-around">
+        <Flex as="ul" direction="row" justify="space-around" gap={2}>
           <li>
-            <NavLink
+            <Link
+              as={NavLink}
               to={ROUTES.HOME.toString()}
-              className={({ isActive, isPending }) =>
-                isActive ? "active" : isPending ? "pending" : ""
-              }
+              _activeLink={{ textDecoration: "underline" }}
             >
               Calculator
-            </NavLink>
+            </Link>
           </li>
           <li>
-            <NavLink
+            <Link
+              as={NavLink}
               to={ROUTES.CARD.toString()}
-              className={({ isActive, isPending }) =>
-                isActive ? "active" : isPending ? "pending" : ""
-              }
+              _activeLink={{ textDecoration: "underline" }}
             >
               Punch cards
-            </NavLink>
+            </Link>
           </li>
-        </ul>
-      </nav>
-    </>
+        </Flex>
+      </Flex>
+    </VStack>
   );
 }

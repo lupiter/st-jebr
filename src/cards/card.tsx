@@ -4,6 +4,55 @@ import { Header } from "../header/header";
 import { UNIT } from "../app-state";
 import { FairIsle } from "./fair-isle/fair-isle";
 import { chunk } from "./measurements";
+import {
+  Box,
+  Center,
+  Text,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  HStack,
+  Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Select,
+  VStack,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Spacer,
+  AccordionPanel,
+  AccordionItem,
+  Accordion,
+  AccordionIcon,
+  AccordionButton,
+  Link,
+  useMultiStyleConfig,
+  Popover,
+  PopoverContent,
+  PopoverHeader,
+  PopoverArrow,
+  Button,
+  PopoverTrigger,
+  PopoverCloseButton,
+  PopoverBody,
+  InputRightElement,
+  InputGroup,
+  Heading,
+  useDisclosure,
+  ModalOverlay,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from "@chakra-ui/react";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 type LoadingErrorState = {
   message: string;
@@ -40,10 +89,10 @@ export function Card() {
     maxHeight: 60,
     unit: UNIT.CM,
   });
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const setMaxHeight = (e: ChangeEvent<HTMLInputElement>) => {
-    const float = parseFloat(e.target.value);
-    setState({ ...state, maxHeight: Number.isNaN(float) ? undefined : float});
+  const setMaxHeight = (_valueAsString: string, valueAsNumber: number) => {
+    setState({ ...state, maxHeight: valueAsNumber });
   };
 
   // const setMaxWidth = (e: ChangeEvent<HTMLInputElement>) => {
@@ -97,77 +146,154 @@ export function Card() {
   if (state.unit === UNIT.IN && state.maxHeight) {
     maxHeightMM = state.maxHeight * 25.4;
   }
+  const styles = useMultiStyleConfig("Button", { variant: "outline" });
 
   return (
-    <>
-      <Header />
-      <section>
-        <form>
-          <fieldset>
-            <legend>Maximum page size</legend>
-            {/* <label>
-              <input
-                type="number"
-                value={state.maxWidth}
-                onChange={setMaxWidth}
-              />{" "}
-              width
-            </label> */}
-            <label>
-              <input
-                type="number"
-                value={state.maxHeight}
-                onChange={setMaxHeight}
-              />{" "}
-              height
-            </label>
-            <select
-              value={state.unit.toString()}
-              onChange={setUnit}
-              aria-label="units"
-            >
-              <option value="cm">cm</option>
-              <option value="in">inch</option>
-            </select>
-          </fieldset>
-          <fieldset>
-            <legend>Image</legend>
-            <input type="file" onChange={fileChange} accept="image/*" />
-            {state.content && isDataState(state.content) && (
-              <img
-                src={state.content.url}
-                style={{width: `${1.333 * state.content.width * 3}px`, height: `${state.content.pixels.length / state.content.width * 3}px`}}
-                title="your image, as it would appear knitted"
-              />
-            )}
-          </fieldset>
-        </form>
-      </section>
-      <aside>
-        <p>
-          Generate punchcards for Brother knitting machines that can be cut with
-          a cutting machine e.g. silhouette, cricut, etc.
-        </p>
-        <p>
-          The image should have the height and width in pixels that you want in
-          stitches. That means to make a card 24 st wide and 60 rows long, you
-          want to upload a 24x60 pixel image. These can be made using the image
-          editor of your choice. Images are not stored or transmitted in any way
-          - it's all done in your browser.
-        </p>
-      </aside>
+    <Center margin={2}>
+      <VStack maxW="3xl">
+        <Header />
+        <Box as="main">
+          <VStack as="form">
+            <FormControl as="fieldset">
+              <FormLabel as="legend">Maximum page size</FormLabel>
+              <HStack>
+                <NumberInput
+                  value={state.maxHeight}
+                  onChange={setMaxHeight}
+                  size="md"
+                  maxW={24}
+                >
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+                <Select
+                  value={state.unit.toString()}
+                  onChange={setUnit}
+                  aria-label="units"
+                  size="md"
+                  maxW={24}
+                >
+                  <option value="cm">cm</option>
+                  <option value="in">inch</option>
+                </Select>
+              </HStack>
+              <FormHelperText>Height</FormHelperText>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Image</FormLabel>
+              <InputGroup>
+                <Input
+                  type="file"
+                  onChange={fileChange}
+                  accept="image/*"
+                  border="none"
+                  paddingInlineStart={0}
+                  sx={{
+                    "::file-selector-button": {
+                      border: "none",
+                      outline: "none",
+                      mr: 2,
+                      ...styles,
+                    },
+                  }}
+                />
+                {state.content && isDataState(state.content) && (
+                  <InputRightElement
+                    as="img"
+                    src={state.content.url}
+                    style={{
+                      width: `${1.333 * state.content.width}px`,
+                      height: `${
+                        state.content.pixels.length / state.content.width
+                      }px`,
+                    }}
+                    title="your image"
+                  />
+                )}
+              </InputGroup>
+            </FormControl>
+          </VStack>
+          <Spacer m={5} />
+          <Button onClick={onOpen}>Help?</Button>
 
-      {state.content && isErrorState(state.content) && (
-        <p className="error">🛑 {state.content.message}</p>
-      )}
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>
+                <Heading size="md">Knitting punchcards from images</Heading>
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <VStack spacing={2} align="stretch">
+                  <Heading size="sm">What?</Heading>
+                  <Text>
+                    Make files for cutting machines (e.g. silhouette, cricut,
+                    etc) to make punchcards for knitting machines (e.g. Brother
+                    KH-860)
+                  </Text>
+                  <Heading size="sm">Images</Heading>
+                  <Text>
+                    The image should have the height and width in pixels that
+                    you want in stitches. That means to make a card 24 stitches wide
+                    and 60 rows long, you want to upload a 24x60 pixel image.
+                    These can be made using the image editor of your choice.
+                  </Text>
+                  <Heading size="sm">Cutting</Heading>
+                  <Text>
+                    I tend to use A4 plastic folder dividers, which can be
+                    purchased very cheaply from stationary and department
+                    stores. I have also heard of people using cardstock. You may
+                    want to practice with cardstock or paper which is easier to
+                    recycle.
+                  </Text>
+                  <Heading size="sm">Silhouette Users</Heading>
+                  <Text>
+                    The "basic" level of Silhouette Studio doesn't let you use
+                    SVGs. If you don't want to upgrade, try the{" "}
+                    <Link
+                      href="https://github.com/fablabnbg/inkscape-silhouette/wiki"
+                      isExternal
+                      color="pink.500"
+                    >
+                      Inkscape Silhouette Plugin <ExternalLinkIcon />
+                    </Link>
+                    . You could also use Inkscape to export as PNG and trace in
+                    Silhouette Studio - this sometimes works, but I find it to
+                    produce less reliable cards.
+                  </Text>
+                  <Heading size="sm">Privacy</Heading>
+                  <Text>
+                    Images are not stored or transmitted in any way - it's all
+                    done in your browser.
+                  </Text>
+                </VStack>
+              </ModalBody>
 
-      {state.content && isDataState(state.content) && (
-        <FairIsle
-          data={state.content.pixels}
-          width={state.content.width}
-          maxHeight={maxHeightMM}
-        />
-      )}
-    </>
+              <ModalFooter>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
+          {state.content && isErrorState(state.content) && (
+            <Alert status="error">
+              <AlertIcon />
+              <AlertTitle>There was a problem generating your card</AlertTitle>
+              <AlertDescription>{state.content.message}</AlertDescription>
+            </Alert>
+          )}
+
+          {state.content && isDataState(state.content) && (
+            <FairIsle
+              data={state.content.pixels}
+              width={state.content.width}
+              maxHeight={maxHeightMM}
+            />
+          )}
+        </Box>
+      </VStack>
+    </Center>
   );
 }

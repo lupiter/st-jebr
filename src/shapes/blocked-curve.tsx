@@ -1,4 +1,21 @@
-import { fillInSlopes, getSpan, pointsToInstructions, pointsToShortInstructions } from "./blocked-calcs";
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  ListItem,
+  OrderedList,
+  UnorderedList,
+  VStack,
+} from "@chakra-ui/react";
+import {
+  fillInSlopes,
+  getSpan,
+  pointsToInstructions,
+  pointsToShortInstructions,
+} from "./blocked-calcs";
 import style from "./shapes.module.css";
 
 export function isSorted(all: number[][]): boolean {
@@ -12,7 +29,11 @@ export function isSorted(all: number[][]): boolean {
   return xMatch && yMatch;
 }
 
-function calculateCurvePoints(radiusX: number, radiusY: number, aspect: number): number[][] {
+function calculateCurvePoints(
+  radiusX: number,
+  radiusY: number,
+  aspect: number
+): number[][] {
   let points: number[][] = [];
 
   let x0 = -radiusX;
@@ -22,7 +43,7 @@ function calculateCurvePoints(radiusX: number, radiusY: number, aspect: number):
   let decisionX = 4 * (1 - diameterX) * diameterY * diameterY;
   let decisionY = 4 * diameterX * diameterX;
   let error = decisionX + decisionY;
-  
+
   let y0 = radiusY * 2 + (diameterY + 1) / 2;
   let startY = y0;
   let y1 = y0;
@@ -30,7 +51,7 @@ function calculateCurvePoints(radiusX: number, radiusY: number, aspect: number):
   let b1 = 8 * diameterY * diameterY;
 
   do {
-    points.push([x1, y0 - startY])
+    points.push([x1, y0 - startY]);
     if (2 * error <= decisionY) {
       y0 += aspect;
       y1 -= aspect;
@@ -43,12 +64,12 @@ function calculateCurvePoints(radiusX: number, radiusY: number, aspect: number):
       decisionX += b1;
       error += decisionX;
     }
-  } while (x0 < x1)
+  } while (x0 < x1);
 
   while (y0 - y1 < diameterY * aspect) {
-    points.push([x1, y0++ - startY])
+    points.push([x1, y0++ - startY]);
   }
-  
+
   return points;
 }
 
@@ -82,7 +103,6 @@ export function sortCurvePoints(points: number[][]): number[][] {
   return points;
 }
 
-
 export function BlockedCurve(props: {
   aspect: number;
   rx: number;
@@ -91,7 +111,7 @@ export function BlockedCurve(props: {
   const { rx, ry, aspect } = props;
 
   if (rx <= 0 || ry <= 0) {
-    return <></>
+    return <></>;
   }
 
   const curve = calculateCurvePoints(rx, ry, aspect);
@@ -101,10 +121,7 @@ export function BlockedCurve(props: {
   const shortInstructions = pointsToShortInstructions(sortedCurve).reverse();
 
   const drawPoints = points
-    .map(
-      (point) =>
-        `${Math.round((point[0] * 10))},${Math.round(point[1] * 10)}`
-    )
+    .map((point) => `${Math.round(point[0] * 10)},${Math.round(point[1] * 10)}`)
     .join(" ");
 
   const width = rx * 10;
@@ -120,7 +137,47 @@ export function BlockedCurve(props: {
     .join(" ");
 
   return (
-    <div className={style.instructions}>
+    <VStack align="stretch">
+      <Accordion allowMultiple>
+        <AccordionItem>
+          <h2>
+            <AccordionButton>
+              <Box as="span" flex="1" textAlign="left">
+                Row-by-row
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+          </h2>
+          <AccordionPanel pb={4}>
+            <OrderedList className={style.steps}>
+              {instructions.map((n, i) => (
+                <li key={i}>{n}</li>
+              ))}
+            </OrderedList>
+          </AccordionPanel>
+        </AccordionItem>
+
+        <AccordionItem>
+          <h2>
+            <AccordionButton>
+              <Box as="span" flex="1" textAlign="left">
+                Japanese-style
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+          </h2>
+          <AccordionPanel pb={4}>
+            Matching diagram
+            <UnorderedList>
+              {shortInstructions.map((n, i) => (
+                <ListItem key={i}>
+                  {n.decrease}&middot;{n.rows}&middot;{n.times}
+                </ListItem>
+              ))}
+            </UnorderedList>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
       <svg
         viewBox={`0 0 ${width + 2} ${height + 2}`}
         width={width + 2}
@@ -135,39 +192,15 @@ export function BlockedCurve(props: {
           fill="none"
         />
         <path
-          d={`M ${(rx) * 10},0 A ${(rx) * 10} ${
-            ry * 10
-          } 0 0 1 0,${ry * 10 * aspect
-
-          } L ${(rx) * 10},${ry * 10 * aspect
-
-          } L ${
-            (rx) * 10
-          },0 z`}
+          d={`M ${rx * 10},0 A ${rx * 10} ${ry * 10} 0 0 1 0,${
+            ry * 10 * aspect
+          } L ${rx * 10},${ry * 10 * aspect} L ${rx * 10},0 z`}
           stroke="blue"
           fill="none"
           strokeWidth={1}
           strokeDasharray={4}
         />
       </svg>
-      <details>
-        <summary>Row-by-row</summary>
-      <ol className={style.steps}>
-        {instructions.map((n, i) => (
-          <li key={i}>{n}</li>
-        ))}
-      </ol>
-      </details>
-      <details>
-        <summary>Japanese-style</summary>
-        Matching diagram
-      <ul className={style.steps}>
-        {shortInstructions.map((n, i) => (
-          <li key={i}>{n.decrease}&middot;{n.rows}&middot;{n.times}</li>
-        ))}
-      </ul>
-      </details>
-    </div>
+    </VStack>
   );
 }
-

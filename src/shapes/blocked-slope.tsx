@@ -1,4 +1,16 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  ListItem,
+  OrderedList,
+  UnorderedList,
+  VStack,
+} from "@chakra-ui/react";
+import {
   fillInSlopes,
   pointsToInstructions,
   pointsToShortInstructions,
@@ -89,7 +101,48 @@ export function BlockedSlope(props: {
     .join(" ");
 
   return (
-    <div className={style.instructions}>
+    <VStack align="stretch">
+      <Accordion allowMultiple>
+        <AccordionItem>
+          <h2>
+            <AccordionButton>
+              <Box as="span" flex="1" textAlign="left">
+                Row-by-row
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+          </h2>
+          <AccordionPanel pb={4}>
+            From bottom
+            <OrderedList className={style.steps}>
+              {instructions.map((n, i) => (
+                <li key={i}>{n}</li>
+              ))}
+            </OrderedList>
+          </AccordionPanel>
+        </AccordionItem>
+
+        <AccordionItem>
+          <h2>
+            <AccordionButton>
+              <Box as="span" flex="1" textAlign="left">
+                Japanese-style
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+          </h2>
+          <AccordionPanel pb={4}>
+            Matching diagram
+            <UnorderedList>
+              {shortInstructions.map((n, i) => (
+                <ListItem key={i}>
+                  {n.decrease}&middot;{n.rows}&middot;{n.times}
+                </ListItem>
+              ))}
+            </UnorderedList>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
       <svg
         viewBox={`-1 -1 ${width + 2} ${height + 2}`}
         width={width + 2}
@@ -113,27 +166,6 @@ export function BlockedSlope(props: {
           fill="none"
         />
       </svg>
-      <details>
-        <summary>Row-by-row</summary>
-        From bottom
-        <ol className={style.steps}>
-          {instructions.map((n, i) => (
-            <li key={i}>{n}</li>
-          ))}
-        </ol>
-      </details>
-
-      <details>
-        <summary>Japanese-style</summary>
-        Matching diagram
-        <ul className={style.steps}>
-          {shortInstructions.map((n, i) => (
-            <li key={i}>
-              {n.decrease}&middot;{n.rows}&middot;{n.times}
-            </li>
-          ))}
-        </ul>
-      </details>
-    </div>
+    </VStack>
   );
 }

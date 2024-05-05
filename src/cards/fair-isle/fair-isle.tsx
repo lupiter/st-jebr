@@ -15,6 +15,7 @@ import {
   holeVerticalInset,
 } from "../measurements";
 import { FairIselCard } from "./fair-isle-card";
+import { Alert, AlertIcon, HStack, Text, VStack } from "@chakra-ui/react";
 
 type FairIsleProps = {
   data: number[][];
@@ -160,7 +161,7 @@ export function FairIsle(props: FairIsleProps): JSX.Element {
   const rows = props.data.length / props.width;
 
   if (props.maxHeight && props.maxHeight < 200) {
-    return <></>
+    return <Alert status="warning" m={4}><AlertIcon /> We can't generate cards this small. Try making the max height larger</Alert>;
   }
 
   while (props.maxHeight && largestHeight > props.maxHeight) {
@@ -176,19 +177,20 @@ export function FairIsle(props: FairIsleProps): JSX.Element {
   }
 
   return (
-    <main>
-      <p>
+    <VStack spacing={2}>
+      <Text>
         Total {props.width} stitches wide, {props.data.length / props.width}{" "}
         stitches long, {palette.length} colours
-      </p>
+      </Text>
       {palette.length > 2 && (
-        <p>
+        <Alert status="info">
+          <AlertIcon />
           Note: when using more than 2 colours, we assume the most common colour
           is the background for fair isle. To be precise, use a two-colour
           image.
-        </p>
+        </Alert>
       )}
-      <div className="cards">
+      <VStack>
         {cards.map((card, i) => (
           <FairIselCard
             height={card.height}
@@ -198,9 +200,10 @@ export function FairIsle(props: FairIsleProps): JSX.Element {
             guideHoles={card.guideHoles}
             snapCX={card.snapCX}
             key={i}
+            index={i + 1}
           />
         ))}
-      </div>
-    </main>
+      </VStack>
+    </VStack>
   );
 }
