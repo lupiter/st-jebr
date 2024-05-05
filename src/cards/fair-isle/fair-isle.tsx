@@ -15,7 +15,7 @@ import {
   holeVerticalInset,
 } from "../measurements";
 import { FairIselCard } from "./fair-isle-card";
-import { Alert, AlertIcon, HStack, Text, VStack } from "@chakra-ui/react";
+import { Alert, AlertIcon, Text, VStack } from "@chakra-ui/react";
 
 type FairIsleProps = {
   data: number[][];
@@ -30,15 +30,15 @@ function pixels(
   data: number[][],
   mostCommon: number[]
 ) {
-  let pixelPoints: number[][] = [];
-  let xOffset =
+  const pixelPoints: number[][] = [];
+  const xOffset =
     edgeInset +
     gapSnapToEdge +
     holeDiameter +
     gapToSnapHole +
     guideHoleDiameter +
     gapToGuideHole;
-  let yOffset = holeVerticalInset;
+  const yOffset = holeVerticalInset;
   for (let st = 0; st < pixelWidth; st++) {
     // top overlap holes
     pixelPoints.push([
@@ -131,7 +131,7 @@ function buildPalette(data: number[][]) {
   const palette: number[][] = [];
   const counts: Map<string, number> = new Map();
   data.forEach((value: number[]) => {
-    let count = counts.get(hex(value));
+    const count = counts.get(hex(value));
     if (count) {
       counts.set(hex(value), count + 1);
     } else {

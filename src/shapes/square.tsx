@@ -1,8 +1,6 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { GaugeState } from "../app-state";
-import style from "./shapes.module.css";
 import {
-  Box,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -10,7 +8,6 @@ import {
   GridItem,
   HStack,
   Heading,
-  Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,

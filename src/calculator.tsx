@@ -9,7 +9,6 @@ import { Header } from "./header/header";
 import {
   Alert,
   AlertIcon,
-  Center,
   VStack,
   Text,
   HStack,

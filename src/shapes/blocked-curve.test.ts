@@ -1,5 +1,4 @@
-import { getSpan } from "./blocked-calcs";
-import { isSorted, sortCurvePoints } from "./blocked-curve";
+import { getSpan, sortCurvePoints, isSorted } from "./blocked-calcs";
 import { expect, test } from "vitest";
 
 const bottom = [

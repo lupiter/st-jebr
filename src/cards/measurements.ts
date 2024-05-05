@@ -42,13 +42,13 @@ export function calculateCardEdge(width: number, height: number) {
 }
 
 export function guideHoles(width: number, height: number, pixelHeight: number) {
-  let xOffset =
+  const xOffset =
     edgeInset +
     gapSnapToEdge +
     holeDiameter +
     gapToSnapHole +
     guideHoleDiameter / 2;
-  let guideHoles: number[][] = [
+  const guideHoles: number[][] = [
     [xOffset, guideVerticalInset + guideHoleDiameter / 2],
     [width - xOffset, guideVerticalInset + guideHoleDiameter / 2],
     [

@@ -12,43 +12,33 @@ import {
 } from "@chakra-ui/react";
 import {
   fillInSlopes,
-  getSpan,
   pointsToInstructions,
   pointsToShortInstructions,
+  sortCurvePoints,
 } from "./blocked-calcs";
 import style from "./shapes.module.css";
 
-export function isSorted(all: number[][]): boolean {
-  const xs = all.map((_, i) => getSpan(all, i, 0));
-  const ys = all.map((_, i) => getSpan(all, i, 1));
-  const sortedXs = xs.slice().sort();
-  const sortedYs = ys.slice().sort().reverse();
-  const xMatch = xs.findIndex((v, i) => sortedXs[i] !== v) < 0;
-  const yMatch = ys.findIndex((v, i) => sortedYs[i] !== v) < 0;
-
-  return xMatch && yMatch;
-}
 
 function calculateCurvePoints(
   radiusX: number,
   radiusY: number,
   aspect: number
 ): number[][] {
-  let points: number[][] = [];
+  const points: number[][] = [];
 
   let x0 = -radiusX;
   let x1 = radiusX;
   let diameterX = 2 * radiusX;
-  let diameterY = 2 * radiusY;
+  const diameterY = 2 * radiusY;
   let decisionX = 4 * (1 - diameterX) * diameterY * diameterY;
   let decisionY = 4 * diameterX * diameterX;
   let error = decisionX + decisionY;
 
   let y0 = radiusY * 2 + (diameterY + 1) / 2;
-  let startY = y0;
+  const startY = y0;
   let y1 = y0;
   diameterX = 8 * diameterX * diameterX;
-  let b1 = 8 * diameterY * diameterY;
+  const b1 = 8 * diameterY * diameterY;
 
   do {
     points.push([x1, y0 - startY]);
@@ -70,36 +60,6 @@ function calculateCurvePoints(
     points.push([x1, y0++ - startY]);
   }
 
-  return points;
-}
-
-export function sortCurvePoints(points: number[][]): number[][] {
-  // wildly inefficient sort
-  let sorted = false;
-  let panic = 0;
-  while (!sorted && panic < 200) {
-    // first item always sorted so skip
-    for (let i = 1; i < points.length; i++) {
-      const p = points[i];
-      const isStart = points[i - 1][0] !== p[0] && points[i - 1][1] !== p[1];
-      if (!isStart) {
-        // skip any not at the start or end of a group
-        continue;
-      }
-
-      let prevYSpan = getSpan(points, i - 1, 0);
-      let prevXSpan = getSpan(points, i - 1, 0);
-      let yspan = getSpan(points, i, 0);
-      let xspan = getSpan(points, i, 1);
-      if (prevXSpan < xspan) {
-        points[i][1] = points[i - 1][1];
-      } else if (prevYSpan > yspan) {
-        points[i - 1][0] = points[i][0];
-      }
-    }
-    panic++;
-    sorted = isSorted(points);
-  }
   return points;
 }
 

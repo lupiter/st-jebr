@@ -19,7 +19,7 @@ export function getSpan(
 }
 
 export function fillInSlopes(points: number[][]): number[][] {
-  let outPoints: number[][] = [];
+  const outPoints: number[][] = [];
   // add intermediate points where needed
   for (let i = 0; i < points.length; i++) {
     const p = points[i];
@@ -42,7 +42,7 @@ type Instruction = {
 };
 
 export function pointsToShortInstructions(all: number[][]): Instruction[] {
-  let instructions: Instruction[] = [];
+  const instructions: Instruction[] = [];
   let current: Instruction | undefined = undefined;
   let repeatRow = 1;
 
@@ -98,8 +98,49 @@ export function pointsToShortInstructions(all: number[][]): Instruction[] {
   return instructions;
 }
 
+export function isSorted(all: number[][]): boolean {
+  const xs = all.map((_, i) => getSpan(all, i, 0));
+  const ys = all.map((_, i) => getSpan(all, i, 1));
+  const sortedXs = xs.slice().sort();
+  const sortedYs = ys.slice().sort().reverse();
+  const xMatch = xs.findIndex((v, i) => sortedXs[i] !== v) < 0;
+  const yMatch = ys.findIndex((v, i) => sortedYs[i] !== v) < 0;
+
+  return xMatch && yMatch;
+}
+
+export function sortCurvePoints(points: number[][]): number[][] {
+  // wildly inefficient sort
+  let sorted = false;
+  let panic = 0;
+  while (!sorted && panic < 200) {
+    // first item always sorted so skip
+    for (let i = 1; i < points.length; i++) {
+      const p = points[i];
+      const isStart = points[i - 1][0] !== p[0] && points[i - 1][1] !== p[1];
+      if (!isStart) {
+        // skip any not at the start or end of a group
+        continue;
+      }
+
+      const prevYSpan = getSpan(points, i - 1, 0);
+      const prevXSpan = getSpan(points, i - 1, 0);
+      const yspan = getSpan(points, i, 0);
+      const xspan = getSpan(points, i, 1);
+      if (prevXSpan < xspan) {
+        points[i][1] = points[i - 1][1];
+      } else if (prevYSpan > yspan) {
+        points[i - 1][0] = points[i][0];
+      }
+    }
+    panic++;
+    sorted = isSorted(points);
+  }
+  return points;
+}
+
 export function pointsToInstructions(all: number[][]): string[] {
-  let instructions: string[] = [];
+  const instructions: string[] = [];
 
   for (let pixel = 1; pixel < all.length; pixel++) {
     const element = all[pixel];

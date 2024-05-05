@@ -22,13 +22,13 @@ function calculateSlopePoints(
   y2: number,
   aspect: number
 ): number[][] {
-  let points: number[][] = [];
+  const points: number[][] = [];
   let yStart = 1 * aspect;
   if (y2 < 0) {
     yStart = -1 * aspect;
   }
   let y = 0;
-  let fn = (x: number, y: number) => y2 * x - (x2 * y) / aspect;
+  const fn = (x: number, y: number) => y2 * x - (x2 * y) / aspect;
 
   for (let x = 0; x <= x2; x += 1) {
     points.push([x, y]);
@@ -45,13 +45,13 @@ function calculateSteepSlopePoints(
   y2: number,
   aspect: number
 ): number[][] {
-  let points: number[][] = [];
+  const points: number[][] = [];
   let yStart = 1;
   if (x2 < 0) {
     yStart = -1;
   }
   let y = 0;
-  let fn = (x: number, y: number) => (x2 * x) / aspect - y2 * y;
+  const fn = (x: number, y: number) => (x2 * x) / aspect - y2 * y;
 
   for (let x = 0; x <= y2; x += 1 * aspect) {
     points.push([y, x]);

@@ -35,7 +35,7 @@ export function FairIselCard(props: FairIsleCardProps): JSX.Element {
     if (!text) {
       return;
     }
-    var element = document.createElement("a");
+    const element = document.createElement("a");
     element.setAttribute(
       "href",
       "data:image/svg+xml," + encodeURIComponent(text)

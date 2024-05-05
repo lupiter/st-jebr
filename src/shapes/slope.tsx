@@ -1,10 +1,8 @@
 import { ChangeEvent, useState } from "react";
 import { GaugeState } from "../app-state";
-import style from "./shapes.module.css";
 import { BlockedSlope } from "./blocked-slope";
 import {
   FormControl,
-  FormHelperText,
   Text,
   FormLabel,
   HStack,

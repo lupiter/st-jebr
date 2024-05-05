@@ -1,6 +1,5 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { GaugeState } from "../app-state";
-import style from "./shapes.module.css";
 import { BlockedCurve } from "./blocked-curve";
 import {
   Accordion,
@@ -32,14 +31,6 @@ type EllipseState = {
   width: number;
   height: number;
 };
-
-function floatOrZero(value: string): number {
-  const asFloat = parseFloat(value);
-  if (Number.isNaN(asFloat)) {
-    return 0;
-  }
-  return asFloat;
-}
 
 export function Ellipse(props: { gauge: GaugeState }): JSX.Element {
   const [state, setState] = useState<EllipseState>({

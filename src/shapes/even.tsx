@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import style from "./shapes.module.css";
 import {
   VStack,
