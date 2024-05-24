@@ -9,7 +9,3 @@ export type GaugeState = {
   unit: UNIT;
   square: 4 | 10 | 1;
 };
-
-export type AppState = {
-  gauge: GaugeState;
-};

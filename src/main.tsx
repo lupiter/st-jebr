@@ -6,6 +6,7 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 import { ROUTES } from "./routes.ts";
 import { Card } from "./cards/card.tsx";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { Radar } from "./radar/radar.tsx";
 
 const router = createHashRouter(
   [
@@ -16,6 +17,10 @@ const router = createHashRouter(
     {
       path: ROUTES.CARD.toString(),
       element: <Card />,
+    },
+    {
+      path: ROUTES.RADAR.toString(),
+      element: <Radar />,
     },
   ],
   { basename: "/" },

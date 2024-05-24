@@ -1,0 +1,9 @@
+html {
+  background: url("/public/dotty-bg.svg");
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: transparent !important;
+}

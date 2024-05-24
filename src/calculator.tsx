@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import "./calculator.css";
-import { AppState, UNIT } from "./app-state";
+import { GaugeState, UNIT } from "./app-state";
 import { Square } from "./shapes/square";
 import { Even } from "./shapes/even";
 import { Ellipse } from "./shapes/ellipse";
@@ -11,64 +11,22 @@ import {
   AlertIcon,
   VStack,
   Text,
-  HStack,
-  FormControl,
-  FormLabel,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  Select,
-  Heading,
   Tabs,
   TabPanel,
   TabPanels,
   Tab,
   TabList,
+  Box,
 } from "@chakra-ui/react";
+import { Gauge } from "./guage/gauge";
 
 function Calculator() {
-  const [state, setState] = useState<AppState>({
-    gauge: {
-      stitches: 14,
-      rows: 21,
-      unit: UNIT.CM,
-      square: 10,
-    },
+  const [state, setState] = useState<GaugeState>({
+    stitches: 14,
+    rows: 21,
+    unit: UNIT.CM,
+    square: 10,
   });
-
-  const setGaugeStitches = (_: string, numberValue: number) => {
-    setState({
-      ...state,
-      gauge: { ...state.gauge, stitches: numberValue },
-    });
-  };
-  const setGaugeRows = (_: string, numberValue: number) => {
-    setState({
-      ...state,
-      gauge: { ...state.gauge, rows: numberValue },
-    });
-  };
-  const setGaugeUnit = (e: ChangeEvent<HTMLSelectElement>) => {
-    setState({
-      ...state,
-      gauge: {
-        ...state.gauge,
-        unit: e.target.value === UNIT.CM.toString() ? UNIT.CM : UNIT.IN,
-      },
-    });
-  };
-  const setGaugeSquare = (e: ChangeEvent<HTMLSelectElement>) => {
-    const square = parseInt(e.target.value);
-    setState({
-      ...state,
-      gauge: {
-        ...state.gauge,
-        square: square === 10 ? 10 : square === 4 ? 4 : 1,
-      },
-    });
-  };
 
   return (
     <VStack
@@ -81,70 +39,9 @@ function Calculator() {
     >
       <Header />
       <VStack as="main" align="stretch">
-        <VStack as="form" align="center">
-          <HStack as="fieldset" align="end">
-            <Heading size="sm" as="legend">
-              Gauge
-            </Heading>
-            <FormControl>
-              <FormLabel>stitches</FormLabel>
-              <NumberInput
-                value={state.gauge.stitches}
-                onChange={setGaugeStitches}
-                maxW={20}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
-            <FormControl>
-              <FormLabel>rows</FormLabel>
-              <NumberInput
-                value={state.gauge.rows}
-                onChange={setGaugeRows}
-                maxW={20}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
-            <FormControl>
-              <Select
-                placeholder="units"
-                aria-label="units"
-                onChange={setGaugeUnit}
-                value={state.gauge.unit.toString()}
-              >
-                <option value="cm">cm</option>
-                <option value="in">inch</option>
-              </Select>
-            </FormControl>
-            <FormControl>
-              <Select
-                placeholder="square size"
-                aria-label="square size"
-                onChange={setGaugeSquare}
-                value={state.gauge.square}
-              >
-                <option value={10}>10x10</option>
-                <option value={4}>4x4</option>
-                <option value={1}>1x1</option>
-              </Select>
-            </FormControl>
-          </HStack>
-          <Text className="working">
-            ({state.gauge.stitches / state.gauge.square} sts/
-            {state.gauge.unit.toString()};{" "}
-            {state.gauge.rows / state.gauge.square} rows/
-            {state.gauge.unit.toString()})
-          </Text>
-        </VStack>
+        <Box as="form">
+          <Gauge gauge={state} onchange={setState} />
+        </Box>
 
         <Tabs>
           <TabList>
@@ -156,25 +53,25 @@ function Calculator() {
 
           <TabPanels>
             <TabPanel>
-              <Square gauge={state.gauge} />
+              <Square gauge={state} />
             </TabPanel>
             <TabPanel>
               <Even />
             </TabPanel>
             <TabPanel>
-              <Ellipse gauge={state.gauge} />
+              <Ellipse gauge={state} />
             </TabPanel>
             <TabPanel>
-              <Slope gauge={state.gauge} />
+              <Slope gauge={state} />
             </TabPanel>
 
-            {/*<Armhole gauge={state.gauge} />
-          <BackNeck gauge={state.gauge} />
-          <Slant gauge={state.gauge} />
-          <CustomCurve gauge={state.gauge} />
-          <SleeveHoleAndCap gauge={state.gauge} />
-          <SleeveCapHeight gauge={state.gauge} />
-          <StandardSleeveCap gauge={state.gauge} /> */}
+            {/*<Armhole gauge={state} />
+          <BackNeck gauge={state} />
+          <Slant gauge={state} />
+          <CustomCurve gauge={state} />
+          <SleeveHoleAndCap gauge={state} />
+          <SleeveCapHeight gauge={state} />
+          <StandardSleeveCap gauge={state} /> */}
           </TabPanels>
         </Tabs>
       </VStack>

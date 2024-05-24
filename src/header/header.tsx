@@ -55,6 +55,15 @@ export function Header() {
               Punch cards
             </Link>
           </li>
+          <li>
+            <Link
+              as={NavLink}
+              to={ROUTES.RADAR.toString()}
+              _activeLink={{ textDecoration: "underline" }}
+            >
+              Radar
+            </Link>
+          </li>
         </Flex>
       </Flex>
     </VStack>
