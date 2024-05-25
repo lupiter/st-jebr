@@ -19,14 +19,19 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { Gauge } from "../guage/gauge";
-import { Pattern, PatternProps } from "../pattern/pattern";
+import { Pattern } from "../pattern/pattern";
 import { RadarHelp } from "./help";
 
+type ImageState = {
+  width: number,
+  height: number, 
+  url: string
+}
 
 type RadarState = {
   gauge: GaugeState;
   row: number;
-  image?: PatternProps;
+  image?: ImageState;
   error?: string;
 };
 
@@ -55,22 +60,16 @@ export function Radar() {
       return;
     }
     const file = files[0];
-    const bitmap = await createImageBitmap(file);
-    const url = await URL.createObjectURL(file);
-    setState({
-      ...state,
-      image: { url, width: bitmap.width, height: bitmap.height },
-    });
-  };
-
-  const setZero = (nextValue: string) => {
-    const zero =
-      Alignment.LEFT.toString() === nextValue
-        ? Alignment.LEFT
-        : Alignment.RIGHT.toString() === nextValue
-          ? Alignment.RIGHT
-          : Alignment.CENTER;
-    setState({ ...state, zero });
+    const url = URL.createObjectURL(file);
+    const img = document.createElement("img");
+    img.onload = async () => {
+      const bitmap = await createImageBitmap(img);
+      setState((prev) => ({
+        ...prev,
+        image: { url, width: bitmap.width, height: bitmap.height },
+      }));
+    }
+    img.src = url;
   };
 
   const styles = useMultiStyleConfig("Button", { variant: "outline" });

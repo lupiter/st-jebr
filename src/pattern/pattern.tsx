@@ -55,8 +55,8 @@ type PatternState = {
 
 export function Pattern(props: PatternProps) {
   const [state, setState] = useState<PatternState>({
-    crop: { x0: 10, y0: 10, x1: props.height - 10, y1: props.width - 10 },
-    scale: { x0: 30, y0: 30, x1: props.height - 30, y1: 30 },
+    crop: { x0: 10, y0: 10, x1: props.width - 10, y1: props.height - 10 },
+    scale: { x0: 30, y0: 30, x1: props.width - 30, y1: 30 },
     scaleSize: 100,
     mode: Mode.None,
     scroll: 0,
@@ -249,9 +249,9 @@ export function Pattern(props: PatternProps) {
         </Box>
       </HStack>
       <svg
-        viewBox={`0 0 ${props.width} ${viewBoxHeight + 20}`}
+        viewBox={`0 0 ${props.width} ${state.mode === Mode.Crop ? props.height + 50 : viewBoxHeight + 50}`}
         width={props.width}
-        height={viewBoxHeight + 50}
+        height={state.mode === Mode.Crop ? props.height + 50 : viewBoxHeight + 50}
         ref={svgRef}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
@@ -447,7 +447,7 @@ function RulePart(props: {
   return (
     <g>
       <rect x={x} y={y} width={10 * pxPerStitch} height={20} fill="white" />
-      <text x={x} y={y + 35} text-anchor="middle">
+      <text x={x} y={y + 35} textAnchor="middle">
         {count}
       </text>
       <line x1={x} x2={x} y1={y} y2={y + 20} stroke={"black"} strokeWidth={2} />
