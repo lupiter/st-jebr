@@ -448,7 +448,7 @@ function RulePart(props: {
     <g>
       <rect x={x} y={y} width={10 * pxPerStitch} height={20} fill="white" />
       <text x={x} y={y + 35} textAnchor="middle">
-        {count}
+        {count * 10}
       </text>
       <line x1={x} x2={x} y1={y} y2={y + 20} stroke={"black"} strokeWidth={2} />
       <line
