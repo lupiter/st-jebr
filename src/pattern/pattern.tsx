@@ -12,12 +12,14 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { MouseEvent as ReactMouseEvent, useRef, useState } from "react";
+import { GaugeState } from "../app-state";
 
 export type PatternProps = {
   width: number;
   height: number;
   url: string;
   unit: string;
+  gauge: GaugeState;
 };
 
 const HANDLE_RADIUS = 20;
@@ -53,9 +55,9 @@ type PatternState = {
 
 export function Pattern(props: PatternProps) {
   const [state, setState] = useState<PatternState>({
-    crop: { x0: 0, y0: 0, x1: props.height, y1: props.width },
+    crop: { x0: 10, y0: 10, x1: props.height - 10, y1: props.width - 10 },
     scale: { x0: 30, y0: 30, x1: props.height - 30, y1: 30 },
-    scaleSize: 10,
+    scaleSize: 100,
     mode: Mode.None,
     scroll: 0,
   });
@@ -184,8 +186,35 @@ export function Pattern(props: PatternProps) {
     }
   };
 
-  const imageX = state.mode === Mode.Crop ? 0 : 0 - state.crop.x0;
-  const imageY = state.mode === Mode.Crop ? 0 : 0 - state.crop.y0 + state.scroll;
+  const cropWidth = state.crop.x1 - state.crop.x0;
+  const scaleFactor = props.width / cropWidth;
+  const imageWidth =
+    state.mode === Mode.Crop
+      ? props.width
+      : (props.width / cropWidth) * props.width;
+
+  // !Note: crop might not match aspect ratio of original
+
+  const imageHeight =
+    state.mode === Mode.Crop ? props.height : scaleFactor * props.height;
+
+  const imageX = state.mode === Mode.Crop ? 0 : 0 - state.crop.x0 * scaleFactor;
+  const imageY =
+    state.mode === Mode.Crop
+      ? 0
+      : 0 - state.crop.y0 * scaleFactor + state.scroll;
+
+  const cropHeight = state.crop.y1 - state.crop.y0;
+  const viewBoxHeight = cropHeight * scaleFactor;
+
+  const scaleLengthPixels = Math.sqrt(
+    (state.scale.x1 - state.scale.x0) * (state.scale.x1 - state.scale.x0) +
+      (state.scale.y1 - state.scale.y0) * (state.scale.y1 - state.scale.y0)
+  );
+  const pxPerUnit = scaleLengthPixels / state.scaleSize;
+  const stitchPerUnit = props.gauge.stitches / props.gauge.square;
+  const pxPerStitch = pxPerUnit / stitchPerUnit;
+  const stitchWidth = imageWidth / pxPerStitch;
 
   return (
     <VStack>
@@ -220,25 +249,54 @@ export function Pattern(props: PatternProps) {
         </Box>
       </HStack>
       <svg
-        viewBox={`0 0 ${props.width} ${props.height + 20}`}
+        viewBox={`0 0 ${props.width} ${viewBoxHeight + 20}`}
         width={props.width}
-        height={props.height + 20}
+        height={viewBoxHeight + 50}
         ref={svgRef}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseUp}
         style={{
           cursor: state.moving != undefined ? "grabbing" : "default",
+          maxWidth: "100vw",
+          objectFit: "contain",
         }}
       >
-        <defs></defs>
+        <defs>
+          <mask id="cropbox">
+            <rect
+              x={state.crop.x0 - HANDLE_RADIUS * 2}
+              y={state.crop.y0 - HANDLE_RADIUS * 2}
+              width={state.crop.x1 - state.crop.x0 + HANDLE_RADIUS * 4}
+              height={state.crop.y1 - state.crop.y0 + HANDLE_RADIUS * 4}
+              fill="white"
+            />
+            <rect
+              x={state.crop.x0}
+              y={state.crop.y0}
+              width={state.crop.x1 - state.crop.x0}
+              height={state.crop.y1 - state.crop.y0}
+              fill="black"
+            />
+          </mask>
+          <clipPath id="imagecrop">
+            <rect
+              x={0}
+              y={0}
+              width={props.width}
+              height={viewBoxHeight}
+              fill="white"
+            />
+          </clipPath>
+        </defs>
         <image
           href={props.url}
           aria-label="your image"
-          width={props.width}
-          height={props.height}
+          width={imageWidth}
+          height={imageHeight}
           x={imageX}
           y={imageY}
+          clipPath={state.mode === Mode.Crop ? "" : "url(#imagecrop)"}
         />
 
         {state.mode === Mode.Scale && (
@@ -280,6 +338,7 @@ export function Pattern(props: PatternProps) {
             stroke="white"
             strokeWidth={5}
             style={{ filter: "drop-shadow(0 0 5px rgba(0, 0, 0, .6))" }}
+            mask="url(#cropbox)"
           >
             <rect
               x={state.crop.x0}
@@ -330,86 +389,137 @@ export function Pattern(props: PatternProps) {
             />
           </g>
         )}
-        <Rule x={0} y={props.height} />
+        <Rule
+          x={0}
+          y={state.mode === Mode.Crop ? props.height : viewBoxHeight}
+          width={props.width}
+          pxPerStitch={pxPerStitch}
+          stitches={stitchWidth}
+        />
       </svg>
     </VStack>
   );
 }
 
-function Rule(props: { x: number; y: number }) {
-  const { x, y } = props;
+function Rule(props: {
+  x: number;
+  y: number;
+  width: number;
+  stitches: number;
+  pxPerStitch: number;
+}) {
+  const segmentCount = Math.ceil(props.stitches / 20);
+  const segmentWidth = props.pxPerStitch * 10;
+  const segments = [...Array(segmentCount)].fill(0);
+  const center = props.width / 2;
+
   return (
     <g>
-      <line x1={x} x2={x} y1={y} y2={y + 10} stroke={"black"} strokeWidth={2} />
+      {segments.map((_, i) => (
+        <RulePart
+          x={props.x + center - segmentWidth * (segmentCount - i)}
+          y={props.y}
+          key={i}
+          pxPerStitch={props.pxPerStitch}
+          count={(segmentCount - i)}
+        />
+      ))}
+      {segments.map((_, i) => (
+        <RulePart
+          x={center + props.x + segmentWidth * i}
+          y={props.y}
+          key={i}
+          pxPerStitch={props.pxPerStitch}
+          count={i}
+        />
+      ))}
+    </g>
+  );
+}
+
+function RulePart(props: {
+  x: number;
+  y: number;
+  pxPerStitch: number;
+  count: number;
+}) {
+  const { x, y, pxPerStitch, count } = props;
+  return (
+    <g>
+      <rect x={x} y={y} width={10 * pxPerStitch} height={20} fill="white" />
+      <text x={x} y={y + 35} text-anchor="middle">
+        {count}
+      </text>
+      <line x1={x} x2={x} y1={y} y2={y + 20} stroke={"black"} strokeWidth={2} />
       <line
-        x1={x + 10}
-        x2={x + 10}
+        x1={x + pxPerStitch}
+        x2={x + pxPerStitch}
         y1={y}
         y2={y + 10}
         stroke={"black"}
         strokeWidth={2}
       />
       <line
-        x1={x + 20}
-        x2={x + 20}
+        x1={x + pxPerStitch * 2}
+        x2={x + pxPerStitch * 2}
         y1={y}
         y2={y + 10}
         stroke={"black"}
         strokeWidth={2}
       />
       <line
-        x1={x + 30}
-        x2={x + 30}
+        x1={x + pxPerStitch * 3}
+        x2={x + pxPerStitch * 3}
         y1={y}
         y2={y + 10}
         stroke={"black"}
         strokeWidth={2}
       />
       <line
-        x1={x + 40}
-        x2={x + 40}
+        x1={x + pxPerStitch * 4}
+        x2={x + pxPerStitch * 4}
+        y1={y}
+        y2={y + 10}
+        stroke={"black"}
+        strokeWidth={2}
+      />
+      <line
+        x1={x + pxPerStitch * 5}
+        x2={x + pxPerStitch * 5}
         y1={y}
         y2={y + 15}
         stroke={"black"}
         strokeWidth={2}
       />
       <line
-        x1={x + 50}
-        x2={x + 50}
+        x1={x + pxPerStitch * 6}
+        x2={x + pxPerStitch * 6}
         y1={y}
         y2={y + 10}
         stroke={"black"}
         strokeWidth={2}
       />
       <line
-        x1={x + 60}
-        x2={x + 60}
+        x1={x + pxPerStitch * 7}
+        x2={x + pxPerStitch * 7}
         y1={y}
         y2={y + 10}
         stroke={"black"}
         strokeWidth={2}
       />
       <line
-        x1={x + 70}
-        x2={x + 70}
+        x1={x + pxPerStitch * 8}
+        x2={x + pxPerStitch * 8}
         y1={y}
         y2={y + 10}
         stroke={"black"}
         strokeWidth={2}
       />
       <line
-        x1={x + 80}
-        x2={x + 80}
+        x1={x + pxPerStitch * 9}
+        x2={x + pxPerStitch * 9}
         y1={y}
         y2={y + 10}
-        stroke={"black"}
-        strokeWidth={2}
-      />
-      <line
-        x1={x + 90}
-        x2={x + 90}
-        y1={y}
-        y2={y + 20}
         stroke={"black"}
         strokeWidth={2}
       />

@@ -16,27 +16,18 @@ import {
   Spacer,
   useMultiStyleConfig,
   InputGroup,
-  RadioGroup,
-  Stack,
-  Radio,
   HStack,
 } from "@chakra-ui/react";
 import { Gauge } from "../guage/gauge";
 import { Pattern, PatternProps } from "../pattern/pattern";
 import { RadarHelp } from "./help";
 
-enum Alignment {
-  LEFT = "LEFT",
-  RIGHT = "RIGHT",
-  CENTER = "CENTER",
-}
 
 type RadarState = {
   gauge: GaugeState;
   row: number;
   image?: PatternProps;
   error?: string;
-  zero: Alignment;
 };
 
 export function Radar() {
@@ -48,7 +39,6 @@ export function Radar() {
       square: 10,
     },
     row: 0,
-    zero: Alignment.CENTER,
   });
 
   const gaugeChange = (gauge: GaugeState) => {
@@ -113,18 +103,6 @@ export function Radar() {
                   />
                 </InputGroup>
               </FormControl>
-              <FormControl>
-                <FormLabel>Zero</FormLabel>
-                <RadioGroup onChange={setZero} value={state.zero}>
-                  <Stack direction="row">
-                    <Radio value={Alignment.LEFT}>Left</Radio>
-                    <Radio value={Alignment.RIGHT}>Right</Radio>
-                    <Radio value={Alignment.CENTER}>
-                      Center (machine knitting)
-                    </Radio>
-                  </Stack>
-                </RadioGroup>
-              </FormControl>
               <RadarHelp />
             </HStack>
           </VStack>
@@ -145,6 +123,7 @@ export function Radar() {
                 height={state.image.height}
                 width={state.image.width}
                 unit={state.gauge.unit}
+                gauge={state.gauge}
               />
             </Box>
           )}
