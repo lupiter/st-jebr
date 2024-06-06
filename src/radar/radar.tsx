@@ -17,16 +17,12 @@ import {
   useMultiStyleConfig,
   InputGroup,
   HStack,
+  Flex,
 } from "@chakra-ui/react";
-import { Gauge } from "../guage/gauge";
+import { Gauge, ModalGauge } from "../guage/gauge";
 import { Pattern } from "../pattern/pattern";
 import { RadarHelp } from "./help";
-
-type ImageState = {
-  width: number,
-  height: number, 
-  url: string
-}
+import { FileModal, ImageState } from "./file-modal";
 
 type RadarState = {
   gauge: GaugeState;
@@ -53,59 +49,41 @@ export function Radar() {
     });
   };
 
-  const fileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length <= 0) {
-      setState({ ...state, image: undefined, error: undefined });
-      return;
-    }
-    const file = files[0];
-    const url = URL.createObjectURL(file);
-    const img = document.createElement("img");
-    img.onload = async () => {
-      const bitmap = await createImageBitmap(img);
+  const fileChange = (image?: ImageState) => {
+    if (image) {
       setState((prev) => ({
         ...prev,
-        image: { url, width: bitmap.width, height: bitmap.height },
+        image,
       }));
+    } else {
+      setState((prev) => ({ ...prev, image: undefined, error: undefined }));
     }
-    img.src = url;
   };
 
-  const styles = useMultiStyleConfig("Button", { variant: "outline" });
-
   return (
-    <Center margin={2}>
-      <VStack maxW="3xl">
+    <Flex
+      padding={2}
+      flexDir={"column"}
+      style={{ height: "100vh", width: "100vw" }}
+    >
+      <VStack flex={1} alignItems={"stretch"} gap={0}>
         <Header />
-        <Box as="main">
-          <VStack as="form">
-            <Gauge gauge={state.gauge} onchange={gaugeChange} />
-            <HStack justify={"start"} align={"end"}>
-              <FormControl>
-                <FormLabel>Image</FormLabel>
-                <InputGroup>
-                  <Input
-                    type="file"
-                    onChange={fileChange}
-                    accept="image/*"
-                    border="none"
-                    paddingInlineStart={0}
-                    sx={{
-                      "::file-selector-button": {
-                        border: "none",
-                        outline: "none",
-                        mr: 2,
-                        ...styles,
-                      },
-                    }}
-                  />
-                </InputGroup>
-              </FormControl>
-              <RadarHelp />
-            </HStack>
-          </VStack>
-          <Spacer m={5} />
+        <Flex
+          as="main"
+          flexDir={"column"}
+          alignItems={"stretch"}
+          height={"100%"}
+        >
+          <HStack
+            wrap={"wrap"}
+            justifyContent={"center"}
+            alignItems={"baseline"}
+          >
+            <RadarHelp />
+            <ModalGauge gauge={state.gauge} onchange={gaugeChange} />
+            <FileModal onchange={fileChange} />
+          </HStack>
+          <Spacer m={2} flex={0} />
 
           {state.error && (
             <Alert status="error">
@@ -116,7 +94,7 @@ export function Radar() {
           )}
 
           {state.image && (
-            <Box>
+            <Flex flex={1}>
               <Pattern
                 url={state.image.url}
                 height={state.image.height}
@@ -124,10 +102,10 @@ export function Radar() {
                 unit={state.gauge.unit}
                 gauge={state.gauge}
               />
-            </Box>
+            </Flex>
           )}
-        </Box>
+        </Flex>
       </VStack>
-    </Center>
+    </Flex>
   );
 }

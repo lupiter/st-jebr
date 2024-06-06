@@ -11,9 +11,54 @@ import {
   NumberDecrementStepper,
   Select,
   Text,
+  Box,
+  Button,
+  ListItem,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  UnorderedList,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { GaugeState, UNIT } from "../app-state";
 import { ChangeEvent } from "react";
+
+export function ModalGauge(props: {
+  gauge: GaugeState;
+  onchange: (gauge: GaugeState) => void;
+}) {
+
+  const {
+    isOpen,
+    onOpen,
+    onClose,
+  } = useDisclosure();
+
+  return (
+    <Box>
+      <Button onClick={onOpen}>Gauge</Button>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            <Heading size="md">Gauge</Heading>
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody as="form">
+            <Gauge gauge={props.gauge} onchange={props.onchange} />
+          </ModalBody>
+
+          <ModalFooter></ModalFooter>
+        </ModalContent>
+      </Modal>
+    </Box>
+  );
+}
 
 export function Gauge(props: {
   gauge: GaugeState;

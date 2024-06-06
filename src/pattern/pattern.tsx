@@ -76,8 +76,8 @@ export function Pattern(props: PatternProps) {
   const stitchWidth = imageWidth / pxPerStitch;
 
   return (
-    <VStack>
-      <HStack align={"end"}>
+    <VStack flex={1} alignItems={"stretch"}>
+      <HStack align={"end"} justifyContent={"center"}>
         <Box>
           <Button onClick={() => PatternController.onScaleClick(setState)} isActive={state.mode === Mode.Scale}>
             Scale
@@ -108,13 +108,11 @@ export function Pattern(props: PatternProps) {
         </Box>
       </HStack>
 
-      <HStack>
+      <HStack flex={1} justifyContent={"center"}>
         <svg
           viewBox={`0 0 ${props.width} ${state.mode === Mode.Crop ? props.height + 50 : viewBoxHeight + 50}`}
-          width={props.width}
-          height={
-            state.mode === Mode.Crop ? props.height + 50 : viewBoxHeight + 50
-          }
+          width="100%"
+          height="100%"
           preserveAspectRatio="xMinYMin"
           ref={svgRef}
           onMouseMove={(e) => PatternController.onMouseMove(setState, svgRef, e)}
@@ -124,6 +122,8 @@ export function Pattern(props: PatternProps) {
             cursor: state.moving != undefined ? "grabbing" : "default",
             maxWidth: "80vw",
             objectFit: "contain",
+            flex: 1,
+            background: "white"
           }}
         >
           <defs>

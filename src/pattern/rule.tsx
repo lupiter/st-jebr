@@ -1,4 +1,3 @@
-
 export function Rule(props: {
   x: number;
   y: number;
@@ -13,6 +12,14 @@ export function Rule(props: {
 
   return (
     <g>
+      <line
+        x1={props.x}
+        y1={props.y}
+        x2={props.x + props.width}
+        y2={props.y}
+        stroke={"black"}
+        strokeWidth={2}
+      />
       {segments.map((_, i) => (
         <RulePart
           x={props.x + center - segmentWidth * (segmentCount - i)}
