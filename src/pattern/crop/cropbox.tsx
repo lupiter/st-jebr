@@ -1,11 +1,7 @@
-import {
-  HANDLE_RADIUS,
-  PatternController,
-  PatternState,
-  SetState,
-} from "./pattern-controller";
+import { HANDLE_RADIUS } from "../measures";
+import { CropController, CropState, SetState } from "./crop-controller";
 
-export function CropBox(props: { state: PatternState; setState: SetState }) {
+export function CropBox(props: { state: CropState; setState: SetState }) {
   const { state, setState } = props;
   return (
     <g
@@ -15,55 +11,51 @@ export function CropBox(props: { state: PatternState; setState: SetState }) {
       mask="url(#cropbox)"
     >
       <rect
-        x={state.crop.x0}
-        y={state.crop.y0}
-        width={state.crop.x1 - state.crop.x0}
-        height={state.crop.y1 - state.crop.y0}
+        x={state.x0}
+        y={state.y0}
+        width={state.x1 - state.x0}
+        height={state.y1 - state.y0}
         fill="transparent"
       />
       <circle
-        cx={state.crop.x0}
-        cy={state.crop.y0}
+        cx={state.x0}
+        cy={state.y0}
         r={HANDLE_RADIUS}
         fill="transparent"
         style={{
           cursor: state.moving != undefined ? "grabbing" : "grab",
         }}
-        onMouseDown={() => PatternController.onCropTopLeftMouseDown(setState)}
+        onMouseDown={() => CropController.onCropTopLeftMouseDown(setState)}
       />
       <circle
-        cx={state.crop.x1}
-        cy={state.crop.y0}
+        cx={state.x1}
+        cy={state.y0}
         r={HANDLE_RADIUS}
         fill="transparent"
         style={{
           cursor: state.moving != undefined ? "grabbing" : "grab",
         }}
-        onMouseDown={() => PatternController.onCropTopRightMouseDown(setState)}
+        onMouseDown={() => CropController.onCropTopRightMouseDown(setState)}
       />
       <circle
-        cx={state.crop.x0}
-        cy={state.crop.y1}
+        cx={state.x0}
+        cy={state.y1}
         r={HANDLE_RADIUS}
         fill="transparent"
         style={{
           cursor: state.moving != undefined ? "grabbing" : "grab",
         }}
-        onMouseDown={() =>
-          PatternController.onCropBottomLeftMouseDown(setState)
-        }
+        onMouseDown={() => CropController.onCropBottomLeftMouseDown(setState)}
       />
       <circle
-        cx={state.crop.x1}
-        cy={state.crop.y1}
+        cx={state.x1}
+        cy={state.y1}
         r={HANDLE_RADIUS}
         fill="transparent"
         style={{
           cursor: state.moving != undefined ? "grabbing" : "grab",
         }}
-        onMouseDown={() =>
-          PatternController.onCropBottomRightMouseDown(setState)
-        }
+        onMouseDown={() => CropController.onCropBottomRightMouseDown(setState)}
       />
     </g>
   );
