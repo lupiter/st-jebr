@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import "./calculator.css";
 import { GaugeState, UNIT } from "./app-state";
 import { Square } from "./shapes/square";

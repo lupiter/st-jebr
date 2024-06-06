@@ -14,7 +14,6 @@ import {
   useDisclosure,
   Text,
   Box,
-  FormLabel,
 } from "@chakra-ui/react";
 
 export function RadarHelp() {

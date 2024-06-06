@@ -1,25 +1,18 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import "./radar.css";
 import { Header } from "../header/header";
 import { GaugeState, UNIT } from "../app-state";
 import {
-  Box,
-  Center,
-  FormControl,
-  FormLabel,
-  Input,
   VStack,
   Alert,
   AlertIcon,
   AlertTitle,
   AlertDescription,
   Spacer,
-  useMultiStyleConfig,
-  InputGroup,
   HStack,
   Flex,
 } from "@chakra-ui/react";
-import { Gauge, ModalGauge } from "../guage/gauge";
+import { ModalGauge } from "../guage/gauge";
 import { Pattern } from "../pattern/pattern";
 import { RadarHelp } from "./help";
 import { FileModal, ImageState } from "./file-modal";

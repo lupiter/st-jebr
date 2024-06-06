@@ -13,7 +13,6 @@ import {
   Text,
   Box,
   Button,
-  ListItem,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -21,7 +20,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react";
 import { GaugeState, UNIT } from "../app-state";
