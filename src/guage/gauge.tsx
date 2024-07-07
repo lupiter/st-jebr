@@ -85,10 +85,15 @@ export function Gauge(props: {
 
   return (
     <VStack align="center" marginLeft={2} marginRight={2}>
-      <HStack as="fieldset" align="end" wrap={{ base: "wrap", sm: "nowrap" }} justify="center">
-          <Heading size="sm" as="legend">
-            Gauge
-          </Heading>
+      <HStack
+        as="fieldset"
+        align="end"
+        wrap={{ base: "wrap", sm: "nowrap" }}
+        justify="center"
+      >
+        <Heading size="sm" as="legend">
+          Gauge
+        </Heading>
         <HStack align="end">
           <FormControl>
             <FormLabel>stitches</FormLabel>

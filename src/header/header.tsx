@@ -23,9 +23,13 @@ export function Header() {
       justifyContent="start"
     >
       <Menu>
-        <MenuButton as={IconButton} aria-label="Apps" icon={<img src="/st-jebr/logo.svg" alt="Menu" width={30} height={30} />}>
-          
-        </MenuButton>
+        <MenuButton
+          as={IconButton}
+          aria-label="Apps"
+          icon={
+            <img src="/st-jebr/logo.svg" alt="Menu" width={30} height={30} />
+          }
+        ></MenuButton>
         <MenuList>
           <MenuItem
             as={NavLink}

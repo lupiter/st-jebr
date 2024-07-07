@@ -99,7 +99,9 @@ export function ScaleModal(props: {
             </svg>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme='green' onClick={setAndClose}>Set</Button>
+            <Button colorScheme="green" onClick={setAndClose}>
+              Set
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

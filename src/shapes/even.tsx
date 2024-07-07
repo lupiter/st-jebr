@@ -24,7 +24,7 @@ type EvenState = {
 
 function calculateStiches(
   after: number,
-  before: number
+  before: number,
 ): {
   start: number;
   end: number;
@@ -73,7 +73,7 @@ export function Even(): JSX.Element {
 
   const { start, end, changeRepeat, change, remainder } = calculateStiches(
     state.after,
-    state.before
+    state.before,
   );
 
   const startStiches = start > 0 ? new Array(start).fill(0) : [];
@@ -82,7 +82,7 @@ export function Even(): JSX.Element {
   const endStitches = end > 0 ? new Array(end).fill(0) : [];
   const svgWidth = Math.max(
     102,
-    start * 10 + changeRepeat * 10 + end * 10 + 40
+    start * 10 + changeRepeat * 10 + end * 10 + 40,
   );
 
   return (

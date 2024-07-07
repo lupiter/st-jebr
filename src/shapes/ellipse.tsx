@@ -69,12 +69,13 @@ export function Ellipse(props: { gauge: GaugeState }): JSX.Element {
       justify="stretch"
       direction={{ base: "column", md: "row" }}
     >
-      <VStack 
+      <VStack
         spacing={2}
         align="stretch"
         flex={1}
         flexShrink={0}
-        flexBasis={20}>
+        flexBasis={20}
+      >
         <Text>Round necks, sleeve heads, armscyes</Text>
 
         <HStack as="fieldset">
@@ -168,12 +169,13 @@ export function Ellipse(props: { gauge: GaugeState }): JSX.Element {
         </Grid>
       </VStack>
 
-      <VStack 
+      <VStack
         spacing={2}
         align="stretch"
         flex={1}
         flexShrink={0}
-        flexBasis={20}>
+        flexBasis={20}
+      >
         <Accordion allowMultiple>
           <AccordionItem>
             <h2>

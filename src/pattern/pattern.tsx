@@ -2,10 +2,7 @@ import { Button, HStack, VStack, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { GaugeState } from "../app-state";
 import { Rule } from "./rule";
-import {
-  PatternController,
-  PatternState,
-} from "./pattern-controller";
+import { PatternController, PatternState } from "./pattern-controller";
 import { CropModal } from "./crop/crop-modal";
 import { CropState } from "./crop/crop-controller";
 import { ScaleModal } from "./scale/scale-modal";
@@ -36,7 +33,7 @@ export function Pattern(props: PatternProps) {
 
   const scaleLengthPixels = Math.sqrt(
     (state.scale.x1 - state.scale.x0) * (state.scale.x1 - state.scale.x0) +
-      (state.scale.y1 - state.scale.y0) * (state.scale.y1 - state.scale.y0)
+      (state.scale.y1 - state.scale.y0) * (state.scale.y1 - state.scale.y0),
   );
   const pxPerUnit = scaleLengthPixels / state.scale.scaleSize;
 

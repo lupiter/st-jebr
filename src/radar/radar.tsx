@@ -54,16 +54,19 @@ export function Radar() {
   };
 
   return (
-    <VStack
-      align="stretch"
-      m={2}
-      maxW={1000}
-      justify="center"
-      marginLeft="auto"
-      marginRight="auto"
-    >
+    <VStack align="stretch">
       <Header />
-      <Flex as="main" flexDir={"column"} alignItems={"stretch"} height={"100%"}>
+      <Flex
+        m={2}
+        as="main"
+        flexDir={"column"}
+        alignItems={"stretch"}
+        height={"100%"}
+        maxW={1000}
+        justify="center"
+        marginLeft="auto"
+        marginRight="auto"
+      >
         <HStack wrap={"wrap"} justifyContent={"center"} alignItems={"baseline"}>
           <RadarHelp />
           <ModalGauge gauge={state.gauge} onchange={gaugeChange} />

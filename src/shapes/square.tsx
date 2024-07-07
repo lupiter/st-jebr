@@ -51,7 +51,12 @@ export function Square(props: { gauge: GaugeState }): JSX.Element {
   };
 
   return (
-    <Flex wrap="wrap" align="stretch" justify="stretch" direction={{ base: "column",  md: "row"}}>
+    <Flex
+      wrap="wrap"
+      align="stretch"
+      justify="stretch"
+      direction={{ base: "column", md: "row" }}
+    >
       <VStack
         spacing={2}
         align="stretch"

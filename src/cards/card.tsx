@@ -6,7 +6,6 @@ import { FairIsle } from "./fair-isle/fair-isle";
 import { chunk } from "./measurements";
 import {
   Box,
-  Center,
   Text,
   FormControl,
   FormHelperText,
@@ -60,13 +59,13 @@ type CardState = {
 };
 
 function isDataState(
-  content: LoadingErrorState | PixelDataState
+  content: LoadingErrorState | PixelDataState,
 ): content is PixelDataState {
   return (content as PixelDataState).pixels !== undefined;
 }
 
 function isErrorState(
-  content: LoadingErrorState | PixelDataState
+  content: LoadingErrorState | PixelDataState,
 ): content is LoadingErrorState {
   return (content as LoadingErrorState).message !== undefined;
 }
@@ -137,161 +136,158 @@ export function Card() {
   const styles = useMultiStyleConfig("Button", { variant: "outline" });
 
   return (
-    <VStack 
-    align="stretch"
-    m={2}
-    maxW={1000}
-    justify="center"
-    marginLeft="auto"
-    marginRight="auto">
+    <VStack align="stretch">
       <Header />
-      <Center alignSelf='center'>
-        <VStack maxW="3xl">
-          <Box as="main">
-            <VStack as="form">
-              <FormControl as="fieldset">
-                <FormLabel as="legend">Maximum page size</FormLabel>
-                <HStack>
-                  <NumberInput
-                    value={state.maxHeight}
-                    onChange={setMaxHeight}
-                    size="md"
-                    maxW={24}
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                  <Select
-                    value={state.unit.toString()}
-                    onChange={setUnit}
-                    aria-label="units"
-                    size="md"
-                    maxW={24}
-                  >
-                    <option value="cm">cm</option>
-                    <option value="in">inch</option>
-                  </Select>
-                </HStack>
-                <FormHelperText>Height</FormHelperText>
-              </FormControl>
-              <FormControl>
-                <FormLabel>Image</FormLabel>
-                <InputGroup>
-                  <Input
-                    type="file"
-                    onChange={fileChange}
-                    accept="image/*"
-                    border="none"
-                    paddingInlineStart={0}
-                    sx={{
-                      "::file-selector-button": {
-                        border: "none",
-                        outline: "none",
-                        mr: 2,
-                        ...styles,
-                      },
+      <VStack
+        alignSelf="center"
+        m={2}
+        maxW="3xl"
+        justify="center"
+        marginLeft="auto"
+        marginRight="auto"
+      >
+        <Box as="main">
+          <VStack as="form">
+            <FormControl as="fieldset">
+              <FormLabel as="legend">Maximum page size</FormLabel>
+              <HStack>
+                <NumberInput
+                  value={state.maxHeight}
+                  onChange={setMaxHeight}
+                  size="md"
+                  maxW={24}
+                >
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+                <Select
+                  value={state.unit.toString()}
+                  onChange={setUnit}
+                  aria-label="units"
+                  size="md"
+                  maxW={24}
+                >
+                  <option value="cm">cm</option>
+                  <option value="in">inch</option>
+                </Select>
+              </HStack>
+              <FormHelperText>Height</FormHelperText>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Image</FormLabel>
+              <InputGroup>
+                <Input
+                  type="file"
+                  onChange={fileChange}
+                  accept="image/*"
+                  border="none"
+                  paddingInlineStart={0}
+                  sx={{
+                    "::file-selector-button": {
+                      border: "none",
+                      outline: "none",
+                      mr: 2,
+                      ...styles,
+                    },
+                  }}
+                />
+                {state.content && isDataState(state.content) && (
+                  <InputRightElement
+                    as="img"
+                    src={state.content.url}
+                    style={{
+                      width: `${1.333 * state.content.width}px`,
+                      height: `${
+                        state.content.pixels.length / state.content.width
+                      }px`,
                     }}
+                    title="your image"
                   />
-                  {state.content && isDataState(state.content) && (
-                    <InputRightElement
-                      as="img"
-                      src={state.content.url}
-                      style={{
-                        width: `${1.333 * state.content.width}px`,
-                        height: `${
-                          state.content.pixels.length / state.content.width
-                        }px`,
-                      }}
-                      title="your image"
-                    />
-                  )}
-                </InputGroup>
-              </FormControl>
-            </VStack>
-            <Spacer m={5} />
-            <Button onClick={onOpen}>Help?</Button>
+                )}
+              </InputGroup>
+            </FormControl>
+          </VStack>
+          <Spacer m={5} />
+          <Button onClick={onOpen}>Help?</Button>
 
-            <Modal isOpen={isOpen} onClose={onClose}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>
-                  <Heading size="md">Knitting punchcards from images</Heading>
-                </ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <VStack spacing={2} align="stretch">
-                    <Heading size="sm">What?</Heading>
-                    <Text>
-                      Make files for cutting machines (e.g. silhouette, cricut,
-                      etc) to make punchcards for knitting machines (e.g.
-                      Brother KH-860)
-                    </Text>
-                    <Heading size="sm">Images</Heading>
-                    <Text>
-                      The image should have the height and width in pixels that
-                      you want in stitches. That means to make a card 24
-                      stitches wide and 60 rows long, you want to upload a 24x60
-                      pixel image. These can be made using the image editor of
-                      your choice.
-                    </Text>
-                    <Heading size="sm">Cutting</Heading>
-                    <Text>
-                      I tend to use A4 plastic folder dividers, which can be
-                      purchased very cheaply from stationary and department
-                      stores. I have also heard of people using cardstock. You
-                      may want to practice with cardstock or paper which is
-                      easier to recycle.
-                    </Text>
-                    <Heading size="sm">Silhouette Users</Heading>
-                    <Text>
-                      The "basic" level of Silhouette Studio doesn't let you use
-                      SVGs. If you don't want to upgrade, try the{" "}
-                      <Link
-                        href="https://github.com/fablabnbg/inkscape-silhouette/wiki"
-                        isExternal
-                        color="pink.500"
-                      >
-                        Inkscape Silhouette Plugin <ExternalLinkIcon />
-                      </Link>
-                      . You could also use Inkscape to export as PNG and trace
-                      in Silhouette Studio - this sometimes works, but I find it
-                      to produce less reliable cards.
-                    </Text>
-                    <Heading size="sm">Privacy</Heading>
-                    <Text>
-                      Images are not stored or transmitted in any way - it's all
-                      done in your browser.
-                    </Text>
-                  </VStack>
-                </ModalBody>
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>
+                <Heading size="md">Knitting punchcards from images</Heading>
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <VStack spacing={2} align="stretch">
+                  <Heading size="sm">What?</Heading>
+                  <Text>
+                    Make files for cutting machines (e.g. silhouette, cricut,
+                    etc) to make punchcards for knitting machines (e.g. Brother
+                    KH-860)
+                  </Text>
+                  <Heading size="sm">Images</Heading>
+                  <Text>
+                    The image should have the height and width in pixels that
+                    you want in stitches. That means to make a card 24 stitches
+                    wide and 60 rows long, you want to upload a 24x60 pixel
+                    image. These can be made using the image editor of your
+                    choice.
+                  </Text>
+                  <Heading size="sm">Cutting</Heading>
+                  <Text>
+                    I tend to use A4 plastic folder dividers, which can be
+                    purchased very cheaply from stationary and department
+                    stores. I have also heard of people using cardstock. You may
+                    want to practice with cardstock or paper which is easier to
+                    recycle.
+                  </Text>
+                  <Heading size="sm">Silhouette Users</Heading>
+                  <Text>
+                    The "basic" level of Silhouette Studio doesn't let you use
+                    SVGs. If you don't want to upgrade, try the{" "}
+                    <Link
+                      href="https://github.com/fablabnbg/inkscape-silhouette/wiki"
+                      isExternal
+                      color="pink.500"
+                    >
+                      Inkscape Silhouette Plugin <ExternalLinkIcon />
+                    </Link>
+                    . You could also use Inkscape to export as PNG and trace in
+                    Silhouette Studio - this sometimes works, but I find it to
+                    produce less reliable cards.
+                  </Text>
+                  <Heading size="sm">Privacy</Heading>
+                  <Text>
+                    Images are not stored or transmitted in any way - it's all
+                    done in your browser.
+                  </Text>
+                </VStack>
+              </ModalBody>
 
-                <ModalFooter></ModalFooter>
-              </ModalContent>
-            </Modal>
+              <ModalFooter></ModalFooter>
+            </ModalContent>
+          </Modal>
 
-            {state.content && isErrorState(state.content) && (
-              <Alert status="error">
-                <AlertIcon />
-                <AlertTitle>
-                  There was a problem generating your card
-                </AlertTitle>
-                <AlertDescription>{state.content.message}</AlertDescription>
-              </Alert>
-            )}
+          {state.content && isErrorState(state.content) && (
+            <Alert status="error">
+              <AlertIcon />
+              <AlertTitle>There was a problem generating your card</AlertTitle>
+              <AlertDescription>{state.content.message}</AlertDescription>
+            </Alert>
+          )}
 
-            {state.content && isDataState(state.content) && (
-              <FairIsle
-                data={state.content.pixels}
-                width={state.content.width}
-                maxHeight={maxHeightMM}
-              />
-            )}
-          </Box>
-        </VStack>
-      </Center>
+          {state.content && isDataState(state.content) && (
+            <FairIsle
+              data={state.content.pixels}
+              width={state.content.width}
+              maxHeight={maxHeightMM}
+            />
+          )}
+        </Box>
+      </VStack>
     </VStack>
   );
 }

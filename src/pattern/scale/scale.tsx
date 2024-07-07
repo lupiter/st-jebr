@@ -19,12 +19,7 @@ export function Scaler(props: { state: ScaleState; setState: SetState }) {
         }}
         onMouseDown={() => ScaleController.onScaleStartMouseDown(setState)}
       />
-      <line
-        x1={state.x0}
-        x2={state.x1}
-        y1={state.y0}
-        y2={state.y1}
-      />
+      <line x1={state.x0} x2={state.x1} y1={state.y0} y2={state.y1} />
       <circle
         cx={state.x1}
         cy={state.y1}

@@ -15,10 +15,9 @@ export type PatternState = {
   moving?: MoveTarget;
 };
 
-export type SetState = React.Dispatch<React.SetStateAction<PatternState>>
+export type SetState = React.Dispatch<React.SetStateAction<PatternState>>;
 
 export class PatternController {
-
   static scrollDown = (setState: SetState) => {
     setState((prev) => ({
       ...prev,

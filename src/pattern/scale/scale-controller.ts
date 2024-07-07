@@ -46,7 +46,7 @@ export class ScaleController {
       return;
     }
     const bounds = svgRef.current.getBoundingClientRect();
-    const scale =  width / bounds.width;
+    const scale = width / bounds.width;
     const x = (e.clientX - bounds.x) * scale;
     const y = (e.clientY - bounds.y) * scale;
     setState((prev) => {
