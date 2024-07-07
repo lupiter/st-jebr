@@ -11,6 +11,8 @@ export type CropState = {
   x1: number;
   y1: number;
   moving?: MoveTarget;
+  xprev: number;
+  yprev: number;
 };
 
 export type SetState = React.Dispatch<React.SetStateAction<CropState>>;
@@ -39,37 +41,41 @@ export class CropController {
   static onMouseMove = (
     setState: SetState,
     svgRef: React.MutableRefObject<SVGElement | null>,
-    e: React.MouseEvent<SVGElement, MouseEvent>
+    e: React.MouseEvent<SVGElement, MouseEvent>,
+    width: number,
   ) => {
     if (!svgRef.current) {
       return;
     }
     const bounds = svgRef.current.getBoundingClientRect();
+    const scale =  width / bounds.width;
+    const x = (e.clientX - bounds.x) * scale;
+    const y = (e.clientY - bounds.y) * scale;
     setState((prev) => {
       switch (prev.moving) {
         case MoveTarget.TopLeft:
           return {
             ...prev,
-            x0: e.clientX - bounds.x,
-            y0: e.clientY - bounds.y,
+            x0: x,
+            y0: y,
           };
         case MoveTarget.TopRight:
           return {
             ...prev,
-            x1: e.clientX - bounds.x,
-            y0: e.clientY - bounds.y,
+            x1: x,
+            y0: y,
           };
         case MoveTarget.BottomLeft:
           return {
             ...prev,
-            x0: e.clientX - bounds.x,
-            y1: e.clientY - bounds.y,
+            x0: x,
+            y1: y,
           };
         case MoveTarget.BottomRight:
           return {
             ...prev,
-            x1: e.clientX - bounds.x,
-            y1: e.clientY - bounds.y,
+            x1: x,
+            y1: y,
           };
         default:
           break;

@@ -4,68 +4,58 @@ import { NavLink } from "react-router-dom";
 import {
   Heading,
   Text,
-  Link,
-  Flex,
-  VStack,
-  Grid,
-  GridItem,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  IconButton,
 } from "@chakra-ui/react";
 
 export function Header() {
   return (
-    <VStack>
-      <Grid gap={3} templateColumns="repeat(3, 1fr)" alignItems="center">
-        <GridItem justifySelf="end">
-          <img src="/st-jebr/logo.svg" alt="" width={30} height={30} />
-        </GridItem>
-
-        <GridItem>
-          <Heading textAlign="center" color="brand.200">
-            st-jebr
-          </Heading>
-        </GridItem>
-        <GridItem alignSelf="end">
-          <Text
-            role="caption"
-            className="caption"
-            align="left"
-            color="gray.400"
+    <HStack
+      align="baseline"
+      borderBottom="1px"
+      borderBottomColor="gray.200"
+      paddingBottom={1}
+      paddingLeft={2}
+      justifyContent="start"
+    >
+      <Menu>
+        <MenuButton as={IconButton} aria-label="Apps" icon={<img src="/st-jebr/logo.svg" alt="Menu" width={30} height={30} />}>
+          
+        </MenuButton>
+        <MenuList>
+          <MenuItem
+            as={NavLink}
+            to={ROUTES.HOME.toString()}
+            _activeLink={{ textDecoration: "underline" }}
           >
-            stitch-(al)gebra
-          </Text>
-        </GridItem>
-      </Grid>
-      <Flex as="nav" direction="row" justify="space-around">
-        <Flex as="ul" direction="row" justify="space-around" gap={2}>
-          <li>
-            <Link
-              as={NavLink}
-              to={ROUTES.HOME.toString()}
-              _activeLink={{ textDecoration: "underline" }}
-            >
-              Calculator
-            </Link>
-          </li>
-          <li>
-            <Link
-              as={NavLink}
-              to={ROUTES.CARD.toString()}
-              _activeLink={{ textDecoration: "underline" }}
-            >
-              Punch cards
-            </Link>
-          </li>
-          <li>
-            <Link
-              as={NavLink}
-              to={ROUTES.RADAR.toString()}
-              _activeLink={{ textDecoration: "underline" }}
-            >
-              Radar
-            </Link>
-          </li>
-        </Flex>
-      </Flex>
-    </VStack>
+            Calculator
+          </MenuItem>
+          <MenuItem
+            as={NavLink}
+            to={ROUTES.CARD.toString()}
+            _activeLink={{ textDecoration: "underline" }}
+          >
+            Punch cards
+          </MenuItem>
+          <MenuItem
+            as={NavLink}
+            to={ROUTES.RADAR.toString()}
+            _activeLink={{ textDecoration: "underline" }}
+          >
+            Radar
+          </MenuItem>
+        </MenuList>
+      </Menu>
+      <Heading textAlign="center" color="brand.200">
+        st-jebr
+      </Heading>
+      <Text role="caption" className="caption" align="left" color="gray.400">
+        stitch-(al)gebra
+      </Text>
+    </HStack>
   );
 }

@@ -39,25 +39,29 @@ export class ScaleController {
   static onMouseMove = (
     setState: SetState,
     svgRef: React.MutableRefObject<SVGElement | null>,
-    e: React.MouseEvent<SVGElement, MouseEvent>
+    e: React.MouseEvent<SVGElement, MouseEvent>,
+    width: number,
   ) => {
     if (!svgRef.current) {
       return;
     }
     const bounds = svgRef.current.getBoundingClientRect();
+    const scale =  width / bounds.width;
+    const x = (e.clientX - bounds.x) * scale;
+    const y = (e.clientY - bounds.y) * scale;
     setState((prev) => {
       if (prev.moving === MoveTarget.Start) {
         return {
           ...prev,
-          x0: e.clientX - bounds.x,
-          y0: e.clientY - bounds.y,
+          x0: x,
+          y0: y,
         };
       }
       if (prev.moving === MoveTarget.End) {
         return {
           ...prev,
-          x1: e.clientX - bounds.x,
-          y1: e.clientY - bounds.y,
+          x1: x,
+          y1: y,
         };
       }
 

@@ -54,51 +54,43 @@ export function Radar() {
   };
 
   return (
-    <Flex
-      padding={2}
-      flexDir={"column"}
-      style={{ height: "100vh", width: "100vw" }}
+    <VStack
+      align="stretch"
+      m={2}
+      maxW={1000}
+      justify="center"
+      marginLeft="auto"
+      marginRight="auto"
     >
-      <VStack flex={1} alignItems={"stretch"} gap={0}>
-        <Header />
-        <Flex
-          as="main"
-          flexDir={"column"}
-          alignItems={"stretch"}
-          height={"100%"}
-        >
-          <HStack
-            wrap={"wrap"}
-            justifyContent={"center"}
-            alignItems={"baseline"}
-          >
-            <RadarHelp />
-            <ModalGauge gauge={state.gauge} onchange={gaugeChange} />
-            <FileModal onchange={fileChange} />
-          </HStack>
-          <Spacer m={2} flex={0} />
+      <Header />
+      <Flex as="main" flexDir={"column"} alignItems={"stretch"} height={"100%"}>
+        <HStack wrap={"wrap"} justifyContent={"center"} alignItems={"baseline"}>
+          <RadarHelp />
+          <ModalGauge gauge={state.gauge} onchange={gaugeChange} />
+          <FileModal onchange={fileChange} />
+        </HStack>
+        <Spacer m={2} flex={0} />
 
-          {state.error && (
-            <Alert status="error">
-              <AlertIcon />
-              <AlertTitle>There was a problem reading your image</AlertTitle>
-              <AlertDescription>{state.error}</AlertDescription>
-            </Alert>
-          )}
+        {state.error && (
+          <Alert status="error">
+            <AlertIcon />
+            <AlertTitle>There was a problem reading your image</AlertTitle>
+            <AlertDescription>{state.error}</AlertDescription>
+          </Alert>
+        )}
 
-          {state.image && (
-            <Flex flex={1}>
-              <Pattern
-                url={state.image.url}
-                height={state.image.height}
-                width={state.image.width}
-                unit={state.gauge.unit}
-                gauge={state.gauge}
-              />
-            </Flex>
-          )}
-        </Flex>
-      </VStack>
-    </Flex>
+        {state.image && (
+          <Flex flex={1}>
+            <Pattern
+              url={state.image.url}
+              height={state.image.height}
+              width={state.image.width}
+              unit={state.gauge.unit}
+              gauge={state.gauge}
+            />
+          </Flex>
+        )}
+      </Flex>
+    </VStack>
   );
 }

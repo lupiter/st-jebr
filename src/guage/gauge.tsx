@@ -29,12 +29,7 @@ export function ModalGauge(props: {
   gauge: GaugeState;
   onchange: (gauge: GaugeState) => void;
 }) {
-
-  const {
-    isOpen,
-    onOpen,
-    onClose,
-  } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Box>
@@ -74,12 +69,6 @@ export function Gauge(props: {
       rows: numberValue,
     });
   };
-  const setGaugeUnit = (e: ChangeEvent<HTMLSelectElement>) => {
-    props.onchange({
-      ...props.gauge,
-      unit: e.target.value === UNIT.CM.toString() ? UNIT.CM : UNIT.IN,
-    });
-  };
   const setGaugeSquare = (e: ChangeEvent<HTMLSelectElement>) => {
     const square = parseInt(e.target.value);
     props.onchange({
@@ -87,64 +76,79 @@ export function Gauge(props: {
       square: square === 10 ? 10 : square === 4 ? 4 : 1,
     });
   };
+  const setGaugeUnit = (e: ChangeEvent<HTMLSelectElement>) => {
+    props.onchange({
+      ...props.gauge,
+      unit: e.target.value === UNIT.CM.toString() ? UNIT.CM : UNIT.IN,
+    });
+  };
 
   return (
-    <VStack align="center">
-      <HStack as="fieldset" align="end">
-        <Heading size="sm" as="legend">
-          Gauge
-        </Heading>
-        <FormControl>
-          <FormLabel>stitches</FormLabel>
-          <NumberInput
-            value={props.gauge.stitches}
-            onChange={setGaugeStitches}
-            maxW={20}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-        </FormControl>
-        <FormControl>
-          <FormLabel>rows</FormLabel>
-          <NumberInput
-            value={props.gauge.rows}
-            onChange={setGaugeRows}
-            maxW={20}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-        </FormControl>
-        <FormControl>
-          <Select
-            placeholder="units"
-            aria-label="units"
-            onChange={setGaugeUnit}
-            value={props.gauge.unit.toString()}
-          >
-            <option value="cm">cm</option>
-            <option value="in">inch</option>
-          </Select>
-        </FormControl>
-        <FormControl>
-          <Select
-            placeholder="square size"
-            aria-label="square size"
-            onChange={setGaugeSquare}
-            value={props.gauge.square}
-          >
-            <option value={10}>10x10</option>
-            <option value={4}>4x4</option>
-            <option value={1}>1x1</option>
-          </Select>
-        </FormControl>
+    <VStack align="center" marginLeft={2} marginRight={2}>
+      <HStack as="fieldset" align="end" wrap={{ base: "wrap", sm: "nowrap" }} justify="center">
+          <Heading size="sm" as="legend">
+            Gauge
+          </Heading>
+        <HStack align="end">
+          <FormControl>
+            <FormLabel>stitches</FormLabel>
+            <NumberInput
+              value={props.gauge.stitches}
+              onChange={setGaugeStitches}
+              maxW={20}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </FormControl>
+          <FormControl>
+            <FormLabel>rows</FormLabel>
+            <NumberInput
+              value={props.gauge.rows}
+              onChange={setGaugeRows}
+              maxW={20}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </FormControl>
+        </HStack>
+
+        <HStack align="end">
+          <FormControl>
+            <FormLabel>square</FormLabel>
+            <Select
+              placeholder="square size"
+              aria-label="square size"
+              onChange={setGaugeSquare}
+              value={props.gauge.square}
+              maxW={20}
+            >
+              <option value={10}>10x10</option>
+              <option value={4}>4x4</option>
+              <option value={1}>1x1</option>
+            </Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel>unit</FormLabel>
+            <Select
+              placeholder="units"
+              aria-label="units"
+              onChange={setGaugeUnit}
+              value={props.gauge.unit.toString()}
+              maxW={20}
+            >
+              <option value="cm">cm</option>
+              <option value="in">inch</option>
+            </Select>
+          </FormControl>
+        </HStack>
       </HStack>
       <Text className="working">
         ({props.gauge.stitches / props.gauge.square} sts/

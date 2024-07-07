@@ -35,6 +35,7 @@ export function ScaleModal(props: {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const setAndClose = () => {
     props.onchange(state);
+    onClose();
   };
 
   return (
@@ -73,7 +74,7 @@ export function ScaleModal(props: {
               preserveAspectRatio="xMinYMin"
               ref={svgRef}
               onMouseMove={(e) =>
-                ScaleController.onMouseMove(setState, svgRef, e)
+                ScaleController.onMouseMove(setState, svgRef, e, props.width)
               }
               onMouseUp={() => ScaleController.onMouseUp(setState)}
               onMouseLeave={() => ScaleController.onMouseUp(setState)}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { GaugeState } from "../app-state";
 import {
+  Flex,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -50,83 +51,93 @@ export function Square(props: { gauge: GaugeState }): JSX.Element {
   };
 
   return (
-    <VStack spacing={2} align="stretch">
-      <Text size="sm">Body panel, dish cloth, apron front</Text>
-
-      <HStack as="fieldset">
-        <Heading size="sm" as="legend">
-          Measurements
-        </Heading>
-        <FormControl maxW={40}>
-          <FormLabel>Width</FormLabel>
-          <NumberInput value={state.width} onChange={setWidth}>
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <FormHelperText>{props.gauge.unit.toString()}</FormHelperText>
-        </FormControl>
-        <FormControl maxW={40}>
-          <FormLabel>Height</FormLabel>
-          <NumberInput value={state.height} onChange={setHeight}>
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <FormHelperText>{props.gauge.unit.toString()}</FormHelperText>
-        </FormControl>
-      </HStack>
-      <Text size="sm">
-        {props.gauge.rows / props.gauge.square} sts/{props.gauge.unit} &times;{" "}
-        {state.height} {props.gauge.unit} = {height} sts &asymp;{" "}
-        {Math.round(height)} (rounded)
-      </Text>
-      <Text size="sm">
-        {props.gauge.stitches / props.gauge.square} sts/{props.gauge.unit}{" "}
-        &times; {state.width} {props.gauge.unit} = {width} sts &asymp;{" "}
-        {Math.round(width)} (rounded)
-      </Text>
-      <Grid
-        alignSelf="center"
-        templateColumns="repeat(2, 1fr)"
-        alignItems="center"
-        justifyItems="center"
+    <Flex wrap="wrap" align="stretch" justify="stretch" direction={{ base: "column",  md: "row"}}>
+      <VStack
+        spacing={2}
+        align="stretch"
+        flex={1}
+        flexShrink={0}
+        flexBasis={20}
       >
-        <GridItem>
-          <Text>
-            {Math.round(height)} sts ({state.height}{" "}
-            {props.gauge.unit.toString()}) high
-          </Text>
-        </GridItem>
-        <GridItem>
-          {!Number.isNaN(aspectWidth) && !Number.isNaN(aspectHeight) && (
-            <svg viewBox="0 0 102 102" width="102" height="102">
-              <rect
-                width={aspectWidth}
-                height={aspectHeight}
-                x={1}
-                y={1}
-                stroke="black"
-                strokeWidth={1}
-                fill="none"
-              ></rect>
-            </svg>
-          )}
-        </GridItem>
-        <GridItem>
-          <Spacer />
-        </GridItem>
-        <GridItem>
-          <Text>
-            {Math.round(width)} sts ({state.width} {props.gauge.unit.toString()}
-            ) wide
-          </Text>
-        </GridItem>
-      </Grid>
-    </VStack>
+        <Text size="sm">Body panel, dish cloth, apron front</Text>
+
+        <HStack as="fieldset">
+          <Heading size="sm" as="legend">
+            Measurements
+          </Heading>
+          <FormControl maxW={40}>
+            <FormLabel>Width</FormLabel>
+            <NumberInput value={state.width} onChange={setWidth}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            <FormHelperText>{props.gauge.unit.toString()}</FormHelperText>
+          </FormControl>
+          <FormControl maxW={40}>
+            <FormLabel>Height</FormLabel>
+            <NumberInput value={state.height} onChange={setHeight}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            <FormHelperText>{props.gauge.unit.toString()}</FormHelperText>
+          </FormControl>
+        </HStack>
+      </VStack>
+      <VStack flex={1} flexShrink={0} flexBasis={20}>
+        <Text size="sm">
+          {props.gauge.rows / props.gauge.square} sts/{props.gauge.unit} &times;{" "}
+          {state.height} {props.gauge.unit} = {height} sts &asymp;{" "}
+          {Math.round(height)} (rounded)
+        </Text>
+        <Text size="sm">
+          {props.gauge.stitches / props.gauge.square} sts/{props.gauge.unit}{" "}
+          &times; {state.width} {props.gauge.unit} = {width} sts &asymp;{" "}
+          {Math.round(width)} (rounded)
+        </Text>
+        <Grid
+          alignSelf="center"
+          templateColumns="repeat(2, 1fr)"
+          alignItems="center"
+          justifyItems="center"
+        >
+          <GridItem>
+            <Text>
+              {Math.round(height)} sts ({state.height}{" "}
+              {props.gauge.unit.toString()}) high
+            </Text>
+          </GridItem>
+          <GridItem>
+            {!Number.isNaN(aspectWidth) && !Number.isNaN(aspectHeight) && (
+              <svg viewBox="0 0 102 102" width="102" height="102">
+                <rect
+                  width={aspectWidth}
+                  height={aspectHeight}
+                  x={1}
+                  y={1}
+                  stroke="black"
+                  strokeWidth={1}
+                  fill="none"
+                ></rect>
+              </svg>
+            )}
+          </GridItem>
+          <GridItem>
+            <Spacer />
+          </GridItem>
+          <GridItem>
+            <Text>
+              {Math.round(width)} sts ({state.width}{" "}
+              {props.gauge.unit.toString()}) wide
+            </Text>
+          </GridItem>
+        </Grid>
+      </VStack>
+    </Flex>
   );
 }

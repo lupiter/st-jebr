@@ -24,6 +24,7 @@ import {
   AccordionPanel,
   Box,
   Link,
+  Flex,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 
@@ -85,123 +86,144 @@ export function Slope(props: { gauge: GaugeState }): JSX.Element {
   };
 
   return (
-    <VStack spacing={2} align="stretch">
-      <HStack as="fieldset" align="end">
-        <Heading size="sm" as="legend">
-          Size
-        </Heading>
-
-        <FormControl maxW={40}>
-          <FormLabel>Width</FormLabel>
-          <NumberInput value={state.width} onChange={setWidth}>
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-        </FormControl>
-        <FormControl maxW={40}>
-          <FormLabel>Height</FormLabel>
-          <NumberInput value={state.height} onChange={setHeight}>
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-        </FormControl>
-        <FormControl maxW={40}>
-          <Select
-            aria-label="mode"
-            onChange={setMode}
-            value={state.mode.toString()}
-          >
-            <option value={MODE.MEASURE.toString()}>
-              {props.gauge.unit.toString()}
-            </option>
-            <option value={MODE.STITCH.toString()}>stitches</option>
-          </Select>
-        </FormControl>
-      </HStack>
-
-      <Grid
-        alignSelf="center"
-        templateColumns="repeat(2, 1fr)"
-        alignItems="center"
-        justifyItems="center"
-        m={4}
+    <Flex
+      wrap="wrap"
+      align="stretch"
+      justify="stretch"
+      direction={{ base: "column", md: "row" }}
+    >
+      <VStack
+        spacing={2}
+        align="stretch"
+        flex={1}
+        flexShrink={0}
+        flexBasis={20}
       >
-        <GridItem>
-          <Text>
-            {Math.round(heightSt)} sts ({Math.round(heightMeasure * 10) / 10}{" "}
-            {props.gauge.unit.toString()}) high
-          </Text>
-        </GridItem>
-        <GridItem>
-          {!Number.isNaN(aspectWidth) && !Number.isNaN(aspectHeight) && (
-            <svg
-              viewBox={`-1 -1  ${aspectWidth + 2} ${aspectHeight + 2}`}
-              width={aspectWidth}
-              height={aspectHeight}
+        <HStack as="fieldset" align="end">
+          <Heading size="sm" as="legend">
+            Size
+          </Heading>
+
+          <FormControl maxW={40}>
+            <FormLabel>Width</FormLabel>
+            <NumberInput value={state.width} onChange={setWidth}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </FormControl>
+          <FormControl maxW={40}>
+            <FormLabel>Height</FormLabel>
+            <NumberInput value={state.height} onChange={setHeight}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </FormControl>
+          <FormControl maxW={40}>
+            <Select
+              aria-label="mode"
+              onChange={setMode}
+              value={state.mode.toString()}
             >
-              <polyline
-                points={`0,${aspectHeight} ${aspectWidth},0`}
-                stroke="black"
-                strokeWidth={1}
-                fill="none"
-              />
-              <polyline
-                points={`0,${aspectHeight} ${aspectWidth},${aspectHeight} ${aspectWidth},0`}
-                stroke="black"
-                strokeWidth={1}
-                strokeDasharray={4}
-                fill="none"
-              />
-            </svg>
-          )}
-        </GridItem>
-        <GridItem>
-          <Spacer />
-        </GridItem>
-        <GridItem>
-          <Text>
-            {Math.round(widthSt)} sts ({Math.round(widthMeasure * 10) / 10}{" "}
-            {props.gauge.unit.toString()}) wide
-          </Text>
-        </GridItem>
-      </Grid>
+              <option value={MODE.MEASURE.toString()}>
+                {props.gauge.unit.toString()}
+              </option>
+              <option value={MODE.STITCH.toString()}>stitches</option>
+            </Select>
+          </FormControl>
+        </HStack>
 
-      <Accordion allowMultiple>
-        <AccordionItem>
-          <h2>
-            <AccordionButton>
-              <Box as="span" flex="1" textAlign="left">
-                Working
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          <AccordionPanel pb={4}>
+        <Grid
+          alignSelf="center"
+          templateColumns="repeat(2, 1fr)"
+          alignItems="center"
+          justifyItems="center"
+          m={4}
+        >
+          <GridItem>
             <Text>
-              Using{" "}
-              <Link
-                href="https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm"
-                color="pink.500"
-                isExternal
-              >
-                Bresenham's algorithm <ExternalLinkIcon mx="2px" />
-              </Link>
+              {Math.round(heightSt)} sts ({Math.round(heightMeasure * 10) / 10}{" "}
+              {props.gauge.unit.toString()}) high
             </Text>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+          </GridItem>
+          <GridItem>
+            {!Number.isNaN(aspectWidth) && !Number.isNaN(aspectHeight) && (
+              <svg
+                viewBox={`-1 -1  ${aspectWidth + 2} ${aspectHeight + 2}`}
+                width={aspectWidth}
+                height={aspectHeight}
+              >
+                <polyline
+                  points={`0,${aspectHeight} ${aspectWidth},0`}
+                  stroke="black"
+                  strokeWidth={1}
+                  fill="none"
+                />
+                <polyline
+                  points={`0,${aspectHeight} ${aspectWidth},${aspectHeight} ${aspectWidth},0`}
+                  stroke="black"
+                  strokeWidth={1}
+                  strokeDasharray={4}
+                  fill="none"
+                />
+              </svg>
+            )}
+          </GridItem>
+          <GridItem>
+            <Spacer />
+          </GridItem>
+          <GridItem>
+            <Text>
+              {Math.round(widthSt)} sts ({Math.round(widthMeasure * 10) / 10}{" "}
+              {props.gauge.unit.toString()}) wide
+            </Text>
+          </GridItem>
+        </Grid>
+      </VStack>
 
-      <BlockedSlope
-        x={widthSt}
-        y={heightSt}
-        aspect={props.gauge.stitches / props.gauge.rows}
-      />
-    </VStack>
+      <VStack
+        spacing={2}
+        align="stretch"
+        flex={1}
+        flexShrink={0}
+        flexBasis={20}
+      >
+        <Accordion allowMultiple>
+          <AccordionItem>
+            <h2>
+              <AccordionButton>
+                <Box as="span" flex="1" textAlign="left">
+                  Working
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>
+              <Text>
+                Using{" "}
+                <Link
+                  href="https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm"
+                  color="pink.500"
+                  isExternal
+                >
+                  Bresenham's algorithm <ExternalLinkIcon mx="2px" />
+                </Link>
+              </Text>
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+
+        <BlockedSlope
+          x={widthSt}
+          y={heightSt}
+          aspect={props.gauge.stitches / props.gauge.rows}
+        />
+      </VStack>
+    </Flex>
   );
 }

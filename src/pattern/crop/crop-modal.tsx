@@ -28,6 +28,7 @@ export function CropModal(props: {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const setAndClose = () => {
     props.onchange(state);
+    onClose();
   };
 
   return (
@@ -44,12 +45,12 @@ export function CropModal(props: {
           <ModalBody>
             <svg
               viewBox={`0 0 ${props.width} ${props.height}`}
-              width="100%"
-              height="100%"
-              preserveAspectRatio="xMinYMin"
+              // width="80vw"
+              // height="80vh"
+              preserveAspectRatio="xMaxyMax"
               ref={svgRef}
               onMouseMove={(e) =>
-                CropController.onMouseMove(setState, svgRef, e)
+                CropController.onMouseMove(setState, svgRef, e, props.width)
               }
               onMouseUp={() => CropController.onMouseUp(setState)}
               onMouseLeave={() => CropController.onMouseUp(setState)}

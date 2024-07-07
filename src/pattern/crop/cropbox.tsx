@@ -16,6 +16,9 @@ export function CropBox(props: { state: CropState; setState: SetState }) {
         width={state.x1 - state.x0}
         height={state.y1 - state.y0}
         fill="transparent"
+        style={{
+          cursor: state.moving != undefined ? "grabbing" : "grab",
+        }}
       />
       <circle
         cx={state.x0}
@@ -23,7 +26,7 @@ export function CropBox(props: { state: CropState; setState: SetState }) {
         r={HANDLE_RADIUS}
         fill="transparent"
         style={{
-          cursor: state.moving != undefined ? "grabbing" : "grab",
+          cursor: state.moving != undefined ? "nw-resize" : "grab",
         }}
         onMouseDown={() => CropController.onCropTopLeftMouseDown(setState)}
       />
@@ -33,7 +36,7 @@ export function CropBox(props: { state: CropState; setState: SetState }) {
         r={HANDLE_RADIUS}
         fill="transparent"
         style={{
-          cursor: state.moving != undefined ? "grabbing" : "grab",
+          cursor: state.moving != undefined ? "ne-resize" : "grab",
         }}
         onMouseDown={() => CropController.onCropTopRightMouseDown(setState)}
       />
@@ -43,7 +46,7 @@ export function CropBox(props: { state: CropState; setState: SetState }) {
         r={HANDLE_RADIUS}
         fill="transparent"
         style={{
-          cursor: state.moving != undefined ? "grabbing" : "grab",
+          cursor: state.moving != undefined ? "sw-resize" : "grab",
         }}
         onMouseDown={() => CropController.onCropBottomLeftMouseDown(setState)}
       />
@@ -53,7 +56,7 @@ export function CropBox(props: { state: CropState; setState: SetState }) {
         r={HANDLE_RADIUS}
         fill="transparent"
         style={{
-          cursor: state.moving != undefined ? "grabbing" : "grab",
+          cursor: state.moving != undefined ? "se-resize" : "grab",
         }}
         onMouseDown={() => CropController.onCropBottomRightMouseDown(setState)}
       />

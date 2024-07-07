@@ -17,6 +17,7 @@ import {
   Tab,
   TabList,
   Box,
+  Flex,
 } from "@chakra-ui/react";
 import { Gauge } from "./guage/gauge";
 
@@ -45,10 +46,93 @@ function Calculator() {
 
         <Tabs>
           <TabList>
-            <Tab>Rectangle</Tab>
-            <Tab>Decrease/Increase Evenly</Tab>
-            <Tab>Curve</Tab>
-            <Tab>Slope</Tab>
+            <Tab>
+              <Flex
+                direction={{ base: "column", md: "row" }}
+                gap={1}
+                justify="center"
+                align="center"
+              >
+                <svg viewBox="0 0 22 22" width={22} height={22}>
+                  <rect
+                    x={1}
+                    y={1}
+                    width={20}
+                    height={20}
+                    stroke="black"
+                    fill="none"
+                    strokeWidth={1}
+                  />
+                </svg>
+                <Text>Rectangle</Text>
+              </Flex>
+            </Tab>
+            <Tab>
+              <Flex
+                direction={{ base: "column", md: "row" }}
+                gap={1}
+                justify="center"
+                align="center"
+              >
+                <svg viewBox="0 0 22 22" width={22} height={22}>
+                  <rect
+                    x={1}
+                    y={1}
+                    width={20}
+                    height={10}
+                    stroke="black"
+                    fill="none"
+                    strokeWidth={1}
+                  />
+                  <rect
+                    x={4}
+                    y={11}
+                    width={14}
+                    height={10}
+                    stroke="black"
+                    fill="none"
+                    strokeWidth={1}
+                  />
+                </svg>
+                <Text>Decrease/Increase Evenly</Text>
+              </Flex>
+            </Tab>
+            <Tab>
+              <Flex
+                direction={{ base: "column", md: "row" }}
+                gap={1}
+                justify="center"
+                align="center"
+              >
+                <svg viewBox="0 0 22 22" width={22} height={22}>
+                  <path
+                    d="M 1,1 A 20 20 0 0 1 20,20 L 1,20 z"
+                    stroke="black"
+                    fill="none"
+                    strokeWidth={1}
+                  />
+                </svg>
+                <Text>Curve</Text>
+              </Flex>
+            </Tab>
+            <Tab>
+              <Flex
+                direction={{ base: "column", md: "row" }}
+                gap={1}
+                justify="center"
+                align="center"
+              >
+                <svg viewBox="0 0 22 22" width={22} height={22}>
+                  <path
+                    d="M 1,1 L 1,20 20,20 z"
+                    stroke="black"
+                    fill="none"
+                    strokeWidth={1}
+                  />
+                </svg>
+                <Text>Slope</Text>
+              </Flex>
+            </Tab>
           </TabList>
 
           <TabPanels>
