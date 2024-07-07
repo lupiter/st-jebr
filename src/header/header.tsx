@@ -18,8 +18,8 @@ export function Header() {
       align="baseline"
       borderBottom="1px"
       borderBottomColor="gray.200"
+      padding={2}
       paddingBottom={1}
-      paddingLeft={2}
       justifyContent="start"
     >
       <Menu>
