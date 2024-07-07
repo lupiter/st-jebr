@@ -36,10 +36,10 @@ function Calculator() {
         m={2}
         as="main"
         align="stretch"
-        maxW={1000}
         justify="center"
         marginLeft="auto"
         marginRight="auto"
+        width="100%"
       >
         <Box as="form">
           <Gauge gauge={state} onchange={setState} />

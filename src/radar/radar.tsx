@@ -62,7 +62,7 @@ export function Radar() {
         flexDir={"column"}
         alignItems={"stretch"}
         height={"100%"}
-        maxW={1000}
+        width={"100%"}
         justify="center"
         marginLeft="auto"
         marginRight="auto"

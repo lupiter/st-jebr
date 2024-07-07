@@ -142,6 +142,7 @@ export function Card() {
         alignSelf="center"
         m={2}
         maxW="3xl"
+        width={"100%"}
         justify="center"
         marginLeft="auto"
         marginRight="auto"
