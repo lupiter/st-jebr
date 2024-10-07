@@ -53,9 +53,9 @@ const fallback = (partialState: {
     length: 0.08 * partialState.length,
   },
   neck: {
-    width: 0.14 * partialState.chest,
-    depth: 0.5 * partialState.length,
-    angle: 76,
+    width: 0.13 * partialState.chest,
+    depth: 0.6 * partialState.length,
+    angle: 85,
   },
 });
 
@@ -101,11 +101,12 @@ export function Raglan() {
   const bodySlopeWidth = (state.chest / 2 - state.neck.width) / 2 - shelf;
   const sleeveSlopeWidth = state.chest * 0.11;
   const sleeveCastOff = state.sleeve.bicep - (sleeveSlopeWidth + shelf) * 2;
-  const neckSlopeHeight = state.neck.depth - sleeveCastOff / 2;
+  const neckSlopeHeight = state.neck.depth - (sleeveCastOff / 2);
   const neckSlopeWidth =
     neckSlopeHeight / Math.tan((state.neck.angle * Math.PI) / 180);
   const neckCastOff = state.neck.width - neckSlopeWidth * 2;
-  const sleeveTotalLength = state.sleeve.length + (state.length - state.underarm);
+  const sleeveTotalLength =
+    state.sleeve.length + (state.length - state.underarm);
 
   console.log("render", sleeveSlopeWidth);
 
@@ -215,12 +216,17 @@ export function Raglan() {
               />
             </VStack>
           </HStack>
-          <VStack align="center" justify={"center"}>
-            <HStack justify={'stretch'} align={'stretch'} alignSelf={'stretch'} justifySelf={'stretch'}>
+          <VStack align="center" justify="center">
+            <HStack
+              justify={"stretch"}
+              align={"stretch"}
+              alignSelf={"stretch"}
+              justifySelf={"stretch"}
+            >
               <figure>
                 <svg
                   viewBox={`0 0 ${state.chest / 2} ${state.length}`}
-                  width={state.chest / 2 * 2}
+                  width={(state.chest / 2) * 2}
                   height={state.length * 2}
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -244,8 +250,7 @@ export function Raglan() {
               <figure>
                 <svg
                   viewBox={`0 0 ${state.chest / 2} ${state.length}`}
-
-                  width={state.chest / 2 * 2}
+                  width={(state.chest / 2) * 2}
                   height={state.length * 2}
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -296,65 +301,57 @@ export function Raglan() {
               <Table variant="simple">
                 <Thead>
                   <Tr>
-                    <Th>Part</Th>
-                    <Th isNumeric>Body width</Th>
-                    <Th isNumeric>Body length</Th>
-                    <Th isNumeric>Shelf</Th>
-                    <Th isNumeric>Slope width</Th>
-                    <Th isNumeric>Slope length</Th>
-                    <Th isNumeric>Cast off</Th>
+                    <Th>Dimension</Th>
+                    <Th isNumeric>Back</Th>
+                    <Th isNumeric>Front neck</Th>
+                    <Th isNumeric>Sleeve</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
                   <Tr>
-                    <Td>Back</Td>
+                    <Th>Bottom width</Th>
                     <Td isNumeric>{(state.chest / 2).toLocaleString()}</Td>
+                    <Td></Td>
+                    <Td isNumeric>{state.sleeve.width.toLocaleString()}</Td>
+                  </Tr>
+                  <Tr>
+                    <Th>Sleeve max width</Th>
+                    <Td></Td>
+                    <Td></Td>
+                    <Td isNumeric>{state.sleeve.bicep.toLocaleString()}</Td>
+                  </Tr>
+                  <Tr>
+                    <Th>Body length</Th>
                     <Td isNumeric>{state.underarm.toLocaleString()}</Td>
+                    <Td></Td>
+                    <Td isNumeric>{state.sleeve.length.toLocaleString()}</Td>
+                  </Tr>
+                  <Tr>
+                    <Th>Shelf</Th>
                     <Td isNumeric>{shelf.toLocaleString()}</Td>
+                    <Td isNumeric>{shelf.toLocaleString()}</Td>
+                    <Td isNumeric>{shelf.toLocaleString()}</Td>
+                  </Tr>
+                  <Tr>
+                    <Th>Slope width</Th>
                     <Td isNumeric>{bodySlopeWidth.toLocaleString()}</Td>
+                    <Td isNumeric>{neckSlopeWidth.toLocaleString()}</Td>
+                    <Td isNumeric>{sleeveSlopeWidth.toLocaleString()}</Td>
+                  </Tr>
+                  <Tr>
+                    <Th>Slope length</Th>
                     <Td isNumeric>
                       {(state.length - state.underarm).toLocaleString()}
                     </Td>
-                    <Td isNumeric>{state.neck.width.toLocaleString()}</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Front neck</Td>
-                    <Td></Td>
-                    <Td></Td>
-                    <Td></Td>
-                    <Td isNumeric>{neckSlopeWidth.toLocaleString()}</Td>
                     <Td isNumeric>{neckSlopeHeight.toLocaleString()}</Td>
                     <Td isNumeric>
-                      {(neckCastOff).toLocaleString()}
-                    </Td>
-                  </Tr>
-                </Tbody>
-              </Table>
-
-              <Table variant="simple">
-                <Thead>
-                  <Tr>
-                    <Th>Part</Th>
-                    <Th isNumeric>Sleeve end width</Th>
-                    <Th isNumeric>Sleeve max width</Th>
-                    <Th isNumeric>Sleeve length</Th>
-                    <Th isNumeric>Shelf</Th>
-                    <Th isNumeric>Slope width</Th>
-                    <Th isNumeric>Slope length</Th>
-                    <Th isNumeric>Cast off</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  <Tr>
-                    <Td>Sleeve</Td>
-                    <Td isNumeric>{state.sleeve.width.toLocaleString()}</Td>
-                    <Td isNumeric>{state.sleeve.bicep.toLocaleString()}</Td>
-                    <Td isNumeric>{state.sleeve.length.toLocaleString()}</Td>
-                    <Td isNumeric>{shelf.toLocaleString()}</Td>
-                    <Td isNumeric>{sleeveSlopeWidth.toLocaleString()}</Td>
-                    <Td isNumeric>
                       {(state.length - state.underarm).toLocaleString()}
                     </Td>
+                  </Tr>
+                  <Tr>
+                    <Th>Cast off</Th>
+                    <Td isNumeric>{state.neck.width.toLocaleString()}</Td>
+                    <Td isNumeric>{neckCastOff.toLocaleString()}</Td>
                     <Td isNumeric>{sleeveCastOff.toLocaleString()}</Td>
                   </Tr>
                 </Tbody>
