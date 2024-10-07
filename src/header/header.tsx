@@ -40,6 +40,13 @@ export function Header() {
           </MenuItem>
           <MenuItem
             as={NavLink}
+            to={ROUTES.RAGLAN.toString()}
+            _activeLink={{ textDecoration: "underline" }}
+          >
+            Raglan Designer
+          </MenuItem>
+          <MenuItem
+            as={NavLink}
             to={ROUTES.CARD.toString()}
             _activeLink={{ textDecoration: "underline" }}
           >

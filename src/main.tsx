@@ -7,6 +7,7 @@ import { ROUTES } from "./routes.ts";
 import { Card } from "./cards/card.tsx";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { Radar } from "./radar/radar.tsx";
+import { Raglan } from "./raglan/raglan.tsx";
 
 const router = createHashRouter(
   [
@@ -21,6 +22,10 @@ const router = createHashRouter(
     {
       path: ROUTES.RADAR.toString(),
       element: <Radar />,
+    },
+    {
+      path: ROUTES.RAGLAN.toString(),
+      element: <Raglan />,
     },
   ],
   { basename: "/" },

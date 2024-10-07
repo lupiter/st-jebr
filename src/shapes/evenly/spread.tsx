@@ -69,7 +69,8 @@ export function Spread(props: { after: number; before: number }): JSX.Element {
             <>
               <Text>
                 {before} &divide; abs({change}) sts ={" "}
-                {before / Math.abs(change)} sts {remainder > 0 && (<>&asymp; every {changeRepeat} sts</>)}
+                {before / Math.abs(change)} sts{" "}
+                {remainder > 0 && <>&asymp; every {changeRepeat} sts</>}
               </Text>
               {remainder > 0 && (
                 <>
@@ -123,16 +124,20 @@ export function Spread(props: { after: number; before: number }): JSX.Element {
                     by fewer to get how many repeats to do before switching
                     type)
                   </Text>
-                  <Text>
-                    {Math.min(first, remainder)} - {remainder2} ={" "}
-                    {Math.min(first, remainder) - remainder2} (smallest repeat,
-                    minus the remainder, how many more of the smaller repeats
-                    would we need to divide evenly)
-                  </Text>
-                  <Text>
-                    (i) every {changeRepeat2} groups {first2} times (ii) every{" "}
-                    {change2 + 1} groups {remainder2} times
-                  </Text>
+                  {remainder2 > 0 && (
+                    <>
+                      <Text>
+                        {Math.min(first, remainder)} - {remainder2} ={" "}
+                        {Math.min(first, remainder) - remainder2} (smallest
+                        repeat, minus the remainder, how many more of the
+                        smaller repeats would we need to divide evenly)
+                      </Text>
+                      <Text>
+                        (i) every {changeRepeat2} groups {first2} times (ii)
+                        every {change2 + 1} groups {remainder2} times
+                      </Text>
+                    </>
+                  )}
                 </>
               )}
             </>
@@ -157,12 +162,23 @@ export function Spread(props: { after: number; before: number }): JSX.Element {
                   <li>
                     {before > after ? "decrease" : "increase"}, and then{" "}
                     {before > after ? "decrease" : "increase"} every{" "}
-                    {changeRepeat} stitches {first2} times
+                    {changeRepeat} stitches {Math.floor(changeRepeat2 / 2)} times
+                  </li>
+                  /* -- todo: repeat below two points ?? times -- */
+                  <li>
+                    {before > after ? "decrease" : "increase"}, and then{" "}
+                    {before > after ? "decrease" : "increase"} every{" "}
+                    {changeRepeat + 1} stitches {1} times
                   </li>
                   <li>
                     {before > after ? "decrease" : "increase"}, and then{" "}
                     {before > after ? "decrease" : "increase"} every{" "}
-                    {changeRepeat + 1} stitches {remainder2} times
+                    {changeRepeat} stitches {changeRepeat2} times
+                  </li>
+                  <li>
+                    {before > after ? "decrease" : "increase"}, and then{" "}
+                    {before > after ? "decrease" : "increase"} every{" "}
+                    {changeRepeat} stitches {changeRepeat2 - Math.floor(changeRepeat2 / 2)} times
                   </li>
                 </>
               )}
