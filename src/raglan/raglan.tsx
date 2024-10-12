@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { Header } from "../header/header";
 import {
   VStack,
@@ -13,7 +13,6 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Switch,
   Box,
   Table,
   TableContainer,
@@ -27,35 +26,35 @@ import {
 
 type RaglanState = {
   chest: number;
-  length: number;
   underarm: number;
   sleeve: {
     bicep: number;
     width: number;
     length: number;
+    angle: number;
   };
   neck: {
     width: number;
-    depth: number;
-    angle: number;
+    front: number;
+    back: number;
   };
 };
 
 const fallback = (partialState: {
   chest: number;
-  length: number;
+  underarm: number;
 }): RaglanState => ({
   ...partialState,
-  underarm: 0.6 * partialState.length,
   sleeve: {
     bicep: 0.36 * partialState.chest,
     width: 0.31 * partialState.chest,
-    length: 0.08 * partialState.length,
+    length: 0.15 * partialState.underarm,
+    angle: 30,
   },
   neck: {
-    width: 0.13 * partialState.chest,
-    depth: 0.6 * partialState.length,
-    angle: 85,
+    width: 0.2 * partialState.chest,
+    back: 0.1 * partialState.underarm,
+    front: 0.35 * partialState.underarm,
   },
 });
 
@@ -63,21 +62,18 @@ export function Raglan() {
   const [state, setState] = useState<RaglanState>(
     fallback({
       chest: 100,
-      length: 60,
+      underarm: 40,
     })
   );
 
   const setChest = (_: string, chest: number) => {
     setState((state) => ({ ...state, chest }));
   };
-  const setLength = (_: string, length: number) => {
-    setState((state) => ({ ...state, length }));
-  };
-  const setUnderarm = (underarm: number) => {
+  const setUnderarm = (_: string, underarm: number) => {
     setState((state) => ({ ...state, underarm }));
   };
-  const setBicep = (underarm: number) => {
-    setState((state) => ({ ...state, sleeve: { ...state.sleeve, underarm } }));
+  const setBicep = (bicep: number) => {
+    setState((state) => ({ ...state, sleeve: { ...state.sleeve, bicep } }));
   };
   const setSleeveWidth = (width: number) => {
     setState((state) => ({ ...state, sleeve: { ...state.sleeve, width } }));
@@ -85,30 +81,48 @@ export function Raglan() {
   const setSleeveLength = (length: number) => {
     setState((state) => ({ ...state, sleeve: { ...state.sleeve, length } }));
   };
+  const setShoulderAngle = (angle: number) => {
+    setState((state) => ({ ...state, sleeve: { ...state.sleeve, angle } }));
+  };
   const setNeckWidth = (width: number) => {
     setState((state) => ({ ...state, neck: { ...state.neck, width } }));
   };
-  const setNeckDepth = (depth: number) => {
-    setState((state) => ({ ...state, neck: { ...state.neck, depth } }));
+  const setNeckBack = (back: number) => {
+    setState((state) => ({ ...state, neck: { ...state.neck, back } }));
   };
-  const setNeckAngle = (angle: number) => {
-    setState((state) => ({ ...state, neck: { ...state.neck, angle } }));
+  const setNeckFront = (front: number) => {
+    setState((state) => ({ ...state, neck: { ...state.neck, front } }));
   };
 
   const defaults = fallback(state);
 
-  const shelf = state.chest * 0.02;
-  const bodySlopeWidth = (state.chest / 2 - state.neck.width) / 2 - shelf;
-  const sleeveSlopeWidth = state.chest * 0.11;
-  const sleeveCastOff = state.sleeve.bicep - (sleeveSlopeWidth + shelf) * 2;
-  const neckSlopeHeight = state.neck.depth - (sleeveCastOff / 2);
-  const neckSlopeWidth =
-    neckSlopeHeight / Math.tan((state.neck.angle * Math.PI) / 180);
-  const neckCastOff = state.neck.width - neckSlopeWidth * 2;
-  const sleeveTotalLength =
-    state.sleeve.length + (state.length - state.underarm);
+  const degToRad = (x: number): number => (x * Math.PI) / 180;
+  const sleeveAngleRad = degToRad(state.sleeve.angle);
 
-  console.log("render", sleeveSlopeWidth);
+  const shelf = state.chest * 0.02;
+
+  const frontChest = state.chest / 2;
+  const chestAfterShelf = frontChest - 2 * shelf;
+  const halfBicep = state.sleeve.bicep / 2;
+  const halfNeck = state.neck.width / 2;
+
+  const shoulderToArmpit =
+    halfBicep * Math.cos(sleeveAngleRad) +
+    ((chestAfterShelf - halfNeck) / 2) * Math.tan(sleeveAngleRad);
+  const backCastOff =
+    (halfNeck - (state.neck.back * Math.tan(sleeveAngleRad))) * 2;
+  const bodySlopeWidth = (chestAfterShelf - backCastOff) / 2;
+
+  const neckSlopeHeight = state.neck.front - state.neck.back;
+  const neckSlopeWidth = neckSlopeHeight * Math.tan(sleeveAngleRad);
+  const neckCastOff = backCastOff - neckSlopeWidth * 2;
+
+  const sleeveCastOff = state.neck.back / Math.cos(sleeveAngleRad) * 2;
+  const sleeveSlopeWidth = (state.sleeve.bicep - sleeveCastOff) / 2 - shelf;
+  const sleeveSlopeHeight = 20;// todo: this is clearly nutty
+  const sleeveTotalLength = state.sleeve.length + sleeveSlopeHeight;
+
+  const length = shoulderToArmpit + state.underarm;
 
   return (
     <VStack align="stretch">
@@ -151,10 +165,10 @@ export function Raglan() {
                   </NumberInput>
                 </FormControl>
                 <FormControl>
-                  <FormLabel>Length (from back of neck)</FormLabel>
+                  <FormLabel>Underarm to bottom of garment</FormLabel>
                   <NumberInput
-                    value={state.length}
-                    onChange={setLength}
+                    value={state.underarm}
+                    onChange={setUnderarm}
                     maxW={20}
                   >
                     <NumberInputField />
@@ -165,13 +179,6 @@ export function Raglan() {
                   </NumberInput>
                 </FormControl>
               </VStack>
-
-              <OptionalInput
-                value={state.underarm}
-                label="Underarm to bottom of garmet"
-                default={defaults.underarm}
-                onChange={setUnderarm}
-              />
 
               <OptionalInput
                 value={state.sleeve.bicep}
@@ -195,6 +202,13 @@ export function Raglan() {
               />
 
               <OptionalInput
+                value={state.sleeve.angle}
+                label="Sleeve/shoulder angle (degrees)"
+                default={defaults.sleeve.angle}
+                onChange={setShoulderAngle}
+              />
+
+              <OptionalInput
                 value={state.neck.width}
                 label="Neck width"
                 default={defaults.neck.width}
@@ -202,17 +216,17 @@ export function Raglan() {
               />
 
               <OptionalInput
-                value={state.neck.depth}
-                label="Neck depth"
-                default={defaults.neck.depth}
-                onChange={setNeckDepth}
+                value={state.neck.back}
+                label="Back neck depth"
+                default={defaults.neck.back}
+                onChange={setNeckBack}
               />
 
               <OptionalInput
-                value={state.neck.angle}
-                label="Neck slope (degrees)"
-                default={defaults.neck.angle}
-                onChange={setNeckAngle}
+                value={state.neck.front}
+                label="Front neck depth"
+                default={defaults.neck.front}
+                onChange={setNeckFront}
               />
             </VStack>
           </HStack>
@@ -225,22 +239,22 @@ export function Raglan() {
             >
               <figure>
                 <svg
-                  viewBox={`0 0 ${state.chest / 2} ${state.length}`}
-                  width={(state.chest / 2) * 2}
-                  height={state.length * 2}
+                  viewBox={`0 0 ${frontChest} ${length}`}
+                  width={frontChest * 2}
+                  height={length * 2}
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <polygon
                     fill="grey"
                     points={
-                      `0,${state.length} ` +
-                      `0,${state.length - state.underarm} ` +
-                      `${shelf},${state.length - state.underarm} ` +
-                      `${shelf + bodySlopeWidth},0 ` +
-                      `${shelf + bodySlopeWidth + state.neck.width},0  ` +
-                      `${state.chest / 2 - shelf},${state.length - state.underarm} ` +
-                      `${state.chest / 2},${state.length - state.underarm} ` +
-                      `${state.chest / 2},${state.length} `
+                      `0,${length} ` +
+                      `0,${shoulderToArmpit} ` +
+                      `${shelf},${shoulderToArmpit} ` +
+                      `${shelf + bodySlopeWidth},${state.neck.back} ` +
+                      `${shelf + bodySlopeWidth + backCastOff},${state.neck.back}  ` +
+                      `${frontChest - shelf},${shoulderToArmpit} ` +
+                      `${frontChest},${shoulderToArmpit} ` +
+                      `${frontChest},${length} `
                     }
                   />
                 </svg>
@@ -249,24 +263,24 @@ export function Raglan() {
 
               <figure>
                 <svg
-                  viewBox={`0 0 ${state.chest / 2} ${state.length}`}
-                  width={(state.chest / 2) * 2}
-                  height={state.length * 2}
+                  viewBox={`0 0 ${frontChest} ${length}`}
+                  width={frontChest * 2}
+                  height={length * 2}
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <polygon
                     fill="grey"
                     points={
-                      `0,${state.length} ` +
-                      `0,${state.length - state.underarm} ` +
-                      `${shelf},${state.length - state.underarm} ` +
-                      `${shelf + bodySlopeWidth},0 ` +
-                      `${shelf + bodySlopeWidth + neckSlopeWidth},${neckSlopeHeight} ` +
-                      `${shelf + bodySlopeWidth + neckSlopeWidth + neckCastOff},${neckSlopeHeight} ` +
-                      `${shelf + bodySlopeWidth + state.neck.width},0  ` +
-                      `${state.chest / 2 - shelf},${state.length - state.underarm} ` +
-                      `${state.chest / 2},${state.length - state.underarm} ` +
-                      `${state.chest / 2},${state.length} `
+                      `0,${length} ` +
+                      `0,${shoulderToArmpit} ` +
+                      `${shelf},${shoulderToArmpit} ` +
+                      `${shelf + bodySlopeWidth},${state.neck.back} ` +
+                      `${shelf + bodySlopeWidth + neckSlopeWidth},${state.neck.front} ` +
+                      `${shelf + bodySlopeWidth + neckSlopeWidth + neckCastOff},${state.neck.front} ` +
+                      `${shelf + bodySlopeWidth + backCastOff},${state.neck.back}  ` +
+                      `${frontChest - shelf},${shoulderToArmpit} ` +
+                      `${frontChest},${shoulderToArmpit} ` +
+                      `${frontChest},${length} `
                     }
                   />
                 </svg>
@@ -284,12 +298,37 @@ export function Raglan() {
                     fill="grey"
                     points={
                       `${(state.sleeve.bicep - state.sleeve.width) / 2},${sleeveTotalLength} ` +
-                      `0,${state.length - state.underarm} ` +
-                      `${shelf},${state.length - state.underarm} ` +
+                      `0,${sleeveSlopeHeight} ` +
+                      `${shelf},${sleeveSlopeHeight} ` +
                       `${shelf + sleeveSlopeWidth},0 ` +
                       `${shelf + sleeveSlopeWidth + sleeveCastOff},0  ` +
-                      `${state.sleeve.bicep - shelf},${state.length - state.underarm} ` +
-                      `${state.sleeve.bicep},${state.length - state.underarm} ` +
+                      `${state.sleeve.bicep - shelf},${sleeveSlopeHeight} ` +
+                      `${state.sleeve.bicep},${sleeveSlopeHeight} ` +
+                      `${state.sleeve.bicep - (state.sleeve.bicep - state.sleeve.width) / 2},${sleeveTotalLength} `
+                    }
+                  />
+                </svg>
+                <Text as="figcaption">Sleeve</Text>
+              </figure>
+
+
+              <figure>
+                <svg
+                  viewBox={`0 0 ${state.sleeve.bicep} ${sleeveTotalLength}`}
+                  width={state.sleeve.bicep * 2}
+                  height={sleeveTotalLength * 2}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polygon
+                    fill="grey"
+                    points={
+                      `${(state.sleeve.bicep - state.sleeve.width) / 2},${sleeveTotalLength} ` +
+                      `0,${sleeveSlopeHeight} ` +
+                      `${shelf},${sleeveSlopeHeight} ` +
+                      `${shelf + sleeveSlopeWidth},0 ` +
+                      `${shelf + sleeveSlopeWidth + sleeveCastOff},0  ` +
+                      `${state.sleeve.bicep - shelf},${sleeveSlopeHeight} ` +
+                      `${state.sleeve.bicep},${sleeveSlopeHeight} ` +
                       `${state.sleeve.bicep - (state.sleeve.bicep - state.sleeve.width) / 2},${sleeveTotalLength} `
                     }
                   />
@@ -310,7 +349,7 @@ export function Raglan() {
                 <Tbody>
                   <Tr>
                     <Th>Bottom width</Th>
-                    <Td isNumeric>{(state.chest / 2).toLocaleString()}</Td>
+                    <Td isNumeric>{frontChest.toLocaleString()}</Td>
                     <Td></Td>
                     <Td isNumeric>{state.sleeve.width.toLocaleString()}</Td>
                   </Tr>
@@ -340,17 +379,13 @@ export function Raglan() {
                   </Tr>
                   <Tr>
                     <Th>Slope length</Th>
-                    <Td isNumeric>
-                      {(state.length - state.underarm).toLocaleString()}
-                    </Td>
+                    <Td isNumeric>{shoulderToArmpit.toLocaleString()}</Td>
                     <Td isNumeric>{neckSlopeHeight.toLocaleString()}</Td>
-                    <Td isNumeric>
-                      {(state.length - state.underarm).toLocaleString()}
-                    </Td>
+                    <Td isNumeric>{shoulderToArmpit.toLocaleString()}</Td>
                   </Tr>
                   <Tr>
                     <Th>Cast off</Th>
-                    <Td isNumeric>{state.neck.width.toLocaleString()}</Td>
+                    <Td isNumeric>{backCastOff.toLocaleString()}</Td>
                     <Td isNumeric>{neckCastOff.toLocaleString()}</Td>
                     <Td isNumeric>{sleeveCastOff.toLocaleString()}</Td>
                   </Tr>
@@ -371,52 +406,39 @@ function OptionalInput(props: {
   onChange: (newValue: number) => void;
   default: number;
 }) {
-  const [state, setState] = useState<{
-    override: number;
-    useOverride: boolean;
-  }>({
-    override: props.value,
-    useOverride: false,
-  });
+  const [value, setValue] = useState<string>(props.value.toLocaleString());
 
-  const setOverride = (_: string, value: number) => {
-    setState((curr) => ({
-      ...curr,
-      override: value,
-    }));
-    props.onChange(value);
-  };
-  const setUseOverride = (e: ChangeEvent<HTMLInputElement>) => {
-    const useOverride = e.target.checked;
-    setState((curr) => ({
-      ...curr,
-      useOverride,
-    }));
-    props.onChange(useOverride ? state.override : props.default);
-  };
+  const isValid = (x: number) => !isNaN(x) && x !== undefined && x !== null;
+
+  const onChange = (str: string, value: number) => {
+    setValue(str);
+    if (isValid(value)) {
+      props.onChange(value);
+    }
+  }
+
+  const onBlur = () => {
+    const asInt = parseInt(value);
+    if (!isValid(asInt)) {
+      setValue(props.default.toLocaleString());
+      props.onChange(props.default);
+    }
+
+  }
 
   return (
     <HStack as="fieldset" align={"center"}>
       <Heading size="sm" as="legend">
         {props.label}
       </Heading>
-
-      <Box>
-        <FormControl>
-          <Switch
-            isChecked={state.useOverride}
-            onChange={setUseOverride}
-            aria-label="Measure myself"
-          />
-        </FormControl>
-      </Box>
       <Box>
         <FormControl>
           <NumberInput
-            value={state.override}
-            onChange={setOverride}
+            value={value}
+            defaultValue={props.default}
+            onChange={onChange}
+            onBlur={onBlur}
             maxW={20}
-            isDisabled={!state.useOverride}
             aria-label="Measurement"
           >
             <NumberInputField />
