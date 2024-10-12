@@ -110,17 +110,26 @@ export function Raglan() {
     halfBicep * Math.cos(sleeveAngleRad) +
     ((chestAfterShelf - halfNeck) / 2) * Math.tan(sleeveAngleRad);
   const backCastOff =
-    (halfNeck - (state.neck.back * Math.tan(sleeveAngleRad))) * 2;
+    (halfNeck - state.neck.back * Math.tan(sleeveAngleRad)) * 2;
   const bodySlopeWidth = (chestAfterShelf - backCastOff) / 2;
 
   const neckSlopeHeight = state.neck.front - state.neck.back;
   const neckSlopeWidth = neckSlopeHeight * Math.tan(sleeveAngleRad);
   const neckCastOff = backCastOff - neckSlopeWidth * 2;
 
-  const sleeveCastOff = state.neck.back / Math.cos(sleeveAngleRad) * 2;
-  const sleeveSlopeWidth = (state.sleeve.bicep - sleeveCastOff) / 2 - shelf;
-  const sleeveSlopeHeight = 20;// todo: this is clearly nutty
+  const sleeveExtentPastChest =
+    state.sleeve.length * Math.cos(sleeveAngleRad) +
+    halfBicep * Math.sin(sleeveAngleRad);
+  const sleeveCastOff = (state.neck.back / Math.cos(sleeveAngleRad)) * 2;
+  const sleeveSlopeWidth = (state.sleeve.bicep - shelf * 2 - sleeveCastOff) / 2;
+  const sleeveSlopeHeight = 20;
   const sleeveTotalLength = state.sleeve.length + sleeveSlopeHeight;
+
+  const garmentWidth = sleeveExtentPastChest * 2 + frontChest;
+
+  console.log(
+    `sleeve extent ${sleeveExtentPastChest} bodySlope withd ${bodySlopeWidth}`
+  );
 
   const length = shoulderToArmpit + state.underarm;
 
@@ -311,29 +320,72 @@ export function Raglan() {
                 <Text as="figcaption">Sleeve</Text>
               </figure>
 
-
               <figure>
                 <svg
-                  viewBox={`0 0 ${state.sleeve.bicep} ${sleeveTotalLength}`}
-                  width={state.sleeve.bicep * 2}
-                  height={sleeveTotalLength * 2}
+                  viewBox={`${0 - sleeveExtentPastChest} 0 ${garmentWidth} ${length}`}
+                  width={garmentWidth * 2}
+                  height={length * 2}
                   xmlns="http://www.w3.org/2000/svg"
                 >
+                  {/* back */}
                   <polygon
-                    fill="grey"
+                    stroke="grey"
+                    fill="transparent"
                     points={
-                      `${(state.sleeve.bicep - state.sleeve.width) / 2},${sleeveTotalLength} ` +
-                      `0,${sleeveSlopeHeight} ` +
-                      `${shelf},${sleeveSlopeHeight} ` +
-                      `${shelf + sleeveSlopeWidth},0 ` +
-                      `${shelf + sleeveSlopeWidth + sleeveCastOff},0  ` +
-                      `${state.sleeve.bicep - shelf},${sleeveSlopeHeight} ` +
-                      `${state.sleeve.bicep},${sleeveSlopeHeight} ` +
-                      `${state.sleeve.bicep - (state.sleeve.bicep - state.sleeve.width) / 2},${sleeveTotalLength} `
+                      `0,${length} ` +
+                      `0,${shoulderToArmpit} ` +
+                      `${bodySlopeWidth},${state.neck.back} ` +
+                      `${bodySlopeWidth + backCastOff},${state.neck.back}  ` +
+                      `${frontChest - shelf * 2},${shoulderToArmpit} ` +
+                      `${frontChest - shelf * 2},${length} `
+                    }
+                  />
+
+                  {/* front */}
+                  <polygon
+                    stroke="grey"
+                    fill="transparent"
+                    points={
+                      `0,${length} ` +
+                      `0,${shoulderToArmpit} ` +
+                      `${bodySlopeWidth},${state.neck.back} ` +
+                      `${bodySlopeWidth + neckSlopeWidth},${state.neck.front} ` +
+                      `${bodySlopeWidth + neckSlopeWidth + neckCastOff},${state.neck.front} ` +
+                      `${bodySlopeWidth + backCastOff},${state.neck.back}  ` +
+                      `${frontChest - shelf * 2},${shoulderToArmpit} ` +
+                      `${frontChest - shelf * 2},${length} `
+                    }
+                  />
+
+                  {/* left sleeve */}
+                  <polygon
+                    stroke="grey"
+                    fill="transparent"
+                    points={
+                      `${bodySlopeWidth + backCastOff / 2 - halfNeck},0 ` +
+                      `${bodySlopeWidth},${state.neck.back} ` +
+                      `0,${shoulderToArmpit} ` +
+                      `${0 - state.sleeve.length * Math.cos(sleeveAngleRad)},${shoulderToArmpit + state.sleeve.length * Math.sin(sleeveAngleRad)} ` +
+                      `${0 - state.sleeve.length * Math.cos(sleeveAngleRad) - halfBicep * Math.sin(sleeveAngleRad)},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
+                      ``
+                    }
+                  />
+
+                  {/* Right sleeve */}
+                  <polygon
+                    stroke="grey"
+                    fill="transparent"
+                    points={
+                      `${bodySlopeWidth + backCastOff / 2 + halfNeck},0 ` +
+                      `${bodySlopeWidth + backCastOff},${state.neck.back} ` +
+                      `${frontChest - shelf * 2},${shoulderToArmpit} ` +
+                      `${frontChest - shelf * 2 + state.sleeve.length * Math.cos(sleeveAngleRad)},${shoulderToArmpit + state.sleeve.length * Math.sin(sleeveAngleRad)} ` +
+                      `${chestAfterShelf + sleeveExtentPastChest},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
+                      ``
                     }
                   />
                 </svg>
-                <Text as="figcaption">Sleeve</Text>
+                <Text as="figcaption">Garment</Text>
               </figure>
             </HStack>
             <TableContainer>
@@ -415,7 +467,7 @@ function OptionalInput(props: {
     if (isValid(value)) {
       props.onChange(value);
     }
-  }
+  };
 
   const onBlur = () => {
     const asInt = parseInt(value);
@@ -423,8 +475,7 @@ function OptionalInput(props: {
       setValue(props.default.toLocaleString());
       props.onChange(props.default);
     }
-
-  }
+  };
 
   return (
     <HStack as="fieldset" align={"center"}>
