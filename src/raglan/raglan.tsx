@@ -5,29 +5,36 @@ import {
   Spacer,
   HStack,
   Flex,
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Button,
+  Heading,
+  Text,
+  Switch,
   FormControl,
   FormLabel,
-  Heading,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Box,
 } from "@chakra-ui/react";
 import { RaglanState } from "./state";
 import { Figures } from "./figures";
 import { RaglanTable } from "./table";
+import { OptionalInput } from "./optional-input";
+import { RequiredInput } from "./required-input";
 
 const fallback = (partialState: {
   chest: number;
   underarm: number;
+  sleeve: {
+    length: number;
+  };
 }): RaglanState => ({
   ...partialState,
   sleeve: {
+    ...partialState.sleeve,
     bicep: 0.36 * partialState.chest,
-    width: 0.31 * partialState.chest,
-    length: 0.15 * partialState.underarm,
     angle: 30,
   },
   neck: {
@@ -38,12 +45,20 @@ const fallback = (partialState: {
 });
 
 export function Raglan() {
+  const [showHints, setShowHints] = useState<boolean>(false);
   const [state, setState] = useState<RaglanState>(
     fallback({
       chest: 100,
       underarm: 40,
+      sleeve: {
+        length: 9,
+      },
     })
   );
+
+  const toggleHints = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setShowHints(e.target.checked);
+  };
 
   const setChest = (chest: number) => {
     setState((state) => ({ ...state, chest }));
@@ -53,9 +68,6 @@ export function Raglan() {
   };
   const setBicep = (bicep: number) => {
     setState((state) => ({ ...state, sleeve: { ...state.sleeve, bicep } }));
-  };
-  const setSleeveWidth = (width: number) => {
-    setState((state) => ({ ...state, sleeve: { ...state.sleeve, width } }));
   };
   const setSleeveLength = (length: number) => {
     setState((state) => ({ ...state, sleeve: { ...state.sleeve, length } }));
@@ -71,6 +83,17 @@ export function Raglan() {
   };
   const setNeckFront = (front: number) => {
     setState((state) => ({ ...state, neck: { ...state.neck, front } }));
+  };
+  const reset = () => {
+    setState((state) => {
+      const defaults = fallback(state);
+      return {
+        ...state,
+        ...defaults,
+        neck: { ...state.neck, ...defaults.neck },
+        sleeve: { ...state.sleeve, ...defaults.sleeve },
+      };
+    });
   };
 
   const defaults = fallback(state);
@@ -103,203 +126,187 @@ export function Raglan() {
     <VStack align="stretch">
       <Header />
       <Flex
-        m={2}
+        m={0}
+        gap={6}
         as="main"
-        flexDir={"column"}
-        alignItems={"stretch"}
+        flexDir={"row"}
+        padding={6}
+        alignItems="start"
         height={"100%"}
         width={"100%"}
-        justify="center"
+        justify="start"
         marginLeft="auto"
         marginRight="auto"
       >
-        <HStack wrap={"wrap"} justifyContent={"center"} alignItems={"start"}>
-          <HStack
-            align="stretch"
-            wrap={{ base: "wrap", sm: "nowrap" }}
-            justify="center"
-            as="form"
-          >
-            <VStack align="stretch">
-              <VStack align="end" as="fieldset">
-                <Heading size="sm" as="legend">
-                  Required
-                </Heading>
-
-                <Input label="Chest" value={state.chest} onChange={setChest} />
-                <Input
-                  label="Underarm"
-                  value={state.underarm}
-                  onChange={setUnderarm}
-                />
-              </VStack>
-
-              <OptionalInput
-                value={state.sleeve.bicep}
-                label="Around bicep (widest part of arm)"
-                default={defaults.sleeve.bicep}
-                onChange={setBicep}
-              />
-
-              <OptionalInput
-                value={state.sleeve.width}
-                label="Around arm (where you want the sleeve to end)"
-                default={defaults.sleeve.width}
-                onChange={setSleeveWidth}
-              />
-
-              <OptionalInput
-                value={state.sleeve.length}
-                label="Sleeve length"
-                default={defaults.sleeve.length}
-                onChange={setSleeveLength}
-              />
-
-              <OptionalInput
-                value={state.sleeve.angle}
-                label="Sleeve/shoulder angle (degrees)"
-                default={defaults.sleeve.angle}
-                onChange={setShoulderAngle}
-              />
-
-              <OptionalInput
-                value={state.neck.width}
-                label="Neck width"
-                default={defaults.neck.width}
-                onChange={setNeckWidth}
-              />
-
-              <OptionalInput
-                value={state.neck.back}
-                label="Back neck depth"
-                default={defaults.neck.back}
-                onChange={setNeckBack}
-              />
-
-              <OptionalInput
-                value={state.neck.front}
-                label="Front neck depth"
-                default={defaults.neck.front}
-                onChange={setNeckFront}
-              />
-            </VStack>
-          </HStack>
-          <VStack align="center" justify="center">
-            <Figures
-              frontChest={frontChest}
-              shoulderToArmpit={shoulderToArmpit}
-              shelf={shelf}
-              bodySlopeWidth={bodySlopeWidth}
-              state={state}
-              neckSlopeWidth={neckSlopeWidth}
-              backCastOff={backCastOff}
-              neckCastOff={neckCastOff}
-              sleeveSlopeWidth={sleeveSlopeWidth}
-              sleeveCastOff={sleeveCastOff}
-              halfNeck={halfNeck}
-              sleeveAngleRad={sleeveAngleRad}
-              halfBicep={halfBicep}
-              chestAfterShelf={chestAfterShelf}
+        <HStack
+          align="stretch"
+          wrap={{ base: "wrap", sm: "nowrap" }}
+          justify="center"
+          as="form"
+          width={"sm"}
+        >
+          <VStack align="stretch" justify="stretch" flex={1}>
+            <Heading as="h4" size="sm">
+              Garment measurements
+            </Heading>
+            <FormControl>
+              <FormLabel>Show hints</FormLabel>
+              <Switch checked={showHints} onChange={toggleHints} />
+            </FormControl>
+            <RequiredInput
+              label="Chest"
+              value={state.chest}
+              onChange={setChest}
+              showHint={showHints}
+              hint="All around widest part between underarms and bottom of garment"
             />
-            <RaglanTable
-              frontChest={frontChest}
-              state={state}
-              shelf={shelf}
-              bodySlopeWidth={bodySlopeWidth}
-              neckSlopeWidth={neckSlopeWidth}
-              sleeveSlopeWidth={sleeveSlopeWidth}
-              shoulderToArmpit={shoulderToArmpit}
-              neckSlopeHeight={neckSlopeHeight}
-              backCastOff={backCastOff}
-              neckCastOff={neckCastOff}
-              sleeveCastOff={sleeveCastOff}
+            <RequiredInput
+              label="Underarm"
+              value={state.underarm}
+              onChange={setUnderarm}
+              hint="Vertical from armpit to bottom of garment"
+              showHint={showHints}
             />
+
+            <RequiredInput
+              value={state.sleeve.length}
+              label="Sleeve length"
+              onChange={setSleeveLength}
+              hint="Armpit to end of sleeve"
+              showHint={showHints}
+            />
+
+            <Button onClick={reset} variant="outline">
+              Recalculate from above
+            </Button>
+
+            <Accordion allowToggle>
+              <AccordionItem>
+                <h2>
+                  <AccordionButton>
+                    <Box as="span" flex="1" textAlign="left">
+                      Advanced
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                </h2>
+                <AccordionPanel gap="1rem" display="flex" flexDir="column">
+                  <OptionalInput
+                    value={state.sleeve.bicep}
+                    label="Bicep"
+                    default={defaults.sleeve.bicep}
+                    onChange={setBicep}
+                    hint="All around widest part of arm"
+                    showHint={showHints}
+                  />
+
+                  <OptionalInput
+                    value={state.sleeve.angle}
+                    label="Shoulder slope"
+                    default={defaults.sleeve.angle}
+                    onChange={setShoulderAngle}
+                    hint="Shoulder angle, down from a T-shape, degrees"
+                    showHint={showHints}
+                  />
+
+                  <OptionalInput
+                    value={state.neck.width}
+                    label="Neck width"
+                    default={defaults.neck.width}
+                    onChange={setNeckWidth}
+                    hint="Horizontal size of neck hole, across not around"
+                    showHint={showHints}
+                  />
+
+                  <OptionalInput
+                    value={state.neck.back}
+                    label="Back neck depth"
+                    default={defaults.neck.back}
+                    onChange={setNeckBack}
+                    hint="Center of neck hole to top edge of back"
+                    showHint={showHints}
+                  />
+
+                  <OptionalInput
+                    value={state.neck.front}
+                    label="Front neck depth"
+                    default={defaults.neck.front}
+                    onChange={setNeckFront}
+                    hint="Center of neck hole to bottom of front scoop, if same as back neck depth back and front are the same"
+                    showHint={showHints}
+                  />
+                </AccordionPanel>
+              </AccordionItem>
+              <AccordionItem>
+                <h2>
+                  <AccordionButton>
+                    <Box as="span" flex="1" textAlign="left">
+                      Help
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                </h2>
+                <AccordionPanel gap="1rem" display="flex" flexDir="column">
+                  <Heading size="xs" as="h5">
+                    Ease
+                  </Heading>
+                  <Text>
+                    The measurements here are final garment measurements, so if
+                    you measure <em>yourself</em> the garment will be
+                    skin-tight. For a vintage sweater fit, add 5cm or 2in. For a
+                    modern looser fit add 10cm or 4in. The easiest way to find
+                    how much ease you want is to compare your body measurements
+                    to some garments you like the fit of (tshirt, sweatshirt,
+                    etc).
+                  </Text>
+                  <Heading size="xs" as="h5">
+                    Units
+                  </Heading>
+                  <Text>
+                    You can enter centimeters, mm, inches, or whatever unit you
+                    like, and the results will come out in the same units. For
+                    the shoulder slope angle in "advanced" however, you do need
+                    to enter decimal degrees and not radians (sorry maths
+                    nerds).
+                  </Text>
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
           </VStack>
         </HStack>
+        <VStack align="center" justify="center" flex={1}>
+          <Figures
+            frontChest={frontChest}
+            shoulderToArmpit={shoulderToArmpit}
+            shelf={shelf}
+            bodySlopeWidth={bodySlopeWidth}
+            state={state}
+            neckSlopeWidth={neckSlopeWidth}
+            backCastOff={backCastOff}
+            neckCastOff={neckCastOff}
+            sleeveSlopeWidth={sleeveSlopeWidth}
+            sleeveCastOff={sleeveCastOff}
+            halfNeck={halfNeck}
+            sleeveAngleRad={sleeveAngleRad}
+            halfBicep={halfBicep}
+            chestAfterShelf={chestAfterShelf}
+          />
+          <RaglanTable
+            frontChest={frontChest}
+            state={state}
+            shelf={shelf}
+            bodySlopeWidth={bodySlopeWidth}
+            neckSlopeWidth={neckSlopeWidth}
+            sleeveSlopeWidth={sleeveSlopeWidth}
+            shoulderToArmpit={shoulderToArmpit}
+            neckSlopeHeight={neckSlopeHeight}
+            backCastOff={backCastOff}
+            neckCastOff={neckCastOff}
+            sleeveCastOff={sleeveCastOff}
+          />
+        </VStack>
         <Spacer m={2} flex={0} />
       </Flex>
     </VStack>
-  );
-}
-
-function Input({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: number;
-  onChange: (newValue: number) => void;
-}) {
-  const onInputChange = (_str: string, num: number) => {
-    if (isNaN(num)) {
-      onChange(0);
-    }
-    onChange(num);
-  };
-
-  return (
-    <FormControl>
-      <FormLabel>{label}</FormLabel>
-      <NumberInput value={value} onChange={onInputChange} maxW={20}>
-        <NumberInputField />
-        <NumberInputStepper>
-          <NumberIncrementStepper />
-          <NumberDecrementStepper />
-        </NumberInputStepper>
-      </NumberInput>
-    </FormControl>
-  );
-}
-
-function OptionalInput(props: {
-  label: string;
-  value: number;
-  onChange: (newValue: number) => void;
-  default: number;
-}) {
-  const [value, setValue] = useState<string>(props.value.toLocaleString());
-
-  const isValid = (x: number) => !isNaN(x) && x !== undefined && x !== null;
-
-  const onChange = (str: string, value: number) => {
-    setValue(str);
-    if (isValid(value)) {
-      props.onChange(value);
-    }
-  };
-
-  const onBlur = () => {
-    const asInt = parseInt(value);
-    if (!isValid(asInt)) {
-      setValue(props.default.toLocaleString());
-      props.onChange(props.default);
-    }
-  };
-
-  return (
-    <HStack as="fieldset" align={"center"}>
-      <Heading size="sm" as="legend">
-        {props.label}
-      </Heading>
-      <Box>
-        <FormControl>
-          <NumberInput
-            value={value}
-            defaultValue={props.default}
-            onChange={onChange}
-            onBlur={onBlur}
-            maxW={20}
-            aria-label="Measurement"
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-        </FormControl>
-      </Box>
-    </HStack>
   );
 }

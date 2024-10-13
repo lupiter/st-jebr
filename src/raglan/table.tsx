@@ -50,12 +50,6 @@ export const RaglanTable = ({
             <Th>Bottom width</Th>
             <Td isNumeric>{frontChest.toLocaleString()}</Td>
             <Td></Td>
-            <Td isNumeric>{state.sleeve.width.toLocaleString()}</Td>
-          </Tr>
-          <Tr>
-            <Th>Sleeve max width</Th>
-            <Td></Td>
-            <Td></Td>
             <Td isNumeric>{state.sleeve.bicep.toLocaleString()}</Td>
           </Tr>
           <Tr>

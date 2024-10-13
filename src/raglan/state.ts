@@ -3,7 +3,6 @@ export type RaglanState = {
   underarm: number;
   sleeve: {
     bicep: number;
-    width: number;
     length: number;
     angle: number;
   };

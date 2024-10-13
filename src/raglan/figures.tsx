@@ -1,4 +1,4 @@
-import { HStack, Text } from "@chakra-ui/react";
+import { HStack, Text, VStack } from "@chakra-ui/react";
 import { RaglanState } from "./state";
 
 export const Figures = ({
@@ -42,12 +42,12 @@ export const Figures = ({
 
   return (
     <HStack
-      justify={"stretch"}
-      align={"stretch"}
+      justify={"center"}
+      align={"end"}
       alignSelf={"stretch"}
       justifySelf={"stretch"}
     >
-      <figure>
+      <VStack as="figure" align="center">
         <svg
           viewBox={`0 0 ${frontChest} ${length}`}
           width={frontChest * 3}
@@ -69,9 +69,9 @@ export const Figures = ({
           />
         </svg>
         <Text as="figcaption">Back</Text>
-      </figure>
+      </VStack>
 
-      <figure>
+      <VStack as="figure" align="center">
         <svg
           viewBox={`0 0 ${frontChest} ${length}`}
           width={frontChest * 3}
@@ -95,9 +95,9 @@ export const Figures = ({
           />
         </svg>
         <Text as="figcaption">Front</Text>
-      </figure>
+      </VStack>
 
-      <figure>
+      <VStack as="figure" align="center">
         <svg
           viewBox={`0 0 ${state.sleeve.bicep} ${sleeveTotalLength}`}
           width={state.sleeve.bicep * 3}
@@ -107,21 +107,21 @@ export const Figures = ({
           <polygon
             fill="grey"
             points={
-              `${(state.sleeve.bicep - state.sleeve.width) / 2},${sleeveTotalLength} ` +
+              `${(state.sleeve.bicep - state.sleeve.bicep) / 2},${sleeveTotalLength} ` +
               `0,${sleeveSlopeHeight} ` +
               `${shelf},${sleeveSlopeHeight} ` +
               `${shelf + sleeveSlopeWidth},0 ` +
               `${shelf + sleeveSlopeWidth + sleeveCastOff},0  ` +
               `${state.sleeve.bicep - shelf},${sleeveSlopeHeight} ` +
               `${state.sleeve.bicep},${sleeveSlopeHeight} ` +
-              `${state.sleeve.bicep - (state.sleeve.bicep - state.sleeve.width) / 2},${sleeveTotalLength} `
+              `${state.sleeve.bicep - (state.sleeve.bicep - state.sleeve.bicep) / 2},${sleeveTotalLength} `
             }
           />
         </svg>
         <Text as="figcaption">Sleeve</Text>
-      </figure>
+      </VStack>
 
-      <figure>
+      <VStack as="figure" align="center">
         <svg
           viewBox={`${0 - sleeveExtentPastChest} 0 ${garmentWidth} ${length}`}
           width={garmentWidth * 3}
@@ -187,7 +187,7 @@ export const Figures = ({
           />
         </svg>
         <Text as="figcaption">Garment</Text>
-      </figure>
+      </VStack>
     </HStack>
   );
 };
