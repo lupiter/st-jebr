@@ -14,31 +14,10 @@ import {
   NumberInputField,
   NumberInputStepper,
   Box,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Text,
-  Tr,
 } from "@chakra-ui/react";
-
-type RaglanState = {
-  chest: number;
-  underarm: number;
-  sleeve: {
-    bicep: number;
-    width: number;
-    length: number;
-    angle: number;
-  };
-  neck: {
-    width: number;
-    front: number;
-    back: number;
-  };
-};
+import { RaglanState } from "./state";
+import { Figures } from "./figures";
+import { RaglanTable } from "./table";
 
 const fallback = (partialState: {
   chest: number;
@@ -66,10 +45,10 @@ export function Raglan() {
     })
   );
 
-  const setChest = (_: string, chest: number) => {
+  const setChest = (chest: number) => {
     setState((state) => ({ ...state, chest }));
   };
-  const setUnderarm = (_: string, underarm: number) => {
+  const setUnderarm = (underarm: number) => {
     setState((state) => ({ ...state, underarm }));
   };
   const setBicep = (bicep: number) => {
@@ -117,21 +96,8 @@ export function Raglan() {
   const neckSlopeWidth = neckSlopeHeight * Math.tan(sleeveAngleRad);
   const neckCastOff = backCastOff - neckSlopeWidth * 2;
 
-  const sleeveExtentPastChest =
-    state.sleeve.length * Math.cos(sleeveAngleRad) +
-    halfBicep * Math.sin(sleeveAngleRad);
   const sleeveCastOff = (state.neck.back / Math.cos(sleeveAngleRad)) * 2;
   const sleeveSlopeWidth = (state.sleeve.bicep - shelf * 2 - sleeveCastOff) / 2;
-  const sleeveSlopeHeight = 20;
-  const sleeveTotalLength = state.sleeve.length + sleeveSlopeHeight;
-
-  const garmentWidth = sleeveExtentPastChest * 2 + frontChest;
-
-  console.log(
-    `sleeve extent ${sleeveExtentPastChest} bodySlope withd ${bodySlopeWidth}`
-  );
-
-  const length = shoulderToArmpit + state.underarm;
 
   return (
     <VStack align="stretch">
@@ -159,34 +125,13 @@ export function Raglan() {
                 <Heading size="sm" as="legend">
                   Required
                 </Heading>
-                <FormControl>
-                  <FormLabel>Chest (around your widest part)</FormLabel>
-                  <NumberInput
-                    value={state.chest}
-                    onChange={setChest}
-                    maxW={20}
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                </FormControl>
-                <FormControl>
-                  <FormLabel>Underarm to bottom of garment</FormLabel>
-                  <NumberInput
-                    value={state.underarm}
-                    onChange={setUnderarm}
-                    maxW={20}
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                </FormControl>
+
+                <Input label="Chest" value={state.chest} onChange={setChest} />
+                <Input
+                  label="Underarm"
+                  value={state.underarm}
+                  onChange={setUnderarm}
+                />
               </VStack>
 
               <OptionalInput
@@ -240,215 +185,70 @@ export function Raglan() {
             </VStack>
           </HStack>
           <VStack align="center" justify="center">
-            <HStack
-              justify={"stretch"}
-              align={"stretch"}
-              alignSelf={"stretch"}
-              justifySelf={"stretch"}
-            >
-              <figure>
-                <svg
-                  viewBox={`0 0 ${frontChest} ${length}`}
-                  width={frontChest * 2}
-                  height={length * 2}
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    fill="grey"
-                    points={
-                      `0,${length} ` +
-                      `0,${shoulderToArmpit} ` +
-                      `${shelf},${shoulderToArmpit} ` +
-                      `${shelf + bodySlopeWidth},${state.neck.back} ` +
-                      `${shelf + bodySlopeWidth + backCastOff},${state.neck.back}  ` +
-                      `${frontChest - shelf},${shoulderToArmpit} ` +
-                      `${frontChest},${shoulderToArmpit} ` +
-                      `${frontChest},${length} `
-                    }
-                  />
-                </svg>
-                <Text as="figcaption">Back</Text>
-              </figure>
-
-              <figure>
-                <svg
-                  viewBox={`0 0 ${frontChest} ${length}`}
-                  width={frontChest * 2}
-                  height={length * 2}
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    fill="grey"
-                    points={
-                      `0,${length} ` +
-                      `0,${shoulderToArmpit} ` +
-                      `${shelf},${shoulderToArmpit} ` +
-                      `${shelf + bodySlopeWidth},${state.neck.back} ` +
-                      `${shelf + bodySlopeWidth + neckSlopeWidth},${state.neck.front} ` +
-                      `${shelf + bodySlopeWidth + neckSlopeWidth + neckCastOff},${state.neck.front} ` +
-                      `${shelf + bodySlopeWidth + backCastOff},${state.neck.back}  ` +
-                      `${frontChest - shelf},${shoulderToArmpit} ` +
-                      `${frontChest},${shoulderToArmpit} ` +
-                      `${frontChest},${length} `
-                    }
-                  />
-                </svg>
-                <Text as="figcaption">Front</Text>
-              </figure>
-
-              <figure>
-                <svg
-                  viewBox={`0 0 ${state.sleeve.bicep} ${sleeveTotalLength}`}
-                  width={state.sleeve.bicep * 2}
-                  height={sleeveTotalLength * 2}
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    fill="grey"
-                    points={
-                      `${(state.sleeve.bicep - state.sleeve.width) / 2},${sleeveTotalLength} ` +
-                      `0,${sleeveSlopeHeight} ` +
-                      `${shelf},${sleeveSlopeHeight} ` +
-                      `${shelf + sleeveSlopeWidth},0 ` +
-                      `${shelf + sleeveSlopeWidth + sleeveCastOff},0  ` +
-                      `${state.sleeve.bicep - shelf},${sleeveSlopeHeight} ` +
-                      `${state.sleeve.bicep},${sleeveSlopeHeight} ` +
-                      `${state.sleeve.bicep - (state.sleeve.bicep - state.sleeve.width) / 2},${sleeveTotalLength} `
-                    }
-                  />
-                </svg>
-                <Text as="figcaption">Sleeve</Text>
-              </figure>
-
-              <figure>
-                <svg
-                  viewBox={`${0 - sleeveExtentPastChest} 0 ${garmentWidth} ${length}`}
-                  width={garmentWidth * 2}
-                  height={length * 2}
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  {/* back */}
-                  <polygon
-                    stroke="grey"
-                    fill="transparent"
-                    points={
-                      `0,${length} ` +
-                      `0,${shoulderToArmpit} ` +
-                      `${bodySlopeWidth},${state.neck.back} ` +
-                      `${bodySlopeWidth + backCastOff},${state.neck.back}  ` +
-                      `${frontChest - shelf * 2},${shoulderToArmpit} ` +
-                      `${frontChest - shelf * 2},${length} `
-                    }
-                  />
-
-                  {/* front */}
-                  <polygon
-                    stroke="grey"
-                    fill="transparent"
-                    points={
-                      `0,${length} ` +
-                      `0,${shoulderToArmpit} ` +
-                      `${bodySlopeWidth},${state.neck.back} ` +
-                      `${bodySlopeWidth + neckSlopeWidth},${state.neck.front} ` +
-                      `${bodySlopeWidth + neckSlopeWidth + neckCastOff},${state.neck.front} ` +
-                      `${bodySlopeWidth + backCastOff},${state.neck.back}  ` +
-                      `${frontChest - shelf * 2},${shoulderToArmpit} ` +
-                      `${frontChest - shelf * 2},${length} `
-                    }
-                  />
-
-                  {/* left sleeve */}
-                  <polygon
-                    stroke="grey"
-                    fill="transparent"
-                    points={
-                      `${bodySlopeWidth + backCastOff / 2 - halfNeck},0 ` +
-                      `${bodySlopeWidth},${state.neck.back} ` +
-                      `0,${shoulderToArmpit} ` +
-                      `${0 - state.sleeve.length * Math.cos(sleeveAngleRad)},${shoulderToArmpit + state.sleeve.length * Math.sin(sleeveAngleRad)} ` +
-                      `${0 - state.sleeve.length * Math.cos(sleeveAngleRad) - halfBicep * Math.sin(sleeveAngleRad)},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
-                      ``
-                    }
-                  />
-
-                  {/* Right sleeve */}
-                  <polygon
-                    stroke="grey"
-                    fill="transparent"
-                    points={
-                      `${bodySlopeWidth + backCastOff / 2 + halfNeck},0 ` +
-                      `${bodySlopeWidth + backCastOff},${state.neck.back} ` +
-                      `${frontChest - shelf * 2},${shoulderToArmpit} ` +
-                      `${frontChest - shelf * 2 + state.sleeve.length * Math.cos(sleeveAngleRad)},${shoulderToArmpit + state.sleeve.length * Math.sin(sleeveAngleRad)} ` +
-                      `${chestAfterShelf + sleeveExtentPastChest},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
-                      ``
-                    }
-                  />
-                </svg>
-                <Text as="figcaption">Garment</Text>
-              </figure>
-            </HStack>
-            <TableContainer>
-              <Table variant="simple">
-                <Thead>
-                  <Tr>
-                    <Th>Dimension</Th>
-                    <Th isNumeric>Back</Th>
-                    <Th isNumeric>Front neck</Th>
-                    <Th isNumeric>Sleeve</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  <Tr>
-                    <Th>Bottom width</Th>
-                    <Td isNumeric>{frontChest.toLocaleString()}</Td>
-                    <Td></Td>
-                    <Td isNumeric>{state.sleeve.width.toLocaleString()}</Td>
-                  </Tr>
-                  <Tr>
-                    <Th>Sleeve max width</Th>
-                    <Td></Td>
-                    <Td></Td>
-                    <Td isNumeric>{state.sleeve.bicep.toLocaleString()}</Td>
-                  </Tr>
-                  <Tr>
-                    <Th>Body length</Th>
-                    <Td isNumeric>{state.underarm.toLocaleString()}</Td>
-                    <Td></Td>
-                    <Td isNumeric>{state.sleeve.length.toLocaleString()}</Td>
-                  </Tr>
-                  <Tr>
-                    <Th>Shelf</Th>
-                    <Td isNumeric>{shelf.toLocaleString()}</Td>
-                    <Td isNumeric>{shelf.toLocaleString()}</Td>
-                    <Td isNumeric>{shelf.toLocaleString()}</Td>
-                  </Tr>
-                  <Tr>
-                    <Th>Slope width</Th>
-                    <Td isNumeric>{bodySlopeWidth.toLocaleString()}</Td>
-                    <Td isNumeric>{neckSlopeWidth.toLocaleString()}</Td>
-                    <Td isNumeric>{sleeveSlopeWidth.toLocaleString()}</Td>
-                  </Tr>
-                  <Tr>
-                    <Th>Slope length</Th>
-                    <Td isNumeric>{shoulderToArmpit.toLocaleString()}</Td>
-                    <Td isNumeric>{neckSlopeHeight.toLocaleString()}</Td>
-                    <Td isNumeric>{shoulderToArmpit.toLocaleString()}</Td>
-                  </Tr>
-                  <Tr>
-                    <Th>Cast off</Th>
-                    <Td isNumeric>{backCastOff.toLocaleString()}</Td>
-                    <Td isNumeric>{neckCastOff.toLocaleString()}</Td>
-                    <Td isNumeric>{sleeveCastOff.toLocaleString()}</Td>
-                  </Tr>
-                </Tbody>
-              </Table>
-            </TableContainer>
+            <Figures
+              frontChest={frontChest}
+              shoulderToArmpit={shoulderToArmpit}
+              shelf={shelf}
+              bodySlopeWidth={bodySlopeWidth}
+              state={state}
+              neckSlopeWidth={neckSlopeWidth}
+              backCastOff={backCastOff}
+              neckCastOff={neckCastOff}
+              sleeveSlopeWidth={sleeveSlopeWidth}
+              sleeveCastOff={sleeveCastOff}
+              halfNeck={halfNeck}
+              sleeveAngleRad={sleeveAngleRad}
+              halfBicep={halfBicep}
+              chestAfterShelf={chestAfterShelf}
+            />
+            <RaglanTable
+              frontChest={frontChest}
+              state={state}
+              shelf={shelf}
+              bodySlopeWidth={bodySlopeWidth}
+              neckSlopeWidth={neckSlopeWidth}
+              sleeveSlopeWidth={sleeveSlopeWidth}
+              shoulderToArmpit={shoulderToArmpit}
+              neckSlopeHeight={neckSlopeHeight}
+              backCastOff={backCastOff}
+              neckCastOff={neckCastOff}
+              sleeveCastOff={sleeveCastOff}
+            />
           </VStack>
         </HStack>
         <Spacer m={2} flex={0} />
       </Flex>
     </VStack>
+  );
+}
+
+function Input({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  onChange: (newValue: number) => void;
+}) {
+  const onInputChange = (_str: string, num: number) => {
+    if (isNaN(num)) {
+      onChange(0);
+    }
+    onChange(num);
+  };
+
+  return (
+    <FormControl>
+      <FormLabel>{label}</FormLabel>
+      <NumberInput value={value} onChange={onInputChange} maxW={20}>
+        <NumberInputField />
+        <NumberInputStepper>
+          <NumberIncrementStepper />
+          <NumberDecrementStepper />
+        </NumberInputStepper>
+      </NumberInput>
+    </FormControl>
   );
 }
 
