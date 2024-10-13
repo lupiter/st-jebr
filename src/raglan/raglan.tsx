@@ -18,7 +18,7 @@ import {
   FormControl,
   FormLabel,
 } from "@chakra-ui/react";
-import { RaglanState } from "./state";
+import { RaglanCalculations, RaglanState } from "./state";
 import { Figures } from "./figures";
 import { RaglanTable } from "./table";
 import { OptionalInput } from "./optional-input";
@@ -108,19 +108,28 @@ export function Raglan() {
   const halfBicep = state.sleeve.bicep / 2;
   const halfNeck = state.neck.width / 2;
 
-  const shoulderToArmpit =
-    halfBicep * Math.cos(sleeveAngleRad) +
-    ((chestAfterShelf - halfNeck) / 2) * Math.tan(sleeveAngleRad);
   const backCastOff =
     (halfNeck - state.neck.back * Math.tan(sleeveAngleRad)) * 2;
-  const bodySlopeWidth = (chestAfterShelf - backCastOff) / 2;
 
   const neckSlopeHeight = state.neck.front - state.neck.back;
   const neckSlopeWidth = neckSlopeHeight * Math.tan(sleeveAngleRad);
-  const neckCastOff = backCastOff - neckSlopeWidth * 2;
 
   const sleeveCastOff = (state.neck.back / Math.cos(sleeveAngleRad)) * 2;
-  const sleeveSlopeWidth = (state.sleeve.bicep - shelf * 2 - sleeveCastOff) / 2;
+
+  const calculations: RaglanCalculations = {
+    frontChest,
+    shelf,
+    bodySlopeWidth: (chestAfterShelf - backCastOff) / 2,
+    neckSlopeWidth,
+    sleeveSlopeWidth: (state.sleeve.bicep - shelf * 2 - sleeveCastOff) / 2,
+    shoulderToArmpit:
+      halfBicep * Math.cos(sleeveAngleRad) +
+      ((chestAfterShelf - halfNeck) / 2) * Math.tan(sleeveAngleRad),
+    neckSlopeHeight,
+    backCastOff,
+    neckCastOff: backCastOff - neckSlopeWidth * 2,
+    sleeveCastOff,
+  };
 
   return (
     <VStack align="stretch">
@@ -276,34 +285,14 @@ export function Raglan() {
         </HStack>
         <VStack align="center" justify="center" flex={1}>
           <Figures
-            frontChest={frontChest}
-            shoulderToArmpit={shoulderToArmpit}
-            shelf={shelf}
-            bodySlopeWidth={bodySlopeWidth}
+            calculations={calculations}
             state={state}
-            neckSlopeWidth={neckSlopeWidth}
-            backCastOff={backCastOff}
-            neckCastOff={neckCastOff}
-            sleeveSlopeWidth={sleeveSlopeWidth}
-            sleeveCastOff={sleeveCastOff}
             halfNeck={halfNeck}
             sleeveAngleRad={sleeveAngleRad}
             halfBicep={halfBicep}
             chestAfterShelf={chestAfterShelf}
           />
-          <RaglanTable
-            frontChest={frontChest}
-            state={state}
-            shelf={shelf}
-            bodySlopeWidth={bodySlopeWidth}
-            neckSlopeWidth={neckSlopeWidth}
-            sleeveSlopeWidth={sleeveSlopeWidth}
-            shoulderToArmpit={shoulderToArmpit}
-            neckSlopeHeight={neckSlopeHeight}
-            backCastOff={backCastOff}
-            neckCastOff={neckCastOff}
-            sleeveCastOff={sleeveCastOff}
-          />
+          <RaglanTable calculations={calculations} state={state} />
         </VStack>
         <Spacer m={2} flex={0} />
       </Flex>

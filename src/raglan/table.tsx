@@ -7,32 +7,14 @@ import {
   Td,
   Table,
 } from "@chakra-ui/react";
-import { RaglanState } from "./state";
+import { RaglanCalculations, RaglanState } from "./state";
 
 export const RaglanTable = ({
-  frontChest,
   state,
-  shelf,
-  bodySlopeWidth,
-  neckSlopeWidth,
-  sleeveSlopeWidth,
-  shoulderToArmpit,
-  neckSlopeHeight,
-  backCastOff,
-  neckCastOff,
-  sleeveCastOff,
+  calculations: measures,
 }: {
-  frontChest: number;
   state: RaglanState;
-  shelf: number;
-  bodySlopeWidth: number;
-  neckSlopeWidth: number;
-  sleeveSlopeWidth: number;
-  shoulderToArmpit: number;
-  neckSlopeHeight: number;
-  backCastOff: number;
-  neckCastOff: number;
-  sleeveCastOff: number;
+  calculations: RaglanCalculations;
 }) => {
   return (
     <TableContainer>
@@ -48,7 +30,7 @@ export const RaglanTable = ({
         <Tbody>
           <Tr>
             <Th>Bottom width</Th>
-            <Td isNumeric>{frontChest.toLocaleString()}</Td>
+            <Td isNumeric>{measures.frontChest.toLocaleString()}</Td>
             <Td></Td>
             <Td isNumeric>{state.sleeve.bicep.toLocaleString()}</Td>
           </Tr>
@@ -60,27 +42,27 @@ export const RaglanTable = ({
           </Tr>
           <Tr>
             <Th>Shelf</Th>
-            <Td isNumeric>{shelf.toLocaleString()}</Td>
-            <Td isNumeric>{shelf.toLocaleString()}</Td>
-            <Td isNumeric>{shelf.toLocaleString()}</Td>
+            <Td isNumeric>{measures.shelf.toLocaleString()}</Td>
+            <Td isNumeric>{measures.shelf.toLocaleString()}</Td>
+            <Td isNumeric>{measures.shelf.toLocaleString()}</Td>
           </Tr>
           <Tr>
             <Th>Slope width</Th>
-            <Td isNumeric>{bodySlopeWidth.toLocaleString()}</Td>
-            <Td isNumeric>{neckSlopeWidth.toLocaleString()}</Td>
-            <Td isNumeric>{sleeveSlopeWidth.toLocaleString()}</Td>
+            <Td isNumeric>{measures.bodySlopeWidth.toLocaleString()}</Td>
+            <Td isNumeric>{measures.neckSlopeWidth.toLocaleString()}</Td>
+            <Td isNumeric>{measures.sleeveSlopeWidth.toLocaleString()}</Td>
           </Tr>
           <Tr>
             <Th>Slope length</Th>
-            <Td isNumeric>{shoulderToArmpit.toLocaleString()}</Td>
-            <Td isNumeric>{neckSlopeHeight.toLocaleString()}</Td>
-            <Td isNumeric>{shoulderToArmpit.toLocaleString()}</Td>
+            <Td isNumeric>{measures.shoulderToArmpit.toLocaleString()}</Td>
+            <Td isNumeric>{measures.neckSlopeHeight.toLocaleString()}</Td>
+            <Td isNumeric>{measures.shoulderToArmpit.toLocaleString()}</Td>
           </Tr>
           <Tr>
             <Th>Cast off</Th>
-            <Td isNumeric>{backCastOff.toLocaleString()}</Td>
-            <Td isNumeric>{neckCastOff.toLocaleString()}</Td>
-            <Td isNumeric>{sleeveCastOff.toLocaleString()}</Td>
+            <Td isNumeric>{measures.backCastOff.toLocaleString()}</Td>
+            <Td isNumeric>{measures.neckCastOff.toLocaleString()}</Td>
+            <Td isNumeric>{measures.sleeveCastOff.toLocaleString()}</Td>
           </Tr>
         </Tbody>
       </Table>

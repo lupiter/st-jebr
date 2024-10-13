@@ -12,3 +12,16 @@ export type RaglanState = {
     back: number;
   };
 };
+
+export type RaglanCalculations = {
+  frontChest: number;
+  shelf: number;
+  bodySlopeWidth: number;
+  neckSlopeWidth: number;
+  sleeveSlopeWidth: number;
+  shoulderToArmpit: number;
+  neckSlopeHeight: number;
+  backCastOff: number;
+  neckCastOff: number;
+  sleeveCastOff: number;
+}

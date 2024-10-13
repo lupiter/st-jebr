@@ -1,42 +1,26 @@
 import { HStack, Text, VStack } from "@chakra-ui/react";
-import { RaglanState } from "./state";
+import { RaglanCalculations, RaglanState } from "./state";
 
 export const Figures = ({
-  frontChest,
-  shoulderToArmpit,
-  shelf,
-  bodySlopeWidth,
+  calculations,
   state,
-  neckSlopeWidth,
-  backCastOff,
-  neckCastOff,
-  sleeveSlopeWidth,
-  sleeveCastOff,
   halfNeck,
   sleeveAngleRad,
   halfBicep,
   chestAfterShelf,
 }: {
-  frontChest: number;
-  shoulderToArmpit: number;
-  shelf: number;
-  bodySlopeWidth: number;
   state: RaglanState;
-  neckSlopeWidth: number;
-  backCastOff: number;
-  neckCastOff: number;
-  sleeveSlopeWidth: number;
-  sleeveCastOff: number;
+  calculations: RaglanCalculations;
   halfNeck: number;
   sleeveAngleRad: number;
   halfBicep: number;
   chestAfterShelf: number;
 }) => {
-  const length = shoulderToArmpit + state.underarm;
+  const length = calculations.shoulderToArmpit + state.underarm;
   const sleeveExtentPastChest =
     state.sleeve.length * Math.cos(sleeveAngleRad) +
     halfBicep * Math.sin(sleeveAngleRad);
-  const garmentWidth = sleeveExtentPastChest * 2 + frontChest;
+  const garmentWidth = sleeveExtentPastChest * 2 + calculations.frontChest;
   const sleeveSlopeHeight = 20; // TODO: nonsense
   const sleeveTotalLength = state.sleeve.length + sleeveSlopeHeight;
 
@@ -49,8 +33,8 @@ export const Figures = ({
     >
       <VStack as="figure" align="center">
         <svg
-          viewBox={`0 0 ${frontChest} ${length}`}
-          width={frontChest * 3}
+          viewBox={`0 0 ${calculations.frontChest} ${length}`}
+          width={calculations.frontChest * 3}
           height={length * 3}
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -58,13 +42,13 @@ export const Figures = ({
             fill="grey"
             points={
               `0,${length} ` +
-              `0,${shoulderToArmpit} ` +
-              `${shelf},${shoulderToArmpit} ` +
-              `${shelf + bodySlopeWidth},${state.neck.back} ` +
-              `${shelf + bodySlopeWidth + backCastOff},${state.neck.back}  ` +
-              `${frontChest - shelf},${shoulderToArmpit} ` +
-              `${frontChest},${shoulderToArmpit} ` +
-              `${frontChest},${length} `
+              `0,${calculations.shoulderToArmpit} ` +
+              `${calculations.shelf},${calculations.shoulderToArmpit} ` +
+              `${calculations.shelf + calculations.bodySlopeWidth},${state.neck.back} ` +
+              `${calculations.shelf + calculations.bodySlopeWidth + calculations.backCastOff},${state.neck.back}  ` +
+              `${calculations.frontChest - calculations.shelf},${calculations.shoulderToArmpit} ` +
+              `${calculations.frontChest},${calculations.shoulderToArmpit} ` +
+              `${calculations.frontChest},${length} `
             }
           />
         </svg>
@@ -73,8 +57,8 @@ export const Figures = ({
 
       <VStack as="figure" align="center">
         <svg
-          viewBox={`0 0 ${frontChest} ${length}`}
-          width={frontChest * 3}
+          viewBox={`0 0 ${calculations.frontChest} ${length}`}
+          width={calculations.frontChest * 3}
           height={length * 3}
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -82,15 +66,15 @@ export const Figures = ({
             fill="grey"
             points={
               `0,${length} ` +
-              `0,${shoulderToArmpit} ` +
-              `${shelf},${shoulderToArmpit} ` +
-              `${shelf + bodySlopeWidth},${state.neck.back} ` +
-              `${shelf + bodySlopeWidth + neckSlopeWidth},${state.neck.front} ` +
-              `${shelf + bodySlopeWidth + neckSlopeWidth + neckCastOff},${state.neck.front} ` +
-              `${shelf + bodySlopeWidth + backCastOff},${state.neck.back}  ` +
-              `${frontChest - shelf},${shoulderToArmpit} ` +
-              `${frontChest},${shoulderToArmpit} ` +
-              `${frontChest},${length} `
+              `0,${calculations.shoulderToArmpit} ` +
+              `${calculations.shelf},${calculations.shoulderToArmpit} ` +
+              `${calculations.shelf + calculations.bodySlopeWidth},${state.neck.back} ` +
+              `${calculations.shelf + calculations.bodySlopeWidth + calculations.neckSlopeWidth},${state.neck.front} ` +
+              `${calculations.shelf + calculations.bodySlopeWidth + calculations.neckSlopeWidth + calculations.neckCastOff},${state.neck.front} ` +
+              `${calculations.shelf + calculations.bodySlopeWidth + calculations.backCastOff},${state.neck.back}  ` +
+              `${calculations.frontChest - calculations.shelf},${calculations.shoulderToArmpit} ` +
+              `${calculations.frontChest},${calculations.shoulderToArmpit} ` +
+              `${calculations.frontChest},${length} `
             }
           />
         </svg>
@@ -109,10 +93,10 @@ export const Figures = ({
             points={
               `${(state.sleeve.bicep - state.sleeve.bicep) / 2},${sleeveTotalLength} ` +
               `0,${sleeveSlopeHeight} ` +
-              `${shelf},${sleeveSlopeHeight} ` +
-              `${shelf + sleeveSlopeWidth},0 ` +
-              `${shelf + sleeveSlopeWidth + sleeveCastOff},0  ` +
-              `${state.sleeve.bicep - shelf},${sleeveSlopeHeight} ` +
+              `${calculations.shelf},${sleeveSlopeHeight} ` +
+              `${calculations.shelf + calculations.sleeveSlopeWidth},0 ` +
+              `${calculations.shelf + calculations.sleeveSlopeWidth + calculations.sleeveCastOff},0  ` +
+              `${state.sleeve.bicep - calculations.shelf},${sleeveSlopeHeight} ` +
               `${state.sleeve.bicep},${sleeveSlopeHeight} ` +
               `${state.sleeve.bicep - (state.sleeve.bicep - state.sleeve.bicep) / 2},${sleeveTotalLength} `
             }
@@ -134,11 +118,11 @@ export const Figures = ({
             fill="transparent"
             points={
               `0,${length} ` +
-              `0,${shoulderToArmpit} ` +
-              `${bodySlopeWidth},${state.neck.back} ` +
-              `${bodySlopeWidth + backCastOff},${state.neck.back}  ` +
-              `${frontChest - shelf * 2},${shoulderToArmpit} ` +
-              `${frontChest - shelf * 2},${length} `
+              `0,${calculations.shoulderToArmpit} ` +
+              `${calculations.bodySlopeWidth},${state.neck.back} ` +
+              `${calculations.bodySlopeWidth + calculations.backCastOff},${state.neck.back}  ` +
+              `${calculations.frontChest - calculations.shelf * 2},${calculations.shoulderToArmpit} ` +
+              `${calculations.frontChest - calculations.shelf * 2},${length} `
             }
           />
 
@@ -148,13 +132,13 @@ export const Figures = ({
             fill="transparent"
             points={
               `0,${length} ` +
-              `0,${shoulderToArmpit} ` +
-              `${bodySlopeWidth},${state.neck.back} ` +
-              `${bodySlopeWidth + neckSlopeWidth},${state.neck.front} ` +
-              `${bodySlopeWidth + neckSlopeWidth + neckCastOff},${state.neck.front} ` +
-              `${bodySlopeWidth + backCastOff},${state.neck.back}  ` +
-              `${frontChest - shelf * 2},${shoulderToArmpit} ` +
-              `${frontChest - shelf * 2},${length} `
+              `0,${calculations.shoulderToArmpit} ` +
+              `${calculations.bodySlopeWidth},${state.neck.back} ` +
+              `${calculations.bodySlopeWidth + calculations.neckSlopeWidth},${state.neck.front} ` +
+              `${calculations.bodySlopeWidth + calculations.neckSlopeWidth + calculations.neckCastOff},${state.neck.front} ` +
+              `${calculations.bodySlopeWidth + calculations.backCastOff},${state.neck.back}  ` +
+              `${calculations.frontChest - calculations.shelf * 2},${calculations.shoulderToArmpit} ` +
+              `${calculations.frontChest - calculations.shelf * 2},${length} `
             }
           />
 
@@ -163,10 +147,10 @@ export const Figures = ({
             stroke="grey"
             fill="transparent"
             points={
-              `${bodySlopeWidth + backCastOff / 2 - halfNeck},0 ` +
-              `${bodySlopeWidth},${state.neck.back} ` +
-              `0,${shoulderToArmpit} ` +
-              `${0 - state.sleeve.length * Math.cos(sleeveAngleRad)},${shoulderToArmpit + state.sleeve.length * Math.sin(sleeveAngleRad)} ` +
+              `${calculations.bodySlopeWidth + calculations.backCastOff / 2 - halfNeck},0 ` +
+              `${calculations.bodySlopeWidth},${state.neck.back} ` +
+              `0,${calculations.shoulderToArmpit} ` +
+              `${0 - state.sleeve.length * Math.cos(sleeveAngleRad)},${calculations.shoulderToArmpit + state.sleeve.length * Math.sin(sleeveAngleRad)} ` +
               `${0 - state.sleeve.length * Math.cos(sleeveAngleRad) - halfBicep * Math.sin(sleeveAngleRad)},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
               ``
             }
@@ -177,10 +161,10 @@ export const Figures = ({
             stroke="grey"
             fill="transparent"
             points={
-              `${bodySlopeWidth + backCastOff / 2 + halfNeck},0 ` +
-              `${bodySlopeWidth + backCastOff},${state.neck.back} ` +
-              `${frontChest - shelf * 2},${shoulderToArmpit} ` +
-              `${frontChest - shelf * 2 + state.sleeve.length * Math.cos(sleeveAngleRad)},${shoulderToArmpit + state.sleeve.length * Math.sin(sleeveAngleRad)} ` +
+              `${calculations.bodySlopeWidth + calculations.backCastOff / 2 + halfNeck},0 ` +
+              `${calculations.bodySlopeWidth + calculations.backCastOff},${state.neck.back} ` +
+              `${calculations.frontChest - calculations.shelf * 2},${calculations.shoulderToArmpit} ` +
+              `${calculations.frontChest - calculations.shelf * 2 + state.sleeve.length * Math.cos(sleeveAngleRad)},${calculations.shoulderToArmpit + state.sleeve.length * Math.sin(sleeveAngleRad)} ` +
               `${chestAfterShelf + sleeveExtentPastChest},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
               ``
             }
