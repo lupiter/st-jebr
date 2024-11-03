@@ -43,7 +43,7 @@ export const RaglanTable = ({
           <Tr>
             <Th>Shelf</Th>
             <Td isNumeric>{measures.shelf.toLocaleString()}</Td>
-            <Td isNumeric>{measures.shelf.toLocaleString()}</Td>
+            <Td></Td>
             <Td isNumeric>{measures.shelf.toLocaleString()}</Td>
           </Tr>
           <Tr>
@@ -54,9 +54,9 @@ export const RaglanTable = ({
           </Tr>
           <Tr>
             <Th>Slope length</Th>
-            <Td isNumeric>{measures.shoulderToArmpit.toLocaleString()}</Td>
+            <Td isNumeric>{measures.bodySlopeHeight.toLocaleString()}</Td>
             <Td isNumeric>{measures.neckSlopeHeight.toLocaleString()}</Td>
-            <Td isNumeric>{measures.shoulderToArmpit.toLocaleString()}</Td>
+            <Td isNumeric>{measures.sleeveSlopeHeight.toLocaleString()}</Td>
           </Tr>
           <Tr>
             <Th>Cast off</Th>

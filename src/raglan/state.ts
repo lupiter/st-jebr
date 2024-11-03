@@ -1,10 +1,10 @@
 export type RaglanState = {
   chest: number;
   underarm: number;
+  back: number;
   sleeve: {
     bicep: number;
     length: number;
-    angle: number;
   };
   neck: {
     width: number;
@@ -17,6 +17,7 @@ export type RaglanCalculations = {
   frontChest: number;
   shelf: number;
   bodySlopeWidth: number;
+  bodySlopeHeight: number;
   neckSlopeWidth: number;
   sleeveSlopeWidth: number;
   shoulderToArmpit: number;
@@ -24,4 +25,5 @@ export type RaglanCalculations = {
   backCastOff: number;
   neckCastOff: number;
   sleeveCastOff: number;
+  sleeveSlopeHeight: number;
 }

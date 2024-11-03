@@ -7,22 +7,19 @@ export const Figures = ({
   halfNeck,
   sleeveAngleRad,
   halfBicep,
-  chestAfterShelf,
 }: {
   state: RaglanState;
   calculations: RaglanCalculations;
   halfNeck: number;
   sleeveAngleRad: number;
   halfBicep: number;
-  chestAfterShelf: number;
 }) => {
   const length = calculations.shoulderToArmpit + state.underarm;
   const sleeveExtentPastChest =
     state.sleeve.length * Math.cos(sleeveAngleRad) +
     halfBicep * Math.sin(sleeveAngleRad);
   const garmentWidth = sleeveExtentPastChest * 2 + calculations.frontChest;
-  const sleeveSlopeHeight = 20; // TODO: nonsense
-  const sleeveTotalLength = state.sleeve.length + sleeveSlopeHeight;
+  const sleeveTotalLength = state.sleeve.length + calculations.sleeveSlopeHeight;
 
   return (
     <HStack
@@ -91,13 +88,13 @@ export const Figures = ({
           <polygon
             fill="grey"
             points={
-              `${(state.sleeve.bicep - state.sleeve.bicep) / 2},${sleeveTotalLength} ` +
-              `0,${sleeveSlopeHeight} ` +
-              `${calculations.shelf},${sleeveSlopeHeight} ` +
+              `0,${sleeveTotalLength} ` +
+              `0,${calculations.sleeveSlopeHeight} ` +
+              `${calculations.shelf},${calculations.sleeveSlopeHeight} ` +
               `${calculations.shelf + calculations.sleeveSlopeWidth},0 ` +
               `${calculations.shelf + calculations.sleeveSlopeWidth + calculations.sleeveCastOff},0  ` +
-              `${state.sleeve.bicep - calculations.shelf},${sleeveSlopeHeight} ` +
-              `${state.sleeve.bicep},${sleeveSlopeHeight} ` +
+              `${state.sleeve.bicep - calculations.shelf},${calculations.sleeveSlopeHeight} ` +
+              `${state.sleeve.bicep},${calculations.sleeveSlopeHeight} ` +
               `${state.sleeve.bicep - (state.sleeve.bicep - state.sleeve.bicep) / 2},${sleeveTotalLength} `
             }
           />
@@ -144,14 +141,14 @@ export const Figures = ({
 
           {/* left sleeve */}
           <polygon
-            stroke="grey"
+            stroke="red"
             fill="transparent"
             points={
               `${calculations.bodySlopeWidth + calculations.backCastOff / 2 - halfNeck},0 ` +
               `${calculations.bodySlopeWidth},${state.neck.back} ` +
               `0,${calculations.shoulderToArmpit} ` +
               `${0 - state.sleeve.length * Math.cos(sleeveAngleRad)},${calculations.shoulderToArmpit + state.sleeve.length * Math.sin(sleeveAngleRad)} ` +
-              `${0 - state.sleeve.length * Math.cos(sleeveAngleRad) - halfBicep * Math.sin(sleeveAngleRad)},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
+              `${0 - state.sleeve.length * Math.cos(sleeveAngleRad) - (halfBicep) * Math.sin(sleeveAngleRad)},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
               ``
             }
           />
@@ -165,7 +162,7 @@ export const Figures = ({
               `${calculations.bodySlopeWidth + calculations.backCastOff},${state.neck.back} ` +
               `${calculations.frontChest - calculations.shelf * 2},${calculations.shoulderToArmpit} ` +
               `${calculations.frontChest - calculations.shelf * 2 + state.sleeve.length * Math.cos(sleeveAngleRad)},${calculations.shoulderToArmpit + state.sleeve.length * Math.sin(sleeveAngleRad)} ` +
-              `${chestAfterShelf + sleeveExtentPastChest},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
+              `${calculations.frontChest - calculations.shelf * 2 + sleeveExtentPastChest},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
               ``
             }
           />

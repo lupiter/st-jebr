@@ -27,6 +27,7 @@ import { RequiredInput } from "./required-input";
 const fallback = (partialState: {
   chest: number;
   underarm: number;
+  back: number;
   sleeve: {
     length: number;
   };
@@ -35,7 +36,6 @@ const fallback = (partialState: {
   sleeve: {
     ...partialState.sleeve,
     bicep: 0.36 * partialState.chest,
-    angle: 30,
   },
   neck: {
     width: 0.2 * partialState.chest,
@@ -48,8 +48,9 @@ export function Raglan() {
   const [showHints, setShowHints] = useState<boolean>(false);
   const [state, setState] = useState<RaglanState>(
     fallback({
-      chest: 100,
-      underarm: 40,
+      chest: 110,
+      back: 47,
+      underarm: 25,
       sleeve: {
         length: 9,
       },
@@ -66,14 +67,14 @@ export function Raglan() {
   const setUnderarm = (underarm: number) => {
     setState((state) => ({ ...state, underarm }));
   };
+  const setBack = (back: number) => {
+    setState((state) => ({ ...state, back }));
+  }
   const setBicep = (bicep: number) => {
     setState((state) => ({ ...state, sleeve: { ...state.sleeve, bicep } }));
   };
   const setSleeveLength = (length: number) => {
     setState((state) => ({ ...state, sleeve: { ...state.sleeve, length } }));
-  };
-  const setShoulderAngle = (angle: number) => {
-    setState((state) => ({ ...state, sleeve: { ...state.sleeve, angle } }));
   };
   const setNeckWidth = (width: number) => {
     setState((state) => ({ ...state, neck: { ...state.neck, width } }));
@@ -98,37 +99,46 @@ export function Raglan() {
 
   const defaults = fallback(state);
 
-  const degToRad = (x: number): number => (x * Math.PI) / 180;
-  const sleeveAngleRad = degToRad(state.sleeve.angle);
-
   const shelf = state.chest * 0.02;
 
   const frontChest = state.chest / 2;
   const chestAfterShelf = frontChest - 2 * shelf;
-  const halfBicep = state.sleeve.bicep / 2;
+  const halfBicep = state.sleeve.bicep / 2 - shelf;
   const halfNeck = state.neck.width / 2;
+  const shoulderToArmpit = state.back - state.underarm;
 
-  const backCastOff =
-    (halfNeck - state.neck.back * Math.tan(sleeveAngleRad)) * 2;
+  const neckToChest = chestAfterShelf / 2 - halfNeck;
+  const z = chestAfterShelf / 2 - halfNeck;
+  const sleeveSlopeHeight = Math.sqrt(Math.pow(shoulderToArmpit, 2) + Math.pow(z, 2) - Math.pow(halfBicep, 2));
+
+  console.log({sleeveSlopeHeight, shoulderToArmpit, z, halfBicep});
+
+
+  const sleeveAngleRad = Math.PI / 2 - Math.atan(neckToChest / shoulderToArmpit) - Math.atan(sleeveSlopeHeight / halfBicep);
+  const backCastOff = (halfNeck - state.neck.back * Math.tan(sleeveAngleRad)) * 2;
+  const sleeveCastOff = state.neck.back / (Math.cos(sleeveAngleRad)) * 2;
+  const sleeveSlopeWidth = halfBicep - sleeveCastOff / 2;
 
   const neckSlopeHeight = state.neck.front - state.neck.back;
   const neckSlopeWidth = neckSlopeHeight * Math.tan(sleeveAngleRad);
 
-  const sleeveCastOff = (state.neck.back / Math.cos(sleeveAngleRad)) * 2;
+  const bodySlopeWidth = neckToChest + state.neck.back * Math.tan(sleeveAngleRad);
+  const bodySlopeHeight = shoulderToArmpit - state.neck.back;
+
 
   const calculations: RaglanCalculations = {
     frontChest,
     shelf,
-    bodySlopeWidth: (chestAfterShelf - backCastOff) / 2,
+    bodySlopeWidth,
+    bodySlopeHeight,
     neckSlopeWidth,
-    sleeveSlopeWidth: (state.sleeve.bicep - shelf * 2 - sleeveCastOff) / 2,
-    shoulderToArmpit:
-      halfBicep * Math.cos(sleeveAngleRad) +
-      ((chestAfterShelf - halfNeck) / 2) * Math.tan(sleeveAngleRad),
+    sleeveSlopeWidth,
+    shoulderToArmpit,
     neckSlopeHeight,
     backCastOff,
     neckCastOff: backCastOff - neckSlopeWidth * 2,
     sleeveCastOff,
+    sleeveSlopeHeight,
   };
 
   return (
@@ -176,6 +186,13 @@ export function Raglan() {
               hint="Vertical from armpit to bottom of garment"
               showHint={showHints}
             />
+            <RequiredInput
+            label="Back"
+            value={state.back}
+            onChange={setBack}
+            showHint={showHints}
+            hint="From top of shoulder to bottom of garment down your back"
+          />
 
             <RequiredInput
               value={state.sleeve.length}
@@ -206,15 +223,6 @@ export function Raglan() {
                     default={defaults.sleeve.bicep}
                     onChange={setBicep}
                     hint="All around widest part of arm"
-                    showHint={showHints}
-                  />
-
-                  <OptionalInput
-                    value={state.sleeve.angle}
-                    label="Shoulder slope"
-                    default={defaults.sleeve.angle}
-                    onChange={setShoulderAngle}
-                    hint="Shoulder angle, down from a T-shape, degrees"
                     showHint={showHints}
                   />
 
@@ -290,7 +298,6 @@ export function Raglan() {
             halfNeck={halfNeck}
             sleeveAngleRad={sleeveAngleRad}
             halfBicep={halfBicep}
-            chestAfterShelf={chestAfterShelf}
           />
           <RaglanTable calculations={calculations} state={state} />
         </VStack>
