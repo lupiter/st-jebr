@@ -2,54 +2,47 @@ import {
   VStack,
   HStack,
   Heading,
-  FormControl,
-  FormLabel,
   NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   Select,
   Text,
   Box,
   Button,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
+  Dialog,
+  NumberInputRoot,
+  NativeSelect,
 } from "@chakra-ui/react";
 import { GaugeState, UNIT } from "../app-state";
 import { ChangeEvent } from "react";
+import { Field } from "../components/ui/field";
+import { NumberInputField } from "../components/ui/number-input";
+import {
+  NativeSelectField,
+  NativeSelectRoot,
+} from "../components/ui/native-select";
 
 export function ModalGauge(props: {
   gauge: GaugeState;
   onchange: (gauge: GaugeState) => void;
 }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   return (
-    <Box>
-      <Button onClick={onOpen}>Gauge</Button>
+    <Dialog.Root>
+      <Dialog.ActionTrigger>
+        <Button>Gauge</Button>
+      </Dialog.ActionTrigger>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
+      <Dialog.Content>
+        <Dialog.Backdrop />
+        <Dialog.Content>
+          <Dialog.Header>
             <Heading size="md">Gauge</Heading>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody as="form">
+          </Dialog.Header>
+          <Dialog.CloseTrigger />
+          <Dialog.Body as="form">
             <Gauge gauge={props.gauge} onchange={props.onchange} />
-          </ModalBody>
-
-          <ModalFooter></ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Box>
+          </Dialog.Body>
+        </Dialog.Content>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }
 
@@ -57,16 +50,26 @@ export function Gauge(props: {
   gauge: GaugeState;
   onchange: (gauge: GaugeState) => void;
 }) {
-  const setGaugeStitches = (_: string, numberValue: number) => {
+  const setGaugeStitches = ({
+    valueAsNumber,
+  }: {
+    value: string;
+    valueAsNumber: number;
+  }) => {
     props.onchange({
       ...props.gauge,
-      stitches: numberValue,
+      stitches: valueAsNumber,
     });
   };
-  const setGaugeRows = (_: string, numberValue: number) => {
+  const setGaugeRows = ({
+    valueAsNumber,
+  }: {
+    value: string;
+    valueAsNumber: number;
+  }) => {
     props.onchange({
       ...props.gauge,
-      rows: numberValue,
+      rows: valueAsNumber,
     });
   };
   const setGaugeSquare = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -95,64 +98,54 @@ export function Gauge(props: {
           Gauge
         </Heading>
         <HStack align="end">
-          <FormControl>
-            <FormLabel>stitches</FormLabel>
-            <NumberInput
-              value={props.gauge.stitches}
-              onChange={setGaugeStitches}
+          <Field label="stitches">
+            <NumberInputRoot
+              value={props.gauge.stitches.toLocaleString()}
+              onValueChange={setGaugeStitches}
               maxW={20}
             >
               <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          </FormControl>
-          <FormControl>
-            <FormLabel>rows</FormLabel>
-            <NumberInput
-              value={props.gauge.rows}
-              onChange={setGaugeRows}
+            </NumberInputRoot>
+          </Field>
+          <Field label="rows">
+            <NumberInputRoot
+              value={props.gauge.rows.toLocaleString()}
+              onValueChange={setGaugeRows}
               maxW={20}
             >
               <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          </FormControl>
+            </NumberInputRoot>
+          </Field>
         </HStack>
 
         <HStack align="end">
-          <FormControl>
-            <FormLabel>square</FormLabel>
-            <Select
-              placeholder="square size"
-              aria-label="square size"
-              onChange={setGaugeSquare}
-              value={props.gauge.square}
-              maxW={20}
-            >
-              <option value={10}>10x10</option>
-              <option value={4}>4x4</option>
-              <option value={1}>1x1</option>
-            </Select>
-          </FormControl>
-          <FormControl>
-            <FormLabel>unit</FormLabel>
-            <Select
-              placeholder="units"
-              aria-label="units"
-              onChange={setGaugeUnit}
-              value={props.gauge.unit.toString()}
-              maxW={20}
-            >
-              <option value="cm">cm</option>
-              <option value="in">inch</option>
-            </Select>
-          </FormControl>
+          <Field label="square">
+            <NativeSelectRoot maxW={20}>
+              <NativeSelectField
+                onChange={setGaugeSquare}
+                value={props.gauge.square}
+                placeholder="square size"
+                aria-label="square size"
+              >
+                <option value={10}>10x10</option>
+                <option value={4}>4x4</option>
+                <option value={1}>1x1</option>
+              </NativeSelectField>
+            </NativeSelectRoot>
+          </Field>
+          <Field label="unit">
+            <NativeSelectRoot maxW={20}>
+              <NativeSelectField
+                placeholder="units"
+                aria-label="units"
+                onChange={setGaugeUnit}
+                value={props.gauge.unit.toString()}
+              >
+                <option value="cm">cm</option>
+                <option value="in">inch</option>
+              </NativeSelectField>
+            </NativeSelectRoot>
+          </Field>
         </HStack>
       </HStack>
       <Text className="working">

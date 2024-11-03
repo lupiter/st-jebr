@@ -15,7 +15,8 @@ import {
   holeVerticalInset,
 } from "../measurements";
 import { FairIselCard } from "./fair-isle-card";
-import { Alert, AlertIcon, Text, VStack } from "@chakra-ui/react";
+import { Text, VStack } from "@chakra-ui/react";
+import { Alert } from "../../components/ui/alert";
 
 type FairIsleProps = {
   data: number[][];
@@ -163,7 +164,7 @@ export function FairIsle(props: FairIsleProps): JSX.Element {
   if (props.maxHeight && props.maxHeight < 200) {
     return (
       <Alert status="warning" m={4}>
-        <AlertIcon /> We can't generate cards this small. Try making the max
+        We can't generate cards this small. Try making the max
         height larger
       </Alert>
     );
@@ -182,14 +183,13 @@ export function FairIsle(props: FairIsleProps): JSX.Element {
   }
 
   return (
-    <VStack spacing={2}>
+    <VStack>
       <Text>
         Total {props.width} stitches wide, {props.data.length / props.width}{" "}
         stitches long, {palette.length} colours
       </Text>
       {palette.length > 2 && (
         <Alert status="info">
-          <AlertIcon />
           Note: when using more than 2 colours, we assume the most common colour
           is the background for fair isle. To be precise, use a two-colour
           image.

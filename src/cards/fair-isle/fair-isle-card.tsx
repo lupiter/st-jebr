@@ -8,9 +8,9 @@ import {
 import {
   Box,
   Button,
-  Divider,
   HStack,
   Heading,
+  StackSeparator,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -58,10 +58,10 @@ export function FairIselCard(props: FairIsleCardProps): JSX.Element {
   return (
     <VStack
       as="section"
-      spacing={4}
       align="stretch"
       borderWidth="1px"
       borderRadius="lg"
+      separator={<StackSeparator />}
     >
       <HStack
         align="end"
@@ -77,14 +77,12 @@ export function FairIselCard(props: FairIsleCardProps): JSX.Element {
           </Text>
         </VStack>
         <Button
-          leftIcon={<DownloadIcon />}
           onClick={download}
           colorScheme="purple"
         >
-          Download
+          <DownloadIcon /> Download
         </Button>
       </HStack>
-      <Divider />
 
       <Box paddingBottom={4} paddingLeft={4} paddingRight={4}>
         <svg

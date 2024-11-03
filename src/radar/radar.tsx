@@ -4,8 +4,6 @@ import { Header } from "../header/header";
 import { GaugeState, UNIT } from "../app-state";
 import {
   VStack,
-  Alert,
-  AlertIcon,
   AlertTitle,
   AlertDescription,
   Spacer,
@@ -16,6 +14,7 @@ import { ModalGauge } from "../guage/gauge";
 import { Pattern } from "../pattern/pattern";
 import { RadarHelp } from "./help";
 import { FileModal, ImageState } from "./file-modal";
+import { Alert } from "../components/ui/alert";
 
 type RadarState = {
   gauge: GaugeState;
@@ -75,10 +74,8 @@ export function Radar() {
         <Spacer m={2} flex={0} />
 
         {state.error && (
-          <Alert status="error">
-            <AlertIcon />
-            <AlertTitle>There was a problem reading your image</AlertTitle>
-            <AlertDescription>{state.error}</AlertDescription>
+          <Alert status="error" title="There was a problem reading your image">
+            {state.error}
           </Alert>
         )}
 

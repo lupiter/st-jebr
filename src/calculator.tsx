@@ -7,18 +7,13 @@ import { Ellipse } from "./shapes/ellipse";
 import { Slope } from "./shapes/slope";
 import { Header } from "./header/header";
 import {
-  Alert,
-  AlertIcon,
   VStack,
   Text,
   Tabs,
-  TabPanel,
-  TabPanels,
-  Tab,
-  TabList,
   Box,
   Flex,
 } from "@chakra-ui/react";
+import { Alert } from "./components/ui/alert";
 import { Gauge } from "./guage/gauge";
 
 function Calculator() {
@@ -45,9 +40,9 @@ function Calculator() {
           <Gauge gauge={state} onchange={setState} />
         </Box>
 
-        <Tabs>
-          <TabList>
-            <Tab>
+        <Tabs.Root>
+          <Tabs.List>
+            <Tabs.Trigger value="rectangle">
               <Flex
                 direction={{ base: "column", md: "row" }}
                 gap={1}
@@ -67,8 +62,8 @@ function Calculator() {
                 </svg>
                 <Text>Rectangle</Text>
               </Flex>
-            </Tab>
-            <Tab>
+            </Tabs.Trigger>
+            <Tabs.Trigger value="evenly">
               <Flex
                 direction={{ base: "column", md: "row" }}
                 gap={1}
@@ -97,8 +92,8 @@ function Calculator() {
                 </svg>
                 <Text>Decrease/Increase Evenly</Text>
               </Flex>
-            </Tab>
-            <Tab>
+            </Tabs.Trigger>
+            <Tabs.Trigger value="curve">
               <Flex
                 direction={{ base: "column", md: "row" }}
                 gap={1}
@@ -115,8 +110,8 @@ function Calculator() {
                 </svg>
                 <Text>Curve</Text>
               </Flex>
-            </Tab>
-            <Tab>
+            </Tabs.Trigger>
+            <Tabs.Trigger value="slope">
               <Flex
                 direction={{ base: "column", md: "row" }}
                 gap={1}
@@ -133,22 +128,21 @@ function Calculator() {
                 </svg>
                 <Text>Slope</Text>
               </Flex>
-            </Tab>
-          </TabList>
+            </Tabs.Trigger>
+          </Tabs.List>
 
-          <TabPanels>
-            <TabPanel>
+            <Tabs.Content value="rectangle">
               <Square gauge={state} />
-            </TabPanel>
-            <TabPanel>
+            </Tabs.Content>
+            <Tabs.Content value="evenly">
               <Even />
-            </TabPanel>
-            <TabPanel>
+            </Tabs.Content>
+            <Tabs.Content value="curve">
               <Ellipse gauge={state} />
-            </TabPanel>
-            <TabPanel>
+            </Tabs.Content>
+            <Tabs.Content value="slope">
               <Slope gauge={state} />
-            </TabPanel>
+            </Tabs.Content>
 
             {/*<Armhole gauge={state} />
           <BackNeck gauge={state} />
@@ -157,12 +151,10 @@ function Calculator() {
           <SleeveHoleAndCap gauge={state} />
           <SleeveCapHeight gauge={state} />
           <StandardSleeveCap gauge={state} /> */}
-          </TabPanels>
-        </Tabs>
+        </Tabs.Root>
       </VStack>
 
       <Alert status="info">
-        <AlertIcon />
         <Text>
           This calculator is a <em>work in progress</em> and may produce
           unexpected results.

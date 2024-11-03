@@ -7,39 +7,27 @@ import { chunk } from "./measurements";
 import {
   Box,
   Text,
-  FormControl,
-  FormHelperText,
-  FormLabel,
   HStack,
   Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Select,
   VStack,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
   Spacer,
   Link,
-  useMultiStyleConfig,
   Button,
-  InputRightElement,
-  InputGroup,
   Heading,
   useDisclosure,
-  ModalOverlay,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
+  NumberInputRoot,
+  NativeSelectRoot,
+  Fieldset,
+  Image,
+  Dialog,
+  DialogCloseTrigger,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { Field } from "../components/ui/field";
+import { NumberInputField } from "../components/ui/number-input";
+import { NativeSelectField } from "../components/ui/native-select";
+import { InputGroup } from "../components/ui/input-group";
+import { Alert } from "../components/ui/alert";
 
 type LoadingErrorState = {
   message: string;
@@ -59,13 +47,13 @@ type CardState = {
 };
 
 function isDataState(
-  content: LoadingErrorState | PixelDataState,
+  content: LoadingErrorState | PixelDataState
 ): content is PixelDataState {
   return (content as PixelDataState).pixels !== undefined;
 }
 
 function isErrorState(
-  content: LoadingErrorState | PixelDataState,
+  content: LoadingErrorState | PixelDataState
 ): content is LoadingErrorState {
   return (content as LoadingErrorState).message !== undefined;
 }
@@ -76,10 +64,9 @@ export function Card() {
     maxHeight: 60,
     unit: UNIT.CM,
   });
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const setMaxHeight = (_valueAsString: string, valueAsNumber: number) => {
-    setState({ ...state, maxHeight: valueAsNumber });
+  const setMaxHeight = (details: { value: string; valueAsNumber: number }) => {
+    setState({ ...state, maxHeight: details.valueAsNumber });
   };
 
   // const setMaxWidth = (e: ChangeEvent<HTMLInputElement>) => {
@@ -133,7 +120,7 @@ export function Card() {
   if (state.unit === UNIT.IN && state.maxHeight) {
     maxHeightMM = state.maxHeight * 25.4;
   }
-  const styles = useMultiStyleConfig("Button", { variant: "outline" });
+  // const styles = useMultiStyleConfig("Button", { variant: "outline" });
 
   return (
     <VStack align="stretch">
@@ -149,80 +136,73 @@ export function Card() {
       >
         <Box as="main">
           <VStack as="form">
-            <FormControl as="fieldset">
-              <FormLabel as="legend">Maximum page size</FormLabel>
+            <Field as="fieldset" label="Maximum page size" helperText="Height">
               <HStack>
-                <NumberInput
-                  value={state.maxHeight}
-                  onChange={setMaxHeight}
+                <NumberInputRoot
+                  value={state.maxHeight?.toLocaleString()}
+                  onValueChange={setMaxHeight}
                   size="md"
                   maxW={24}
                 >
                   <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-                <Select
-                  value={state.unit.toString()}
-                  onChange={setUnit}
-                  aria-label="units"
-                  size="md"
-                  maxW={24}
-                >
-                  <option value="cm">cm</option>
-                  <option value="in">inch</option>
-                </Select>
+                </NumberInputRoot>
+                <NativeSelectRoot size="md">
+                  <NativeSelectField
+                    value={state.unit.toString()}
+                    onChange={setUnit}
+                    aria-label="units"
+                    maxW={24}
+                  >
+                    <option value="cm">cm</option>
+                    <option value="in">inch</option>
+                  </NativeSelectField>
+                </NativeSelectRoot>
               </HStack>
-              <FormHelperText>Height</FormHelperText>
-            </FormControl>
-            <FormControl>
-              <FormLabel>Image</FormLabel>
-              <InputGroup>
-                <Input
-                  type="file"
-                  onChange={fileChange}
-                  accept="image/*"
-                  border="none"
-                  paddingInlineStart={0}
-                  sx={{
-                    "::file-selector-button": {
-                      border: "none",
-                      outline: "none",
-                      mr: 2,
-                      ...styles,
-                    },
-                  }}
-                />
-                {state.content && isDataState(state.content) && (
-                  <InputRightElement
-                    as="img"
-                    src={state.content.url}
-                    style={{
-                      width: `${1.333 * state.content.width}px`,
-                      height: `${
-                        state.content.pixels.length / state.content.width
-                      }px`,
-                    }}
-                    title="your image"
+            </Field>
+            <Fieldset.Root>
+              <Fieldset.Legend>Image</Fieldset.Legend>
+              <Fieldset.Content>
+                <InputGroup
+                  endElement={
+                    state.content && isDataState(state.content) ? (
+                      <Image
+                        src={state.content.url}
+                        style={{
+                          width: `${1.333 * state.content.width}px`,
+                          height: `${
+                            state.content.pixels.length / state.content.width
+                          }px`,
+                        }}
+                        title="your image"
+                      />
+                    ) : undefined
+                  }
+                >
+                  <Input
+                    type="file"
+                    onChange={fileChange}
+                    accept="image/*"
+                    border="none"
+                    paddingInlineStart={0}
                   />
-                )}
-              </InputGroup>
-            </FormControl>
+                </InputGroup>
+              </Fieldset.Content>
+            </Fieldset.Root>
           </VStack>
           <Spacer m={5} />
-          <Button onClick={onOpen}>Help?</Button>
 
-          <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>
+          <Dialog.Root>
+          <Dialog.Trigger asChild>
+              <Button>Help?</Button>
+            </Dialog.Trigger>
+            <Dialog.Backdrop />
+            <Dialog.Content>
+              <Dialog.Header>
                 <Heading size="md">Knitting punchcards from images</Heading>
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <VStack spacing={2} align="stretch">
+              </Dialog.Header>
+              <DialogCloseTrigger />
+              <Dialog.Body>
+                <VStack spaceX={2} align="stretch">
                   <Heading size="sm">What?</Heading>
                   <Text>
                     Make files for cutting machines (e.g. silhouette, cricut,
@@ -251,7 +231,6 @@ export function Card() {
                     SVGs. If you don't want to upgrade, try the{" "}
                     <Link
                       href="https://github.com/fablabnbg/inkscape-silhouette/wiki"
-                      isExternal
                       color="pink.500"
                     >
                       Inkscape Silhouette Plugin <ExternalLinkIcon />
@@ -266,17 +245,16 @@ export function Card() {
                     done in your browser.
                   </Text>
                 </VStack>
-              </ModalBody>
-
-              <ModalFooter></ModalFooter>
-            </ModalContent>
-          </Modal>
+              </Dialog.Body>
+            </Dialog.Content>
+          </Dialog.Root>
 
           {state.content && isErrorState(state.content) && (
-            <Alert status="error">
-              <AlertIcon />
-              <AlertTitle>There was a problem generating your card</AlertTitle>
-              <AlertDescription>{state.content.message}</AlertDescription>
+            <Alert
+              status="error"
+              title="There was a problem generating your card"
+            >
+              {state.content.message}
             </Alert>
           )}
 
