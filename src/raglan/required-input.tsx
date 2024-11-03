@@ -1,36 +1,47 @@
-import { FormControl, FormLabel, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, FormHelperText } from "@chakra-ui/react";
+import { Field } from "../components/ui/field";
+import {
+  NumberInputField,
+  NumberInputRoot,
+} from "../components/ui/number-input";
+import { useState } from "react";
 
-export function RequiredInput({
-    label,
-    value,
-    onChange,
-    hint,
-    showHint,
-  }: {
-    label: string;
-    value: number;
-    onChange: (newValue: number) => void;
-    hint: string;
-    showHint: boolean;
-  }) {
-    const onInputChange = (_str: string, num: number) => {
-      if (isNaN(num)) {
-        onChange(0);
-      }
-      onChange(num);
-    };
-  
-    return (
-      <FormControl isRequired={true}>
-        <FormLabel>{label}</FormLabel>
-        <NumberInput value={value} onChange={onInputChange}  maxW={20}>
+export function RequiredInput(props: {
+  label: string;
+  value: number;
+  onChange: (newValue: number) => void;
+  hint: string;
+  showHint: boolean;
+}) {
+  const [value, setValue] = useState<string>(props.value.toLocaleString());
+
+  const isValid = (x: number) => !isNaN(x) && x !== undefined && x !== null;
+
+  const onChange = ({value, valueAsNumber}: {value: string, valueAsNumber: number}) => {
+    setValue(value);
+    if (isValid(valueAsNumber)) {
+      props.onChange(valueAsNumber);
+    }
+  };
+
+  const onBlur = () => {
+    const asInt = parseInt(value);
+    if (!isValid(asInt)) {
+      setValue("0");
+      props.onChange(0);
+    }
+  };
+
+  return (
+    <Field label={props.label} helperText={props.showHint ? props.hint : undefined} required>
+        <NumberInputRoot
+          value={value.toLocaleString()}
+          onValueChange={onChange}
+          onBlur={onBlur}
+          maxW={20}
+          aria-label="Measurement"
+        >
           <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-        {showHint && <FormHelperText>{hint}</FormHelperText>}
-      </FormControl>
-    );
-  }
+        </NumberInputRoot>
+      </Field>
+  );
+}

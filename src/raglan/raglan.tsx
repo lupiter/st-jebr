@@ -6,18 +6,15 @@ import {
   HStack,
   Flex,
   Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
   Box,
   Button,
   Heading,
   Text,
-  Switch,
-  FormControl,
-  FormLabel,
+  Alert,
+  SwitchCheckedChangeDetails,
 } from "@chakra-ui/react";
+import { Switch } from "../components/ui/switch";
+import { Field } from "../components/ui/field";
 import { RaglanCalculations, RaglanState } from "./state";
 import { Figures } from "./figures";
 import { RaglanTable } from "./table";
@@ -57,8 +54,8 @@ export function Raglan() {
     })
   );
 
-  const toggleHints = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setShowHints(e.target.checked);
+  const toggleHints = (e: SwitchCheckedChangeDetails) => {
+    setShowHints(e.checked);
   };
 
   const setChest = (chest: number) => {
@@ -142,6 +139,7 @@ export function Raglan() {
   return (
     <VStack align="stretch">
       <Header />
+      <Alert.Root title="Work in progress" status="warning">This calculator is still in development and may give really bad results.</Alert.Root>
       <Flex
         m={0}
         gap={6}
@@ -166,10 +164,9 @@ export function Raglan() {
             <Heading as="h4" size="sm">
               Garment measurements
             </Heading>
-            <FormControl>
-              <FormLabel>Show hints</FormLabel>
-              <Switch checked={showHints} onChange={toggleHints} />
-            </FormControl>
+            <Field label="Show hints">
+              <Switch checked={showHints} onCheckedChange={toggleHints} />
+            </Field>
             <RequiredInput
               label="Chest"
               value={state.chest}
@@ -204,17 +201,14 @@ export function Raglan() {
               Recalculate from above
             </Button>
 
-            <Accordion allowToggle>
-              <AccordionItem>
-                <h2>
-                  <AccordionButton>
+            <Accordion.Root multiple collapsible>
+              <Accordion.Item value="advanced">
+                  <Accordion.ItemTrigger>
                     <Box as="span" flex="1" textAlign="left">
                       Advanced
                     </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                </h2>
-                <AccordionPanel gap="1rem" display="flex" flexDir="column">
+                  </Accordion.ItemTrigger>
+                <Accordion.ItemContent gap="1rem" display="flex" flexDir="column">
                   <OptionalInput
                     value={state.sleeve.bicep}
                     label="Bicep"
@@ -250,18 +244,17 @@ export function Raglan() {
                     hint="Center of neck hole to bottom of front scoop, if same as back neck depth back and front are the same"
                     showHint={showHints}
                   />
-                </AccordionPanel>
-              </AccordionItem>
-              <AccordionItem>
+                </Accordion.ItemContent>
+              </Accordion.Item>
+              <Accordion.Item value="help">
                 <h2>
-                  <AccordionButton>
+                  <Accordion.ItemTrigger>
                     <Box as="span" flex="1" textAlign="left">
                       Help
                     </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
+                  </Accordion.ItemTrigger>
                 </h2>
-                <AccordionPanel gap="1rem" display="flex" flexDir="column">
+                <Accordion.ItemContent gap="1rem" display="flex" flexDir="column">
                   <Heading size="xs" as="h5">
                     Ease
                   </Heading>
@@ -284,9 +277,9 @@ export function Raglan() {
                     to enter decimal degrees and not radians (sorry maths
                     nerds).
                   </Text>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
+                </Accordion.ItemContent>
+              </Accordion.Item>
+            </Accordion.Root>
           </VStack>
         </HStack>
         <VStack align="center" justify="center" flex={1}>
