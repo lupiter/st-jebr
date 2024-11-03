@@ -111,18 +111,16 @@ export function Raglan() {
   const z = chestAfterShelf / 2 - halfNeck;
   const sleeveSlopeHeight = Math.sqrt(Math.pow(shoulderToArmpit, 2) + Math.pow(z, 2) - Math.pow(halfBicep, 2));
 
-  console.log({sleeveSlopeHeight, shoulderToArmpit, z, halfBicep});
-
-
   const sleeveAngleRad = Math.PI / 2 - Math.atan(neckToChest / shoulderToArmpit) - Math.atan(sleeveSlopeHeight / halfBicep);
-  const backCastOff = (halfNeck - state.neck.back * Math.tan(sleeveAngleRad)) * 2;
+  const probablyTan = sleeveAngleRad === Math.PI / 2 ? 0 : Math.tan(sleeveAngleRad);
+  const backCastOff = (halfNeck - state.neck.back * probablyTan) * 2;
   const sleeveCastOff = state.neck.back / (Math.cos(sleeveAngleRad)) * 2;
   const sleeveSlopeWidth = halfBicep - sleeveCastOff / 2;
 
   const neckSlopeHeight = state.neck.front - state.neck.back;
-  const neckSlopeWidth = neckSlopeHeight * Math.tan(sleeveAngleRad);
+  const neckSlopeWidth = neckSlopeHeight * probablyTan;
 
-  const bodySlopeWidth = neckToChest + state.neck.back * Math.tan(sleeveAngleRad);
+  const bodySlopeWidth = neckToChest + state.neck.back * probablyTan;
   const bodySlopeHeight = shoulderToArmpit - state.neck.back;
 
 
