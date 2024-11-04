@@ -4,8 +4,6 @@ import { Header } from "../header/header";
 import { GaugeState, UNIT } from "../app-state";
 import {
   VStack,
-  AlertTitle,
-  AlertDescription,
   Spacer,
   HStack,
   Flex,

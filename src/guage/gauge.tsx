@@ -2,14 +2,10 @@ import {
   VStack,
   HStack,
   Heading,
-  NumberInput,
-  Select,
   Text,
-  Box,
   Button,
   Dialog,
   NumberInputRoot,
-  NativeSelect,
 } from "@chakra-ui/react";
 import { GaugeState, UNIT } from "../app-state";
 import { ChangeEvent } from "react";
