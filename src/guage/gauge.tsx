@@ -4,7 +4,6 @@ import {
   Heading,
   Text,
   Button,
-  Dialog,
   NumberInputRoot,
 } from "@chakra-ui/react";
 import { GaugeState, UNIT } from "../app-state";
@@ -15,30 +14,37 @@ import {
   NativeSelectField,
   NativeSelectRoot,
 } from "../components/ui/native-select";
+import {
+  DialogBackdrop,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+  DialogRoot,
+} from "../components/ui/dialog";
 
 export function ModalGauge(props: {
   gauge: GaugeState;
   onchange: (gauge: GaugeState) => void;
 }) {
   return (
-    <Dialog.Root>
-      <Dialog.ActionTrigger>
+    <DialogRoot>
+      <DialogTrigger>
         <Button>Gauge</Button>
-      </Dialog.ActionTrigger>
+      </DialogTrigger>
 
-      <Dialog.Content>
-        <Dialog.Backdrop />
-        <Dialog.Content>
-          <Dialog.Header>
-            <Heading size="md">Gauge</Heading>
-          </Dialog.Header>
-          <Dialog.CloseTrigger />
-          <Dialog.Body as="form">
-            <Gauge gauge={props.gauge} onchange={props.onchange} />
-          </Dialog.Body>
-        </Dialog.Content>
-      </Dialog.Content>
-    </Dialog.Root>
+      <DialogBackdrop />
+      <DialogContent>
+        <DialogHeader>
+          <Heading size="md">Gauge</Heading>
+        </DialogHeader>
+        <DialogCloseTrigger />
+        <DialogBody as="form">
+          <Gauge gauge={props.gauge} onchange={props.onchange} />
+        </DialogBody>
+      </DialogContent>
+    </DialogRoot>
   );
 }
 

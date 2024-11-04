@@ -1,16 +1,19 @@
 import {
   Button,
   Heading,
-  DialogRoot,
-  DialogTrigger,
-  DialogContent,
-  DialogBackdrop,
-  DialogHeader,
-  DialogCloseTrigger,
-  DialogBody,
   DialogFooter,
   DialogActionTrigger,
 } from "@chakra-ui/react";
+
+import {
+  DialogBackdrop,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+  DialogRoot,
+} from "../../components/ui/dialog";
 import { CropBox } from "./cropbox";
 import { useRef, useState } from "react";
 import { CropController, CropState } from "./crop-controller";

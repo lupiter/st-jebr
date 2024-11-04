@@ -3,22 +3,24 @@ import {
   Heading,
   VStack,
   Text,
-  DialogRoot,
-  DialogActionTrigger,
-  DialogBackdrop,
-  DialogContent,
-  DialogHeader,
-  DialogCloseTrigger,
-  DialogBody,
   List,
 } from "@chakra-ui/react";
+import {
+  DialogBackdrop,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogRoot,
+} from "../components/ui/dialog";
+import { DialogTrigger } from "../components/ui/dialog";
 
 export function RadarHelp() {
   return (
     <DialogRoot>
-      <DialogActionTrigger asChild>
+      <DialogTrigger asChild>
         <Button>Help?</Button>
-      </DialogActionTrigger>
+      </DialogTrigger>
       <DialogBackdrop />
       <DialogContent>
         <DialogHeader>

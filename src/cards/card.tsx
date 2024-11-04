@@ -18,9 +18,16 @@ import {
   NativeSelectRoot,
   Fieldset,
   Image,
-  Dialog,
-  DialogCloseTrigger,
 } from "@chakra-ui/react";
+import {
+  DialogBackdrop,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+  DialogRoot,
+} from "../components/ui/dialog";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Field } from "../components/ui/field";
 import { NumberInputField } from "../components/ui/number-input";
@@ -189,17 +196,17 @@ export function Card() {
           </VStack>
           <Spacer m={5} />
 
-          <Dialog.Root>
-            <Dialog.Trigger asChild>
+          <DialogRoot>
+            <DialogTrigger asChild>
               <Button>Help?</Button>
-            </Dialog.Trigger>
-            <Dialog.Backdrop />
-            <Dialog.Content>
-              <Dialog.Header>
+            </DialogTrigger>
+            <DialogBackdrop />
+            <DialogContent>
+              <DialogHeader>
                 <Heading size="md">Knitting punchcards from images</Heading>
-              </Dialog.Header>
+              </DialogHeader>
               <DialogCloseTrigger />
-              <Dialog.Body>
+              <DialogBody>
                 <VStack spaceX={2} align="stretch">
                   <Heading size="sm">What?</Heading>
                   <Text>
@@ -243,9 +250,9 @@ export function Card() {
                     done in your browser.
                   </Text>
                 </VStack>
-              </Dialog.Body>
-            </Dialog.Content>
-          </Dialog.Root>
+              </DialogBody>
+            </DialogContent>
+          </DialogRoot>
 
           {state.content && isErrorState(state.content) && (
             <Alert

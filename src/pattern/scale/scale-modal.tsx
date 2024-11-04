@@ -2,21 +2,23 @@ import {
   Button,
   Heading,
   Box,
-  DialogActionTrigger,
-  DialogRoot,
-  DialogContent,
-  DialogBackdrop,
-  DialogHeader,
-  DialogCloseTrigger,
-  DialogBody,
-  DialogFooter,
   NumberInputRoot,
 } from "@chakra-ui/react";
+
+import {
+  DialogBackdrop,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogRoot,
+} from "../../components/ui/dialog";
 import { useRef, useState } from "react";
 import { ScaleController, ScaleState } from "./scale-controller";
 import { Scaler } from "./scale";
 import { NumberInputField } from "../../components/ui/number-input";
 import { Field } from "../../components/ui/field";
+import { DialogActionTrigger, DialogFooter } from "../../components/ui/dialog";
 
 export function ScaleModal(props: {
   width: number;

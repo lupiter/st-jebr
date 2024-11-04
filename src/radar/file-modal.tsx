@@ -3,17 +3,19 @@ import {
   Input,
   Button,
   Heading,
-  DialogRoot,
-  DialogActionTrigger,
-  DialogBackdrop,
-  DialogContent,
-  DialogHeader,
-  DialogCloseTrigger,
-  DialogBody,
   Fieldset,
 } from "@chakra-ui/react";
 import { ChangeEvent } from "react";
 import { Field } from "../components/ui/field";
+import {
+  DialogBackdrop,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogRoot,
+  DialogTrigger,
+} from "../components/ui/dialog";
 
 export type ImageState = {
   width: number;
@@ -40,9 +42,9 @@ export function FileModal(props: { onchange: (image?: ImageState) => void }) {
 
   return (
     <DialogRoot>
-      <DialogActionTrigger>
+      <DialogTrigger>
         <Button>File</Button>
-      </DialogActionTrigger>
+      </DialogTrigger>
 
       <DialogBackdrop />
 
