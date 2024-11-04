@@ -18,7 +18,14 @@ export type PatternProps = {
 
 export function Pattern(props: PatternProps) {
   const [state, setState] = useState<PatternState>({
-    crop: { x0: 10, y0: 10, x1: props.width - 10, y1: props.height - 10, xprev: 0, yprev: 0 },
+    crop: {
+      x0: 10,
+      y0: 10,
+      x1: props.width - 10,
+      y1: props.height - 10,
+      xprev: 0,
+      yprev: 0,
+    },
     scale: { x0: 30, y0: 30, x1: props.width - 30, y1: 30, scaleSize: 100 },
     scroll: 0,
   });

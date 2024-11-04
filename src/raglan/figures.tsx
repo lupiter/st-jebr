@@ -19,7 +19,8 @@ export const Figures = ({
     state.sleeve.length * Math.cos(sleeveAngleRad) +
     halfBicep * Math.sin(sleeveAngleRad);
   const garmentWidth = sleeveExtentPastChest * 2 + calculations.frontChest;
-  const sleeveTotalLength = state.sleeve.length + calculations.sleeveSlopeHeight;
+  const sleeveTotalLength =
+    state.sleeve.length + calculations.sleeveSlopeHeight;
 
   return (
     <HStack
@@ -148,7 +149,7 @@ export const Figures = ({
               `${calculations.bodySlopeWidth},${state.neck.back} ` +
               `0,${calculations.shoulderToArmpit} ` +
               `${0 - state.sleeve.length * Math.cos(sleeveAngleRad)},${calculations.shoulderToArmpit + state.sleeve.length * Math.sin(sleeveAngleRad)} ` +
-              `${0 - state.sleeve.length * Math.cos(sleeveAngleRad) - (halfBicep) * Math.sin(sleeveAngleRad)},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
+              `${0 - state.sleeve.length * Math.cos(sleeveAngleRad) - halfBicep * Math.sin(sleeveAngleRad)},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
               ``
             }
           />

@@ -1,12 +1,4 @@
-import {
-  TableContainer,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
-  Table,
-} from "@chakra-ui/react";
+import { Table } from "@chakra-ui/react";
 import { RaglanCalculations, RaglanState } from "./state";
 
 export const RaglanTable = ({
@@ -17,55 +9,83 @@ export const RaglanTable = ({
   calculations: RaglanCalculations;
 }) => {
   return (
-    <TableContainer>
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>Dimension</Th>
-            <Th isNumeric>Back</Th>
-            <Th isNumeric>Front neck</Th>
-            <Th isNumeric>Sleeve</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Th>Bottom width</Th>
-            <Td isNumeric>{measures.frontChest.toLocaleString()}</Td>
-            <Td></Td>
-            <Td isNumeric>{state.sleeve.bicep.toLocaleString()}</Td>
-          </Tr>
-          <Tr>
-            <Th>Body length</Th>
-            <Td isNumeric>{state.underarm.toLocaleString()}</Td>
-            <Td></Td>
-            <Td isNumeric>{state.sleeve.length.toLocaleString()}</Td>
-          </Tr>
-          <Tr>
-            <Th>Shelf</Th>
-            <Td isNumeric>{measures.shelf.toLocaleString()}</Td>
-            <Td></Td>
-            <Td isNumeric>{measures.shelf.toLocaleString()}</Td>
-          </Tr>
-          <Tr>
-            <Th>Slope width</Th>
-            <Td isNumeric>{measures.bodySlopeWidth.toLocaleString()}</Td>
-            <Td isNumeric>{measures.neckSlopeWidth.toLocaleString()}</Td>
-            <Td isNumeric>{measures.sleeveSlopeWidth.toLocaleString()}</Td>
-          </Tr>
-          <Tr>
-            <Th>Slope length</Th>
-            <Td isNumeric>{measures.bodySlopeHeight.toLocaleString()}</Td>
-            <Td isNumeric>{measures.neckSlopeHeight.toLocaleString()}</Td>
-            <Td isNumeric>{measures.sleeveSlopeHeight.toLocaleString()}</Td>
-          </Tr>
-          <Tr>
-            <Th>Cast off</Th>
-            <Td isNumeric>{measures.backCastOff.toLocaleString()}</Td>
-            <Td isNumeric>{measures.neckCastOff.toLocaleString()}</Td>
-            <Td isNumeric>{measures.sleeveCastOff.toLocaleString()}</Td>
-          </Tr>
-        </Tbody>
-      </Table>
-    </TableContainer>
+    <Table.Root>
+      <Table.Header>
+        <Table.Row>
+          <Table.ColumnHeader>Dimension</Table.ColumnHeader>
+          <Table.ColumnHeader textAlign="end">Back</Table.ColumnHeader>
+          <Table.ColumnHeader textAlign="end">Front neck</Table.ColumnHeader>
+          <Table.ColumnHeader textAlign="end">Sleeve</Table.ColumnHeader>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        <Table.Row>
+          <Table.ColumnHeader>Bottom width</Table.ColumnHeader>
+          <Table.Cell textAlign="end">
+            {measures.frontChest.toLocaleString()}
+          </Table.Cell>
+          <Table.Cell></Table.Cell>
+          <Table.Cell textAlign="end">
+            {state.sleeve.bicep.toLocaleString()}
+          </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader>Body length</Table.ColumnHeader>
+          <Table.Cell textAlign="end">
+            {state.underarm.toLocaleString()}
+          </Table.Cell>
+          <Table.Cell></Table.Cell>
+          <Table.Cell textAlign="end">
+            {state.sleeve.length.toLocaleString()}
+          </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader>Shelf</Table.ColumnHeader>
+          <Table.Cell textAlign="end">
+            {measures.shelf.toLocaleString()}
+          </Table.Cell>
+          <Table.Cell></Table.Cell>
+          <Table.Cell textAlign="end">
+            {measures.shelf.toLocaleString()}
+          </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader>Slope width</Table.ColumnHeader>
+          <Table.Cell textAlign="end">
+            {measures.bodySlopeWidth.toLocaleString()}
+          </Table.Cell>
+          <Table.Cell textAlign="end">
+            {measures.neckSlopeWidth.toLocaleString()}
+          </Table.Cell>
+          <Table.Cell textAlign="end">
+            {measures.sleeveSlopeWidth.toLocaleString()}
+          </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader>Slope length</Table.ColumnHeader>
+          <Table.Cell textAlign="end">
+            {measures.bodySlopeHeight.toLocaleString()}
+          </Table.Cell>
+          <Table.Cell textAlign="end">
+            {measures.neckSlopeHeight.toLocaleString()}
+          </Table.Cell>
+          <Table.Cell textAlign="end">
+            {measures.sleeveSlopeHeight.toLocaleString()}
+          </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader>Cast off</Table.ColumnHeader>
+          <Table.Cell textAlign="end">
+            {measures.backCastOff.toLocaleString()}
+          </Table.Cell>
+          <Table.Cell textAlign="end">
+            {measures.neckCastOff.toLocaleString()}
+          </Table.Cell>
+          <Table.Cell textAlign="end">
+            {measures.sleeveCastOff.toLocaleString()}
+          </Table.Cell>
+        </Table.Row>
+      </Table.Body>
+    </Table.Root>
   );
 };

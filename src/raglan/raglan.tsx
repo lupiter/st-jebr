@@ -6,18 +6,15 @@ import {
   HStack,
   Flex,
   Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
   Box,
   Button,
   Heading,
   Text,
-  Switch,
-  FormControl,
-  FormLabel,
+  Alert,
+  SwitchCheckedChangeDetails,
 } from "@chakra-ui/react";
+import { Switch } from "../components/ui/switch";
+import { Field } from "../components/ui/field";
 import { RaglanCalculations, RaglanState } from "./state";
 import { Figures } from "./figures";
 import { RaglanTable } from "./table";
@@ -54,11 +51,11 @@ export function Raglan() {
       sleeve: {
         length: 9,
       },
-    })
+    }),
   );
 
-  const toggleHints = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setShowHints(e.target.checked);
+  const toggleHints = (e: SwitchCheckedChangeDetails) => {
+    setShowHints(e.checked);
   };
 
   const setChest = (chest: number) => {
@@ -69,7 +66,7 @@ export function Raglan() {
   };
   const setBack = (back: number) => {
     setState((state) => ({ ...state, back }));
-  }
+  };
   const setBicep = (bicep: number) => {
     setState((state) => ({ ...state, sleeve: { ...state.sleeve, bicep } }));
   };
@@ -109,22 +106,25 @@ export function Raglan() {
 
   const neckToChest = chestAfterShelf / 2 - halfNeck;
   const z = chestAfterShelf / 2 - halfNeck;
-  const sleeveSlopeHeight = Math.sqrt(Math.pow(shoulderToArmpit, 2) + Math.pow(z, 2) - Math.pow(halfBicep, 2));
+  const sleeveSlopeHeight = Math.sqrt(
+    Math.pow(shoulderToArmpit, 2) + Math.pow(z, 2) - Math.pow(halfBicep, 2),
+  );
 
-  console.log({sleeveSlopeHeight, shoulderToArmpit, z, halfBicep});
-
-
-  const sleeveAngleRad = Math.PI / 2 - Math.atan(neckToChest / shoulderToArmpit) - Math.atan(sleeveSlopeHeight / halfBicep);
-  const backCastOff = (halfNeck - state.neck.back * Math.tan(sleeveAngleRad)) * 2;
-  const sleeveCastOff = state.neck.back / (Math.cos(sleeveAngleRad)) * 2;
+  const sleeveAngleRad =
+    Math.PI / 2 -
+    Math.atan(neckToChest / shoulderToArmpit) -
+    Math.atan(sleeveSlopeHeight / halfBicep);
+  const probablyTan =
+    sleeveAngleRad === Math.PI / 2 ? 0 : Math.tan(sleeveAngleRad);
+  const backCastOff = (halfNeck - state.neck.back * probablyTan) * 2;
+  const sleeveCastOff = (state.neck.back / Math.cos(sleeveAngleRad)) * 2;
   const sleeveSlopeWidth = halfBicep - sleeveCastOff / 2;
 
   const neckSlopeHeight = state.neck.front - state.neck.back;
-  const neckSlopeWidth = neckSlopeHeight * Math.tan(sleeveAngleRad);
+  const neckSlopeWidth = neckSlopeHeight * probablyTan;
 
-  const bodySlopeWidth = neckToChest + state.neck.back * Math.tan(sleeveAngleRad);
+  const bodySlopeWidth = neckToChest + state.neck.back * probablyTan;
   const bodySlopeHeight = shoulderToArmpit - state.neck.back;
-
 
   const calculations: RaglanCalculations = {
     frontChest,
@@ -144,6 +144,9 @@ export function Raglan() {
   return (
     <VStack align="stretch">
       <Header />
+      <Alert.Root title="Work in progress" status="warning">
+        This calculator is still in development and may give really bad results.
+      </Alert.Root>
       <Flex
         m={0}
         gap={6}
@@ -168,10 +171,9 @@ export function Raglan() {
             <Heading as="h4" size="sm">
               Garment measurements
             </Heading>
-            <FormControl>
-              <FormLabel>Show hints</FormLabel>
-              <Switch checked={showHints} onChange={toggleHints} />
-            </FormControl>
+            <Field label="Show hints">
+              <Switch checked={showHints} onCheckedChange={toggleHints} />
+            </Field>
             <RequiredInput
               label="Chest"
               value={state.chest}
@@ -187,12 +189,12 @@ export function Raglan() {
               showHint={showHints}
             />
             <RequiredInput
-            label="Back"
-            value={state.back}
-            onChange={setBack}
-            showHint={showHints}
-            hint="From top of shoulder to bottom of garment down your back"
-          />
+              label="Back"
+              value={state.back}
+              onChange={setBack}
+              showHint={showHints}
+              hint="From top of shoulder to bottom of garment down your back"
+            />
 
             <RequiredInput
               value={state.sleeve.length}
@@ -206,17 +208,18 @@ export function Raglan() {
               Recalculate from above
             </Button>
 
-            <Accordion allowToggle>
-              <AccordionItem>
-                <h2>
-                  <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      Advanced
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                </h2>
-                <AccordionPanel gap="1rem" display="flex" flexDir="column">
+            <Accordion.Root multiple collapsible>
+              <Accordion.Item value="advanced">
+                <Accordion.ItemTrigger>
+                  <Box as="span" flex="1" textAlign="left">
+                    Advanced
+                  </Box>
+                </Accordion.ItemTrigger>
+                <Accordion.ItemContent
+                  gap="1rem"
+                  display="flex"
+                  flexDir="column"
+                >
                   <OptionalInput
                     value={state.sleeve.bicep}
                     label="Bicep"
@@ -252,18 +255,21 @@ export function Raglan() {
                     hint="Center of neck hole to bottom of front scoop, if same as back neck depth back and front are the same"
                     showHint={showHints}
                   />
-                </AccordionPanel>
-              </AccordionItem>
-              <AccordionItem>
+                </Accordion.ItemContent>
+              </Accordion.Item>
+              <Accordion.Item value="help">
                 <h2>
-                  <AccordionButton>
+                  <Accordion.ItemTrigger>
                     <Box as="span" flex="1" textAlign="left">
                       Help
                     </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
+                  </Accordion.ItemTrigger>
                 </h2>
-                <AccordionPanel gap="1rem" display="flex" flexDir="column">
+                <Accordion.ItemContent
+                  gap="1rem"
+                  display="flex"
+                  flexDir="column"
+                >
                   <Heading size="xs" as="h5">
                     Ease
                   </Heading>
@@ -286,9 +292,9 @@ export function Raglan() {
                     to enter decimal degrees and not radians (sorry maths
                     nerds).
                   </Text>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
+                </Accordion.ItemContent>
+              </Accordion.Item>
+            </Accordion.Root>
           </VStack>
         </HStack>
         <VStack align="center" justify="center" flex={1}>

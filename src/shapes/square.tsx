@@ -2,22 +2,17 @@ import { useState } from "react";
 import { GaugeState } from "../app-state";
 import {
   Flex,
-  FormControl,
-  FormHelperText,
-  FormLabel,
   Grid,
   GridItem,
   HStack,
   Heading,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
+  NumberInputRoot,
   Spacer,
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { Field } from "../components/ui/field";
+import { NumberInputField } from "../components/ui/number-input";
 
 type SquareState = {
   width: number;
@@ -37,16 +32,26 @@ export function Square(props: { gauge: GaugeState }): JSX.Element {
     aspectWidth = aspectWidth * (state.width / state.height);
   }
 
-  const setWidth = (_: string, numberValue: number) => {
+  const setWidth = ({
+    valueAsNumber,
+  }: {
+    value: string;
+    valueAsNumber: number;
+  }) => {
     setState({
       ...state,
-      width: numberValue,
+      width: valueAsNumber,
     });
   };
-  const setHeight = (_: string, numberValue: number) => {
+  const setHeight = ({
+    valueAsNumber,
+  }: {
+    value: string;
+    valueAsNumber: number;
+  }) => {
     setState({
       ...state,
-      height: numberValue,
+      height: valueAsNumber,
     });
   };
 
@@ -57,50 +62,46 @@ export function Square(props: { gauge: GaugeState }): JSX.Element {
       justify="stretch"
       direction={{ base: "column", md: "row" }}
     >
-      <VStack
-        spacing={2}
-        align="stretch"
-        flex={1}
-        flexShrink={0}
-        flexBasis={20}
-      >
-        <Text size="sm">Body panel, dish cloth, apron front</Text>
+      <VStack align="stretch" flex={1} flexShrink={0} flexBasis={20}>
+        <Text fontSize="sm">Body panel, dish cloth, apron front</Text>
 
         <HStack as="fieldset">
           <Heading size="sm" as="legend">
             Measurements
           </Heading>
-          <FormControl maxW={40}>
-            <FormLabel>Width</FormLabel>
-            <NumberInput value={state.width} onChange={setWidth}>
+          <Field
+            maxW={40}
+            label="Width"
+            helperText={props.gauge.unit.toString()}
+          >
+            <NumberInputRoot
+              value={state.width.toLocaleString()}
+              onValueChange={setWidth}
+            >
               <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-            <FormHelperText>{props.gauge.unit.toString()}</FormHelperText>
-          </FormControl>
-          <FormControl maxW={40}>
-            <FormLabel>Height</FormLabel>
-            <NumberInput value={state.height} onChange={setHeight}>
+            </NumberInputRoot>
+          </Field>
+          <Field
+            maxW={40}
+            label="Height"
+            helperText={props.gauge.unit.toString()}
+          >
+            <NumberInputRoot
+              value={state.height.toLocaleString()}
+              onValueChange={setHeight}
+            >
               <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-            <FormHelperText>{props.gauge.unit.toString()}</FormHelperText>
-          </FormControl>
+            </NumberInputRoot>
+          </Field>
         </HStack>
       </VStack>
       <VStack flex={1} flexShrink={0} flexBasis={20}>
-        <Text size="sm">
+        <Text fontSize="sm">
           {props.gauge.rows / props.gauge.square} sts/{props.gauge.unit} &times;{" "}
           {state.height} {props.gauge.unit} = {height} sts &asymp;{" "}
           {Math.round(height)} (rounded)
         </Text>
-        <Text size="sm">
+        <Text fontSize="sm">
           {props.gauge.stitches / props.gauge.square} sts/{props.gauge.unit}{" "}
           &times; {state.width} {props.gauge.unit} = {width} sts &asymp;{" "}
           {Math.round(width)} (rounded)

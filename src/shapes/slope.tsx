@@ -2,31 +2,27 @@ import { ChangeEvent, useState } from "react";
 import { GaugeState } from "../app-state";
 import { BlockedSlope } from "./blocked-slope";
 import {
-  FormControl,
   Text,
-  FormLabel,
   HStack,
   Heading,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Select,
   VStack,
   Grid,
   GridItem,
   Spacer,
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
   AccordionItem,
-  AccordionPanel,
   Box,
   Link,
   Flex,
+  NumberInputRoot,
+  AccordionRoot,
+  AccordionItemTrigger,
+  AccordionItemContent,
+  NativeSelectField,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { Field } from "../components/ui/field";
+import { NumberInputField } from "../components/ui/number-input";
+import { NativeSelectRoot } from "../components/ui/native-select";
 
 type SlopeState = {
   width: number;
@@ -65,16 +61,26 @@ export function Slope(props: { gauge: GaugeState }): JSX.Element {
     aspectWidth = aspectWidth * (widthMeasure / heightMeasure);
   }
 
-  const setWidth = (_: string, numberValue: number) => {
+  const setWidth = ({
+    valueAsNumber,
+  }: {
+    value: string;
+    valueAsNumber: number;
+  }) => {
     setState({
       ...state,
-      width: numberValue,
+      width: valueAsNumber,
     });
   };
-  const setHeight = (_: string, numberValue: number) => {
+  const setHeight = ({
+    valueAsNumber,
+  }: {
+    value: string;
+    valueAsNumber: number;
+  }) => {
     setState({
       ...state,
-      height: numberValue,
+      height: valueAsNumber,
     });
   };
   const setMode = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -92,50 +98,42 @@ export function Slope(props: { gauge: GaugeState }): JSX.Element {
       justify="stretch"
       direction={{ base: "column", md: "row" }}
     >
-      <VStack
-        spacing={2}
-        align="stretch"
-        flex={1}
-        flexShrink={0}
-        flexBasis={20}
-      >
+      <VStack align="stretch" flex={1} flexShrink={0} flexBasis={20}>
         <HStack as="fieldset" align="end">
           <Heading size="sm" as="legend">
             Size
           </Heading>
 
-          <FormControl maxW={40}>
-            <FormLabel>Width</FormLabel>
-            <NumberInput value={state.width} onChange={setWidth}>
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          </FormControl>
-          <FormControl maxW={40}>
-            <FormLabel>Height</FormLabel>
-            <NumberInput value={state.height} onChange={setHeight}>
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          </FormControl>
-          <FormControl maxW={40}>
-            <Select
-              aria-label="mode"
-              onChange={setMode}
-              value={state.mode.toString()}
+          <Field maxW={40} label="Width">
+            <NumberInputRoot
+              value={state.width.toLocaleString()}
+              onValueChange={setWidth}
             >
-              <option value={MODE.MEASURE.toString()}>
-                {props.gauge.unit.toString()}
-              </option>
-              <option value={MODE.STITCH.toString()}>stitches</option>
-            </Select>
-          </FormControl>
+              <NumberInputField />
+            </NumberInputRoot>
+          </Field>
+          <Field maxW={40} label="Height">
+            <NumberInputRoot
+              value={state.height.toLocaleString()}
+              onValueChange={setHeight}
+            >
+              <NumberInputField />
+            </NumberInputRoot>
+          </Field>
+          <Field maxW={40}>
+            <NativeSelectRoot>
+              <NativeSelectField
+                aria-label="mode"
+                onChange={setMode}
+                value={state.mode.toString()}
+              >
+                <option value={MODE.MEASURE.toString()}>
+                  {props.gauge.unit.toString()}
+                </option>
+                <option value={MODE.STITCH.toString()}>stitches</option>
+              </NativeSelectField>
+            </NativeSelectRoot>
+          </Field>
         </HStack>
 
         <Grid
@@ -186,37 +184,29 @@ export function Slope(props: { gauge: GaugeState }): JSX.Element {
         </Grid>
       </VStack>
 
-      <VStack
-        spacing={2}
-        align="stretch"
-        flex={1}
-        flexShrink={0}
-        flexBasis={20}
-      >
-        <Accordion allowMultiple>
-          <AccordionItem>
+      <VStack align="stretch" flex={1} flexShrink={0} flexBasis={20}>
+        <AccordionRoot multiple>
+          <AccordionItem value="working">
             <h2>
-              <AccordionButton>
+              <AccordionItemTrigger>
                 <Box as="span" flex="1" textAlign="left">
                   Working
                 </Box>
-                <AccordionIcon />
-              </AccordionButton>
+              </AccordionItemTrigger>
             </h2>
-            <AccordionPanel pb={4}>
+            <AccordionItemContent pb={4}>
               <Text>
                 Using{" "}
                 <Link
                   href="https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm"
                   color="pink.500"
-                  isExternal
                 >
                   Bresenham's algorithm <ExternalLinkIcon mx="2px" />
                 </Link>
               </Text>
-            </AccordionPanel>
+            </AccordionItemContent>
           </AccordionItem>
-        </Accordion>
+        </AccordionRoot>
 
         <BlockedSlope
           x={widthSt}

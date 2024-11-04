@@ -1,13 +1,11 @@
 import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
   AccordionItem,
-  AccordionPanel,
+  AccordionItemContent,
+  AccordionItemTrigger,
+  AccordionRoot,
   Box,
   ListItem,
-  OrderedList,
-  UnorderedList,
+  ListRoot,
   VStack,
 } from "@chakra-ui/react";
 import {
@@ -102,47 +100,45 @@ export function BlockedSlope(props: {
 
   return (
     <VStack align="stretch">
-      <Accordion allowMultiple>
-        <AccordionItem>
+      <AccordionRoot multiple>
+        <AccordionItem value="row">
           <h2>
-            <AccordionButton>
+            <AccordionItemTrigger>
               <Box as="span" flex="1" textAlign="left">
                 Row-by-row
               </Box>
-              <AccordionIcon />
-            </AccordionButton>
+            </AccordionItemTrigger>
           </h2>
-          <AccordionPanel pb={4}>
+          <AccordionItemContent pb={4}>
             From bottom
-            <OrderedList className={style.steps}>
+            <ListRoot className={style.steps}>
               {instructions.map((n, i) => (
                 <li key={i}>{n}</li>
               ))}
-            </OrderedList>
-          </AccordionPanel>
+            </ListRoot>
+          </AccordionItemContent>
         </AccordionItem>
 
-        <AccordionItem>
+        <AccordionItem value="japanese">
           <h2>
-            <AccordionButton>
+            <AccordionItemTrigger>
               <Box as="span" flex="1" textAlign="left">
                 Japanese-style
               </Box>
-              <AccordionIcon />
-            </AccordionButton>
+            </AccordionItemTrigger>
           </h2>
-          <AccordionPanel pb={4}>
+          <AccordionItemContent pb={4}>
             Matching diagram
-            <UnorderedList>
+            <ListRoot>
               {shortInstructions.map((n, i) => (
                 <ListItem key={i}>
                   {n.decrease}&middot;{n.rows}&middot;{n.times}
                 </ListItem>
               ))}
-            </UnorderedList>
-          </AccordionPanel>
+            </ListRoot>
+          </AccordionItemContent>
         </AccordionItem>
-      </Accordion>
+      </AccordionRoot>
       <svg
         viewBox={`-1 -1 ${width + 2} ${height + 2}`}
         width={width + 2}

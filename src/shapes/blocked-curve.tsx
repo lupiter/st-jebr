@@ -1,15 +1,10 @@
+import { Box, ListItem, ListRoot, VStack } from "@chakra-ui/react";
 import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
   AccordionItem,
-  AccordionPanel,
-  Box,
-  ListItem,
-  OrderedList,
-  UnorderedList,
-  VStack,
-} from "@chakra-ui/react";
+  AccordionItemContent,
+  AccordionItemTrigger,
+  AccordionRoot,
+} from "../components/ui/accordion";
 import {
   fillInSlopes,
   pointsToInstructions,
@@ -97,46 +92,44 @@ export function BlockedCurve(props: {
 
   return (
     <VStack align="stretch">
-      <Accordion allowMultiple>
-        <AccordionItem>
+      <AccordionRoot multiple>
+        <AccordionItem value="row">
           <h2>
-            <AccordionButton>
+            <AccordionItemTrigger>
               <Box as="span" flex="1" textAlign="left">
                 Row-by-row
               </Box>
-              <AccordionIcon />
-            </AccordionButton>
+            </AccordionItemTrigger>
           </h2>
-          <AccordionPanel pb={4}>
-            <OrderedList className={style.steps}>
+          <AccordionItemContent pb={4}>
+            <ListRoot className={style.steps}>
               {instructions.map((n, i) => (
-                <li key={i}>{n}</li>
+                <ListItem key={i}>{n}</ListItem>
               ))}
-            </OrderedList>
-          </AccordionPanel>
+            </ListRoot>
+          </AccordionItemContent>
         </AccordionItem>
 
-        <AccordionItem>
+        <AccordionItem value="japanese">
           <h2>
-            <AccordionButton>
+            <AccordionItemTrigger>
               <Box as="span" flex="1" textAlign="left">
                 Japanese-style
               </Box>
-              <AccordionIcon />
-            </AccordionButton>
+            </AccordionItemTrigger>
           </h2>
-          <AccordionPanel pb={4}>
+          <AccordionItemContent pb={4}>
             Matching diagram
-            <UnorderedList>
+            <ListRoot>
               {shortInstructions.map((n, i) => (
                 <ListItem key={i}>
                   {n.decrease}&middot;{n.rows}&middot;{n.times}
                 </ListItem>
               ))}
-            </UnorderedList>
-          </AccordionPanel>
+            </ListRoot>
+          </AccordionItemContent>
         </AccordionItem>
-      </Accordion>
+      </AccordionRoot>
       <svg
         viewBox={`0 0 ${width + 2} ${height + 2}`}
         width={width + 2}

@@ -3,7 +3,7 @@ import { Text } from "@chakra-ui/react";
 
 function calculateStiches(
   before: number,
-  after: number
+  after: number,
 ): {
   start: number;
   end: number;
@@ -29,7 +29,7 @@ export function Remainder(props: {
   const { before, after } = props;
   const { start, end, changeRepeat, change, remainder } = calculateStiches(
     before,
-    after
+    after,
   );
 
   const startStiches = start > 0 ? new Array(start).fill(0) : [];
@@ -38,7 +38,7 @@ export function Remainder(props: {
   const endStitches = end > 0 ? new Array(end).fill(0) : [];
   const svgWidth = Math.max(
     102,
-    start * 10 + changeRepeat * 10 + end * 10 + 40
+    start * 10 + changeRepeat * 10 + end * 10 + 40,
   );
 
   return (

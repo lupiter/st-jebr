@@ -4,19 +4,14 @@ import {
   Text,
   HStack,
   Heading,
-  FormControl,
-  FormHelperText,
-  NumberInput,
-  NumberInputStepper,
-  FormLabel,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInputField,
   Box,
   Flex,
+  NumberInputRoot,
 } from "@chakra-ui/react";
 import { Remainder } from "./evenly/remainder";
 import { Spread } from "./evenly/spread";
+import { Field } from "../components/ui/field";
+import { NumberInputField } from "../components/ui/number-input";
 
 type EvenState = {
   before: number;
@@ -38,19 +33,28 @@ export function Even(): JSX.Element {
     offsetAfter = (aspectBefore - aspectAfter) / 2;
   }
 
-  const setBefore = (_: string, numberValue: number) => {
+  const setBefore = ({
+    valueAsNumber,
+  }: {
+    value: string;
+    valueAsNumber: number;
+  }) => {
     setState({
       ...state,
-      before: numberValue,
+      before: valueAsNumber,
     });
   };
-  const setAfter = (_: string, numberValue: number) => {
+  const setAfter = ({
+    valueAsNumber,
+  }: {
+    value: string;
+    valueAsNumber: number;
+  }) => {
     setState({
       ...state,
-      after: numberValue,
+      after: valueAsNumber,
     });
   };
-
 
   return (
     <Flex
@@ -59,13 +63,7 @@ export function Even(): JSX.Element {
       justify="stretch"
       direction={{ base: "column", md: "row" }}
     >
-      <VStack
-        spacing={2}
-        align="stretch"
-        flex={1}
-        flexShrink={0}
-        flexBasis={20}
-      >
+      <VStack align="stretch" flex={1} flexShrink={0} flexBasis={20}>
         <Text>
           Cuff to sleeve, ribbing to body, working in the round generally
         </Text>
@@ -73,28 +71,22 @@ export function Even(): JSX.Element {
           <Heading size="sm" as="legend">
             Change
           </Heading>
-          <FormControl maxW={40}>
-            <FormLabel>Before</FormLabel>
-            <NumberInput value={state.before} onChange={setBefore}>
+          <Field maxW={40} label="Before" helperText="stitches">
+            <NumberInputRoot
+              value={state.before.toLocaleString()}
+              onValueChange={setBefore}
+            >
               <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-            <FormHelperText>stitches</FormHelperText>
-          </FormControl>
-          <FormControl maxW={40}>
-            <FormLabel>After</FormLabel>
-            <NumberInput value={state.after} onChange={setAfter}>
+            </NumberInputRoot>
+          </Field>
+          <Field maxW={40} label="After" helperText="stitches">
+            <NumberInputRoot
+              value={state.after.toLocaleString()}
+              onValueChange={setAfter}
+            >
               <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-            <FormHelperText>stitches</FormHelperText>
-          </FormControl>
+            </NumberInputRoot>
+          </Field>
         </HStack>
 
         <Box alignSelf="center">
@@ -127,13 +119,7 @@ export function Even(): JSX.Element {
           </svg>
         </Box>
       </VStack>
-      <VStack
-        spacing={2}
-        align="stretch"
-        flex={1}
-        flexShrink={0}
-        flexBasis={20}
-      >
+      <VStack align="stretch" flex={1} flexShrink={0} flexBasis={20}>
         <Remainder before={state.before} after={state.after} />
         <Spread before={state.before} after={state.after} />
       </VStack>
