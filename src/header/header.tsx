@@ -21,7 +21,7 @@ export function Header() {
     >
       <MenuRoot>
         <MenuTrigger>
-          <Button>
+          <Button variant="outline">
             <Image src="/st-jebr/logo.svg" alt="Menu" width={30} height={30} />
           </Button>
         </MenuTrigger>
