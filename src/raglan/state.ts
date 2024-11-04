@@ -26,4 +26,4 @@ export type RaglanCalculations = {
   neckCastOff: number;
   sleeveCastOff: number;
   sleeveSlopeHeight: number;
-}
+};

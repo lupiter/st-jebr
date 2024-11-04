@@ -16,7 +16,13 @@ export function RequiredInput(props: {
 
   const isValid = (x: number) => !isNaN(x) && x !== undefined && x !== null;
 
-  const onChange = ({value, valueAsNumber}: {value: string, valueAsNumber: number}) => {
+  const onChange = ({
+    value,
+    valueAsNumber,
+  }: {
+    value: string;
+    valueAsNumber: number;
+  }) => {
     setValue(value);
     if (isValid(valueAsNumber)) {
       props.onChange(valueAsNumber);
@@ -32,16 +38,20 @@ export function RequiredInput(props: {
   };
 
   return (
-    <Field label={props.label} helperText={props.showHint ? props.hint : undefined} required>
-        <NumberInputRoot
-          value={value.toLocaleString()}
-          onValueChange={onChange}
-          onBlur={onBlur}
-          maxW={20}
-          aria-label="Measurement"
-        >
-          <NumberInputField />
-        </NumberInputRoot>
-      </Field>
+    <Field
+      label={props.label}
+      helperText={props.showHint ? props.hint : undefined}
+      required
+    >
+      <NumberInputRoot
+        value={value.toLocaleString()}
+        onValueChange={onChange}
+        onBlur={onBlur}
+        maxW={20}
+        aria-label="Measurement"
+      >
+        <NumberInputField />
+      </NumberInputRoot>
+    </Field>
   );
 }

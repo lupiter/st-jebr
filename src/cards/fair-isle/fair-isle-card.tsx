@@ -76,10 +76,7 @@ export function FairIselCard(props: FairIsleCardProps): JSX.Element {
             {height}mm high by {width}mm wide
           </Text>
         </VStack>
-        <Button
-          onClick={download}
-          colorScheme="purple"
-        >
+        <Button onClick={download} colorScheme="purple">
           <DownloadIcon /> Download
         </Button>
       </HStack>

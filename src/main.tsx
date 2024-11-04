@@ -8,7 +8,7 @@ import { Card } from "./cards/card.tsx";
 import { Radar } from "./radar/radar.tsx";
 import { Raglan } from "./raglan/raglan.tsx";
 import { Provider } from "./components/ui/provider";
-import { system } from "./theme.ts"
+import { system } from "./theme.ts";
 
 const router = createHashRouter(
   [
@@ -31,7 +31,6 @@ const router = createHashRouter(
   ],
   { basename: "/" },
 );
-
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

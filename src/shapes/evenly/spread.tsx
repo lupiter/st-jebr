@@ -3,7 +3,7 @@ import { Text } from "@chakra-ui/react";
 
 function calculateStiches(
   before: number,
-  after: number
+  after: number,
 ): {
   changeRepeat: number;
   change: number;
@@ -29,7 +29,7 @@ export function Spread(props: { after: number; before: number }): JSX.Element {
   const { before, after } = props;
   const { changeRepeat, change, remainder, first } = calculateStiches(
     before,
-    after
+    after,
   );
 
   const biggerRepeats = Math.max(first, remainder);
@@ -40,11 +40,11 @@ export function Spread(props: { after: number; before: number }): JSX.Element {
     first: first2,
   } = calculateStiches(
     first + remainder - Math.min(first, remainder),
-    first + remainder
+    first + remainder,
   );
 
   const start = Math.floor(
-    (first > remainder ? changeRepeat : changeRepeat + 1) / 2
+    (first > remainder ? changeRepeat : changeRepeat + 1) / 2,
   );
   const end = (first > remainder ? changeRepeat : changeRepeat + 1) - start;
 
@@ -54,7 +54,7 @@ export function Spread(props: { after: number; before: number }): JSX.Element {
   const endStitches = end > 0 ? new Array(end).fill(0) : [];
   const svgWidth = Math.max(
     102,
-    start * 10 + changeRepeat * 10 + end * 10 + 40
+    start * 10 + changeRepeat * 10 + end * 10 + 40,
   );
 
   return (
@@ -162,7 +162,8 @@ export function Spread(props: { after: number; before: number }): JSX.Element {
                   <li>
                     {before > after ? "decrease" : "increase"}, and then{" "}
                     {before > after ? "decrease" : "increase"} every{" "}
-                    {changeRepeat} stitches {Math.floor(changeRepeat2 / 2)} times
+                    {changeRepeat} stitches {Math.floor(changeRepeat2 / 2)}{" "}
+                    times
                   </li>
                   /* -- todo: repeat below two points ?? times -- */
                   <li>
@@ -178,7 +179,8 @@ export function Spread(props: { after: number; before: number }): JSX.Element {
                   <li>
                     {before > after ? "decrease" : "increase"}, and then{" "}
                     {before > after ? "decrease" : "increase"} every{" "}
-                    {changeRepeat} stitches {changeRepeat2 - Math.floor(changeRepeat2 / 2)} times
+                    {changeRepeat} stitches{" "}
+                    {changeRepeat2 - Math.floor(changeRepeat2 / 2)} times
                   </li>
                 </>
               )}

@@ -2,31 +2,27 @@ import { useState } from "react";
 import { GaugeState } from "../app-state";
 import { BlockedCurve } from "./blocked-curve";
 import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
   AccordionItem,
-  AccordionPanel,
+  AccordionItemContent,
+  AccordionItemTrigger,
+  AccordionRoot,
   Box,
   Flex,
-  FormControl,
-  FormHelperText,
-  FormLabel,
   Grid,
   GridItem,
   HStack,
   Heading,
   Link,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Spacer,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { Field } from "../components/ui/field";
+import {
+  NumberInputField,
+  NumberInputRoot,
+} from "../components/ui/number-input";
 
 type EllipseState = {
   width: number;
@@ -49,16 +45,26 @@ export function Ellipse(props: { gauge: GaugeState }): JSX.Element {
     aspectWidth = aspectWidth * (state.width / state.height);
   }
 
-  const setWidth = (_: string, numberValue: number) => {
+  const setWidth = ({
+    valueAsNumber,
+  }: {
+    value: string;
+    valueAsNumber: number;
+  }) => {
     setState({
       ...state,
-      width: numberValue,
+      width: valueAsNumber,
     });
   };
-  const setHeight = (_: string, numberValue: number) => {
+  const setHeight = ({
+    valueAsNumber,
+  }: {
+    value: string;
+    valueAsNumber: number;
+  }) => {
     setState({
       ...state,
-      height: numberValue,
+      height: valueAsNumber,
     });
   };
 
@@ -69,48 +75,44 @@ export function Ellipse(props: { gauge: GaugeState }): JSX.Element {
       justify="stretch"
       direction={{ base: "column", md: "row" }}
     >
-      <VStack
-        spacing={2}
-        align="stretch"
-        flex={1}
-        flexShrink={0}
-        flexBasis={20}
-      >
+      <VStack align="stretch" flex={1} flexShrink={0} flexBasis={20}>
         <Text>Round necks, sleeve heads, armscyes</Text>
 
         <HStack as="fieldset">
           <Heading size="sm" as="legend">
             Measurements
           </Heading>
-          <FormControl maxW={40}>
-            <FormLabel>Width</FormLabel>
-            <NumberInput value={state.width} onChange={setWidth}>
+          <Field
+            maxW={40}
+            label="Width"
+            helperText={props.gauge.unit.toString()}
+          >
+            <NumberInputRoot
+              value={state.width.toLocaleString()}
+              onValueChange={setWidth}
+            >
               <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-            <FormHelperText>{props.gauge.unit.toString()}</FormHelperText>
-          </FormControl>
-          <FormControl maxW={40}>
-            <FormLabel>Height</FormLabel>
-            <NumberInput value={state.height} onChange={setHeight}>
+            </NumberInputRoot>
+          </Field>
+          <Field
+            maxW={40}
+            label="Height"
+            helperText={props.gauge.unit.toString()}
+          >
+            <NumberInputRoot
+              value={state.height.toLocaleString()}
+              onValueChange={setHeight}
+            >
               <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-            <FormHelperText>{props.gauge.unit.toString()}</FormHelperText>
-          </FormControl>
+            </NumberInputRoot>
+          </Field>
         </HStack>
-        <Text size="sm">
+        <Text fontSize="sm">
           {props.gauge.rows / props.gauge.square} sts/{props.gauge.unit} &times;{" "}
           {state.height} {props.gauge.unit} = {height} sts &asymp;{" "}
           {Math.round(height)} (rounded)
         </Text>
-        <Text size="sm">
+        <Text fontSize="sm">
           {props.gauge.stitches / props.gauge.square} sts/{props.gauge.unit}{" "}
           &times; {state.width} {props.gauge.unit} = {width} sts &asymp;{" "}
           {Math.round(width)} (rounded)
@@ -169,24 +171,17 @@ export function Ellipse(props: { gauge: GaugeState }): JSX.Element {
         </Grid>
       </VStack>
 
-      <VStack
-        spacing={2}
-        align="stretch"
-        flex={1}
-        flexShrink={0}
-        flexBasis={20}
-      >
-        <Accordion allowMultiple>
-          <AccordionItem>
+      <VStack align="stretch" flex={1} flexShrink={0} flexBasis={20}>
+        <AccordionRoot multiple>
+          <AccordionItem value="working">
             <h2>
-              <AccordionButton>
+              <AccordionItemTrigger>
                 <Box as="span" flex="1" textAlign="left">
                   Working
                 </Box>
-                <AccordionIcon />
-              </AccordionButton>
+              </AccordionItemTrigger>
             </h2>
-            <AccordionPanel pb={4}>
+            <AccordionItemContent pb={4}>
               <Text>
                 Using{" "}
                 {/* <a href="https://www.geeksforgeeks.org/midpoint-ellipse-drawing-algorithm/">
@@ -195,7 +190,6 @@ export function Ellipse(props: { gauge: GaugeState }): JSX.Element {
                 <Link
                   href="https://zingl.github.io/bresenham.html"
                   color="pink.500"
-                  isExternal
                 >
                   Bresenham's algorithm extended to ellipses{" "}
                   <ExternalLinkIcon mx="2px" />
@@ -204,14 +198,13 @@ export function Ellipse(props: { gauge: GaugeState }): JSX.Element {
                 <Link
                   href="http://src.acm.org/binaries/content/assets/src/2012/tiffany-inglis.pdf"
                   color="pink.500"
-                  isExternal
                 >
                   Inglis' Superpixelator <ExternalLinkIcon mx="2px" />
                 </Link>
               </Text>
-            </AccordionPanel>
+            </AccordionItemContent>
           </AccordionItem>
-        </Accordion>
+        </AccordionRoot>
 
         <BlockedCurve
           aspect={props.gauge.stitches / props.gauge.rows}

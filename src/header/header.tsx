@@ -39,47 +39,52 @@ export function Header() {
             </NavLink>
           </MenuItem>
           <MenuItem value="raglan">
-          <NavLink
-            to={ROUTES.RAGLAN.toString()}
-            style={({ isActive }) => {
-              return {
-                textDecoration: isActive ? "underline" : "",
-              };
-            }}
-          >
-            Raglan Designer
-          </NavLink>
+            <NavLink
+              to={ROUTES.RAGLAN.toString()}
+              style={({ isActive }) => {
+                return {
+                  textDecoration: isActive ? "underline" : "",
+                };
+              }}
+            >
+              Raglan Designer
+            </NavLink>
           </MenuItem>
           <MenuItem value="card">
-          <NavLink
-            to={ROUTES.CARD.toString()}
-            style={({ isActive }) => {
-              return {
-                textDecoration: isActive ? "underline" : "",
-              };
-            }}
-          >
-            Punch cards
-          </NavLink>
+            <NavLink
+              to={ROUTES.CARD.toString()}
+              style={({ isActive }) => {
+                return {
+                  textDecoration: isActive ? "underline" : "",
+                };
+              }}
+            >
+              Punch cards
+            </NavLink>
           </MenuItem>
           <MenuItem value="radar">
-          <NavLink
-            to={ROUTES.RADAR.toString()}
-            style={({ isActive }) => {
-              return {
-                textDecoration: isActive ? "underline" : "",
-              };
-            }}
-          >
-            Radar
-          </NavLink>
+            <NavLink
+              to={ROUTES.RADAR.toString()}
+              style={({ isActive }) => {
+                return {
+                  textDecoration: isActive ? "underline" : "",
+                };
+              }}
+            >
+              Radar
+            </NavLink>
           </MenuItem>
         </MenuContent>
       </MenuRoot>
       <Heading textAlign="center" color="brand.200">
         st-jebr
       </Heading>
-      <Text role="caption" className="caption" textAlign="left" color="gray.400">
+      <Text
+        role="caption"
+        className="caption"
+        textAlign="left"
+        color="gray.400"
+      >
         stitch-(al)gebra
       </Text>
     </HStack>

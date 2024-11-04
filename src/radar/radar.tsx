@@ -2,12 +2,7 @@ import { useState } from "react";
 import "./radar.css";
 import { Header } from "../header/header";
 import { GaugeState, UNIT } from "../app-state";
-import {
-  VStack,
-  Spacer,
-  HStack,
-  Flex,
-} from "@chakra-ui/react";
+import { VStack, Spacer, HStack, Flex } from "@chakra-ui/react";
 import { ModalGauge } from "../guage/gauge";
 import { Pattern } from "../pattern/pattern";
 import { RadarHelp } from "./help";

@@ -46,13 +46,13 @@ type CardState = {
 };
 
 function isDataState(
-  content: LoadingErrorState | PixelDataState
+  content: LoadingErrorState | PixelDataState,
 ): content is PixelDataState {
   return (content as PixelDataState).pixels !== undefined;
 }
 
 function isErrorState(
-  content: LoadingErrorState | PixelDataState
+  content: LoadingErrorState | PixelDataState,
 ): content is LoadingErrorState {
   return (content as LoadingErrorState).message !== undefined;
 }
@@ -190,7 +190,7 @@ export function Card() {
           <Spacer m={5} />
 
           <Dialog.Root>
-          <Dialog.Trigger asChild>
+            <Dialog.Trigger asChild>
               <Button>Help?</Button>
             </Dialog.Trigger>
             <Dialog.Backdrop />

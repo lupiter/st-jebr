@@ -164,8 +164,7 @@ export function FairIsle(props: FairIsleProps): JSX.Element {
   if (props.maxHeight && props.maxHeight < 200) {
     return (
       <Alert status="warning" m={4}>
-        We can't generate cards this small. Try making the max
-        height larger
+        We can't generate cards this small. Try making the max height larger
       </Alert>
     );
   }

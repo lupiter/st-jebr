@@ -1,22 +1,19 @@
 import {
-  useDisclosure,
   HStack,
-  FormControl,
-  FormLabel,
-  InputGroup,
   Input,
-  Box,
   Button,
   Heading,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  useMultiStyleConfig,
+  DialogRoot,
+  DialogActionTrigger,
+  DialogBackdrop,
+  DialogContent,
+  DialogHeader,
+  DialogCloseTrigger,
+  DialogBody,
+  Fieldset,
 } from "@chakra-ui/react";
 import { ChangeEvent } from "react";
+import { Field } from "../components/ui/field";
 
 export type ImageState = {
   width: number;
@@ -25,8 +22,6 @@ export type ImageState = {
 };
 
 export function FileModal(props: { onchange: (image?: ImageState) => void }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   const fileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length <= 0) {
@@ -43,45 +38,35 @@ export function FileModal(props: { onchange: (image?: ImageState) => void }) {
     img.src = url;
   };
 
-  const styles = useMultiStyleConfig("Button", { variant: "outline" });
-
   return (
-    <Box>
-      <Button onClick={onOpen}>File</Button>
+    <DialogRoot>
+      <DialogActionTrigger>
+        <Button>File</Button>
+      </DialogActionTrigger>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <Heading size="md">File</Heading>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody as="form">
-            <HStack justify={"start"} align={"end"}>
-              <FormControl>
-                <FormLabel>Image</FormLabel>
-                <InputGroup>
-                  <Input
-                    type="file"
-                    onChange={fileChange}
-                    accept="image/*"
-                    border="none"
-                    paddingInlineStart={0}
-                    sx={{
-                      "::file-selector-button": {
-                        border: "none",
-                        outline: "none",
-                        mr: 2,
-                        ...styles,
-                      },
-                    }}
-                  />
-                </InputGroup>
-              </FormControl>
-            </HStack>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </Box>
+      <DialogBackdrop />
+
+      <DialogContent>
+        <DialogHeader>
+          <Heading size="md">File</Heading>
+        </DialogHeader>
+        <DialogCloseTrigger />
+        <DialogBody as="form">
+          <HStack justify={"start"} align={"end"}>
+            <Field label="Image">
+              <Fieldset.Root>
+                <Input
+                  type="file"
+                  onChange={fileChange}
+                  accept="image/*"
+                  border="none"
+                  paddingInlineStart={0}
+                />
+              </Fieldset.Root>
+            </Field>
+          </HStack>
+        </DialogBody>
+      </DialogContent>
+    </DialogRoot>
   );
 }

@@ -6,13 +6,7 @@ import { Even } from "./shapes/even";
 import { Ellipse } from "./shapes/ellipse";
 import { Slope } from "./shapes/slope";
 import { Header } from "./header/header";
-import {
-  VStack,
-  Text,
-  Tabs,
-  Box,
-  Flex,
-} from "@chakra-ui/react";
+import { VStack, Text, Tabs, Box, Flex } from "@chakra-ui/react";
 import { Alert } from "./components/ui/alert";
 import { Gauge } from "./guage/gauge";
 
@@ -131,20 +125,20 @@ function Calculator() {
             </Tabs.Trigger>
           </Tabs.List>
 
-            <Tabs.Content value="rectangle">
-              <Square gauge={state} />
-            </Tabs.Content>
-            <Tabs.Content value="evenly">
-              <Even />
-            </Tabs.Content>
-            <Tabs.Content value="curve">
-              <Ellipse gauge={state} />
-            </Tabs.Content>
-            <Tabs.Content value="slope">
-              <Slope gauge={state} />
-            </Tabs.Content>
+          <Tabs.Content value="rectangle">
+            <Square gauge={state} />
+          </Tabs.Content>
+          <Tabs.Content value="evenly">
+            <Even />
+          </Tabs.Content>
+          <Tabs.Content value="curve">
+            <Ellipse gauge={state} />
+          </Tabs.Content>
+          <Tabs.Content value="slope">
+            <Slope gauge={state} />
+          </Tabs.Content>
 
-            {/*<Armhole gauge={state} />
+          {/*<Armhole gauge={state} />
           <BackNeck gauge={state} />
           <Slant gauge={state} />
           <CustomCurve gauge={state} />

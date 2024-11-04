@@ -2,13 +2,14 @@ import {
   VStack,
   Box,
   Heading,
-  Accordion,
   AccordionItem,
-  AccordionButton,
-  AccordionIcon,
-  AccordionPanel,
+  AccordionRoot,
 } from "@chakra-ui/react";
 import style from "./shapes.module.css";
+import {
+  AccordionItemContent,
+  AccordionItemTrigger,
+} from "../components/ui/accordion";
 
 export type ResultsPrams = {
   title: string;
@@ -22,44 +23,41 @@ export function Results(props: ResultsPrams): JSX.Element {
   return (
     <VStack as="article" align="stretch">
       <Heading size="sm">{title}</Heading>
-      <Accordion allowMultiple>
-        <AccordionItem>
+      <AccordionRoot multiple>
+        <AccordionItem value="working">
           <h2>
-            <AccordionButton>
+            <AccordionItemTrigger>
               <Box as="span" flex="1" textAlign="left">
                 Working
               </Box>
-              <AccordionIcon />
-            </AccordionButton>
+            </AccordionItemTrigger>
           </h2>
-          <AccordionPanel pb={4}>{working}</AccordionPanel>
+          <AccordionItemContent pb={4}>{working}</AccordionItemContent>
         </AccordionItem>
-        <AccordionItem>
+        <AccordionItem value="words">
           <h2>
-            <AccordionButton>
+            <AccordionItemTrigger>
               <Box as="span" flex="1" textAlign="left">
                 Words
               </Box>
-              <AccordionIcon />
-            </AccordionButton>
+            </AccordionItemTrigger>
           </h2>
-          <AccordionPanel pb={4}>
+          <AccordionItemContent pb={4}>
             <ul className={style.steps}>{words}</ul>
-          </AccordionPanel>
+          </AccordionItemContent>
         </AccordionItem>
 
-        <AccordionItem>
+        <AccordionItem value="diagram">
           <h2>
-            <AccordionButton>
+            <AccordionItemTrigger>
               <Box as="span" flex="1" textAlign="left">
                 Diagram
               </Box>
-              <AccordionIcon />
-            </AccordionButton>
+            </AccordionItemTrigger>
           </h2>
-          <AccordionPanel pb={4}>{diagram}</AccordionPanel>
+          <AccordionItemContent pb={4}>{diagram}</AccordionItemContent>
         </AccordionItem>
-      </Accordion>
+      </AccordionRoot>
     </VStack>
   );
 }

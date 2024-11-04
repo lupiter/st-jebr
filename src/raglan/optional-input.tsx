@@ -1,12 +1,10 @@
-import {
-  Box,
-} from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 import { Field } from "../components/ui/field";
 import {
   NumberInputField,
   NumberInputRoot,
-} from "../components/ui/number-input"
+} from "../components/ui/number-input";
 import { useState } from "react";
 
 export function OptionalInput(props: {
@@ -21,7 +19,13 @@ export function OptionalInput(props: {
 
   const isValid = (x: number) => !isNaN(x) && x !== undefined && x !== null;
 
-  const onChange = ({value, valueAsNumber}: {value: string, valueAsNumber: number}) => {
+  const onChange = ({
+    value,
+    valueAsNumber,
+  }: {
+    value: string;
+    valueAsNumber: number;
+  }) => {
     setValue(value);
     if (isValid(valueAsNumber)) {
       props.onChange(valueAsNumber);
@@ -38,7 +42,10 @@ export function OptionalInput(props: {
 
   return (
     <Box>
-      <Field label={props.label} helperText={props.showHint ? props.hint : undefined}>
+      <Field
+        label={props.label}
+        helperText={props.showHint ? props.hint : undefined}
+      >
         <NumberInputRoot
           value={value}
           defaultValue={props.default.toLocaleString()}
