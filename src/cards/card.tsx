@@ -119,7 +119,6 @@ export function Card() {
   if (state.unit === UNIT.IN && state.maxHeight) {
     maxHeightMM = state.maxHeight * 25.4;
   }
-  // const styles = useMultiStyleConfig("Button", { variant: "outline" });
 
   return (
     <VStack align="stretch">
