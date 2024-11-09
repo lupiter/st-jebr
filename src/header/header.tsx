@@ -20,7 +20,7 @@ export function Header() {
       justifyContent="start"
     >
       <MenuRoot>
-        <MenuTrigger>
+        <MenuTrigger asChild>
           <Button variant="outline">
             <Image src="/st-jebr/logo.svg" alt="Menu" width={30} height={30} />
           </Button>
@@ -38,7 +38,7 @@ export function Header() {
               Calculator
             </NavLink>
           </MenuItem>
-          <MenuItem value="raglan">
+          <MenuItem value="raglan" asChild>
             <NavLink
               to={ROUTES.RAGLAN.toString()}
               style={({ isActive }) => {
@@ -50,7 +50,7 @@ export function Header() {
               Raglan Designer
             </NavLink>
           </MenuItem>
-          <MenuItem value="card">
+          <MenuItem value="card" asChild>
             <NavLink
               to={ROUTES.CARD.toString()}
               style={({ isActive }) => {
@@ -62,7 +62,7 @@ export function Header() {
               Punch cards
             </NavLink>
           </MenuItem>
-          <MenuItem value="radar">
+          <MenuItem value="radar" asChild>
             <NavLink
               to={ROUTES.RADAR.toString()}
               style={({ isActive }) => {
