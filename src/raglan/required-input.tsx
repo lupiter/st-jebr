@@ -11,6 +11,7 @@ export function RequiredInput(props: {
   onChange: (newValue: number) => void;
   hint: string;
   showHint: boolean;
+  errorText?: string;
 }) {
   const [value, setValue] = useState<string>(props.value.toLocaleString());
 
@@ -42,6 +43,7 @@ export function RequiredInput(props: {
       label={props.label}
       helperText={props.showHint ? props.hint : undefined}
       required
+      errorText={props.errorText}
     >
       <NumberInputRoot
         value={value.toLocaleString()}

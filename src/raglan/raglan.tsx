@@ -32,7 +32,7 @@ const fallback = (partialState: {
   ...partialState,
   sleeve: {
     ...partialState.sleeve,
-    bicep: 0.36 * partialState.chest,
+    bicep: Math.min(0.36 * partialState.chest, (partialState.back - partialState.underarm) * 2),
   },
   neck: {
     width: 0.2 * partialState.chest,
@@ -88,8 +88,8 @@ export function Raglan() {
       return {
         ...state,
         ...defaults,
-        neck: { ...state.neck, ...defaults.neck },
-        sleeve: { ...state.sleeve, ...defaults.sleeve },
+        neck: { ...defaults.neck },
+        sleeve: { ...defaults.sleeve },
       };
     });
   };
@@ -139,7 +139,10 @@ export function Raglan() {
     neckCastOff: backCastOff - neckSlopeWidth * 2,
     sleeveCastOff,
     sleeveSlopeHeight,
+    sleeveAngleRad,
   };
+
+  console.log(calculations, shoulderToArmpit, z, halfBicep, sleeveSlopeHeight);
 
   return (
     <VStack align="stretch">

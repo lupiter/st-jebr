@@ -1,4 +1,4 @@
-import { Table } from "@chakra-ui/react";
+import { Table, Text } from "@chakra-ui/react";
 import { RaglanCalculations, RaglanState } from "./state";
 
 export const RaglanTable = ({
@@ -86,6 +86,9 @@ export const RaglanTable = ({
           </Table.Cell>
         </Table.Row>
       </Table.Body>
+      <Table.Caption>
+        <Text>Sleeve slope is {measures.sleeveAngleRad.toLocaleString()} rad or {(measures.sleeveAngleRad / Math.PI * 180).toLocaleString()}º</Text>
+      </Table.Caption>
     </Table.Root>
   );
 };

@@ -142,14 +142,31 @@ export const Figures = ({
 
           {/* left sleeve */}
           <polygon
-            stroke="red"
+            stroke="grey"
             fill="transparent"
             points={
               `${calculations.bodySlopeWidth + calculations.backCastOff / 2 - halfNeck},0 ` +
               `${calculations.bodySlopeWidth},${state.neck.back} ` +
               `0,${calculations.shoulderToArmpit} ` +
               `${0 - state.sleeve.length * Math.cos(sleeveAngleRad)},${calculations.shoulderToArmpit + state.sleeve.length * Math.sin(sleeveAngleRad)} ` +
-              `${0 - state.sleeve.length * Math.cos(sleeveAngleRad) - halfBicep * Math.sin(sleeveAngleRad)},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
+              `${0 - sleeveTotalLength * Math.cos(sleeveAngleRad) + calculations.bodySlopeWidth},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
+              ``
+            }
+          />
+
+
+          {/* left sleeve messing around */}
+          <polygon
+            stroke="red"
+            fill="transparent"
+            points={
+              `${calculations.bodySlopeWidth + calculations.backCastOff / 2 - halfNeck},0 ` +
+              `${calculations.bodySlopeWidth},${state.neck.back} ` +
+              `0,${calculations.shoulderToArmpit} ` +
+              `0,${Math.sin(sleeveAngleRad) * calculations.bodySlopeWidth}` + 
+              `0,${Math.sin(sleeveAngleRad) * calculations.sleeveSlopeHeight}` +
+              // `${0 - state.sleeve.length * Math.cos(sleeveAngleRad)},${calculations.shoulderToArmpit + state.sleeve.length * Math.sin(sleeveAngleRad)} ` +
+              // `${0 - state.sleeve.length * Math.cos(sleeveAngleRad) - halfBicep * Math.sin(sleeveAngleRad)},${sleeveTotalLength * Math.sin(sleeveAngleRad)} ` +
               ``
             }
           />
